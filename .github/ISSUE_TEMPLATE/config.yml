@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Report a security vulnerability
+    url: https://github.com/OWNER/flowdesk/security/advisories/new
+    about: Please report security problems privately. Do not open a public issue.
+  - name: Setup guide
+    url: https://github.com/OWNER/flowdesk/blob/main/docs/SETUP.md
+    about: Step-by-step installation on a free Supabase project and a free Vercel account.
+  - name: Known issues
+    url: https://github.com/OWNER/flowdesk/blob/main/docs/KNOWN_ISSUES.md
+    about: Check whether your problem is already known before opening an issue.
