@@ -667,4 +667,4 @@ The sidebar pages (Kanban, Backlog, Admin Panel and the rest) are not available 
 
 ---
 
-Found something that does not work as described here? Check [KNOWN_ISSUES.md](KNOWN_ISSUES.md) and [TROUBLESHOOTING.md](TROUBLESHOOTING.md), then open an issue at https://github.com/OWNER/flowdesk/issues.
+Found something that does not work as described here? Check [KNOWN_ISSUES.md](KNOWN_ISSUES.md) and [TROUBLESHOOTING.md](TROUBLESHOOTING.md), then open an issue at https://github.com/JeffTarlton/FlowDesk-Public/issues.

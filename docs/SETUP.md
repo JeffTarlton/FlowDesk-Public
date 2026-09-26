@@ -65,23 +65,23 @@ Pick one of these options.
 **Option A: clone with Git**
 
 ```bash
-git clone https://github.com/OWNER/flowdesk.git
-cd flowdesk
+git clone https://github.com/JeffTarlton/FlowDesk-Public.git
+cd FlowDesk-Public
 ```
 
 **Option B: fork, then clone (best if you will deploy to Vercel)**
 
-1. Open https://github.com/OWNER/flowdesk and click **Fork**. This makes your own copy of the repository, which Vercel can deploy from.
+1. Open https://github.com/JeffTarlton/FlowDesk-Public and click **Fork**. This makes your own copy of the repository, which Vercel can deploy from.
 2. Clone your fork:
 
    ```bash
-   git clone https://github.com/<your-username>/flowdesk.git
-   cd flowdesk
+   git clone https://github.com/<your-username>/FlowDesk-Public.git
+   cd FlowDesk-Public
    ```
 
 **Option C: download a ZIP**
 
-1. Open https://github.com/OWNER/flowdesk, click **Code**, then **Download ZIP**.
+1. Open https://github.com/JeffTarlton/FlowDesk-Public, click **Code**, then **Download ZIP**.
 2. Extract it and open a terminal in the extracted folder.
 
    To deploy to Vercel later, you will need to put the code in a GitHub repository of your own. Forking (option B) is the easiest way.

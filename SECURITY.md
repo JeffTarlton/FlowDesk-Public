@@ -16,7 +16,7 @@ Security fixes are released for the latest 1.x version. Please update to the new
 Report them privately through GitHub's private vulnerability reporting:
 
 1. Go to the repository's **Security** tab (GitHub may label it **Security and quality**).
-2. Click **Report a vulnerability**. You can also open the form directly: <https://github.com/OWNER/flowdesk/security/advisories/new>
+2. Click **Report a vulnerability**. You can also open the form directly: <https://github.com/JeffTarlton/FlowDesk-Public/security/advisories/new>
 3. Fill in the form and click **Submit report**. Only the maintainers can see it.
 
 Please include as much of the following as you can:

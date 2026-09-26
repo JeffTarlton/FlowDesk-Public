@@ -29,11 +29,11 @@ FlowDesk builds to a folder of static files (HTML, JavaScript, CSS), so any stat
 
 Vercel deploys from a Git repository that you control.
 
-- **Easiest:** open https://github.com/OWNER/flowdesk and click **Fork**. Your fork is at `https://github.com/<your-username>/flowdesk`.
+- **Easiest:** open https://github.com/JeffTarlton/FlowDesk-Public and click **Fork**. Your fork is at `https://github.com/<your-username>/FlowDesk-Public`.
 - **Or**, if you cloned or downloaded the code, create a new empty repository on GitHub and push the code to it:
 
   ```bash
-  git remote set-url origin https://github.com/<your-username>/flowdesk.git
+  git remote set-url origin https://github.com/<your-username>/FlowDesk-Public.git
   git push -u origin main
   ```
 
@@ -47,7 +47,7 @@ Your `.env.local` file is git-ignored, so your keys are **not** pushed. That is 
 
 1. Sign up or sign in at https://vercel.com, using **Continue with GitHub** so Vercel can see your repositories.
 2. Start a new project: click **Add New...** and choose **Project**, or go straight to https://vercel.com/new.
-3. Find your `flowdesk` repository in the list and click **Import**.
+3. Find your `FlowDesk-Public` repository in the list and click **Import**.
    If it is not listed, use the option to adjust the GitHub App permissions and give Vercel access to the repository, then come back.
 
 You are now on the **Configure Project** page. Do not click **Deploy** yet.

@@ -28,8 +28,8 @@ You need:
 1. Fork the repository on GitHub, then clone your fork:
 
    ```bash
-   git clone https://github.com/<your-username>/flowdesk.git
-   cd flowdesk
+   git clone https://github.com/<your-username>/FlowDesk-Public.git
+   cd FlowDesk-Public
    ```
 
 2. Install dependencies:

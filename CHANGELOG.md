@@ -72,5 +72,5 @@ Initial public release of FlowDesk under the MIT License.
 - Accounts not created by an admin start deactivated, and the local configuration disables public sign-ups.
 - Every database function pins its `search_path`, and user-supplied HTML is sanitized before it is displayed.
 
-[Unreleased]: https://github.com/OWNER/flowdesk/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/OWNER/flowdesk/releases/tag/v1.0.0
+[Unreleased]: https://github.com/JeffTarlton/FlowDesk-Public/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/JeffTarlton/FlowDesk-Public/releases/tag/v1.0.0

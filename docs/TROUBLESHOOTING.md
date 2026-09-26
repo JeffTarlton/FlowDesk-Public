@@ -301,7 +301,7 @@ If an error mentions a FlowDesk object and none of the above applies, copy the f
 
 ## Still stuck?
 
-1. Search the existing issues: https://github.com/OWNER/flowdesk/issues
+1. Search the existing issues: https://github.com/JeffTarlton/FlowDesk-Public/issues
 2. Check [KNOWN_ISSUES.md](KNOWN_ISSUES.md) for limitations we already know about.
 3. Open a new issue with: what you did, what you expected, the exact message, the browser console output, and whether you use hosted or local Supabase and Vercel or `npm run dev`. **Remove any keys, passwords and email addresses before posting.**
 

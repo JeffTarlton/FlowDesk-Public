@@ -100,12 +100,12 @@ Six steps take you from nothing to FlowDesk running at your own Vercel address. 
 
 ### Step 1. Fork and clone the code
 
-1. Open https://github.com/OWNER/flowdesk and click **Fork**. Vercel will deploy from your fork.
+1. Open https://github.com/JeffTarlton/FlowDesk-Public and click **Fork**. Vercel will deploy from your fork.
 2. Clone your fork and install the dependencies:
 
    ```bash
-   git clone https://github.com/<your-username>/flowdesk.git
-   cd flowdesk
+   git clone https://github.com/<your-username>/FlowDesk-Public.git
+   cd FlowDesk-Public
    npm install
    ```
 
@@ -192,7 +192,7 @@ Details: [SETUP.md, steps 7 and 8](docs/SETUP.md#7-run-flowdesk-locally).
 
 ### Step 6. Deploy to Vercel
 
-1. At https://vercel.com/new, sign in with GitHub and **Import** your `flowdesk` fork.
+1. At https://vercel.com/new, sign in with GitHub and **Import** your `FlowDesk-Public` fork.
 2. Leave the detected build settings as they are: framework **Vite**, build command `npm run build`, output directory `dist`.
 3. Under **Environment Variables**, add the same two values as your `.env.local`, for **Production** and **Preview**:
 
@@ -270,7 +270,7 @@ To work on the SQL or the Edge Function without touching a hosted project, run t
 ## Project structure
 
 ```text
-flowdesk/
+FlowDesk-Public/
 ├── src/
 │   ├── pages/            One component per route (Kanban, Backlog, Admin, ...)
 │   ├── components/       Shared UI (ticket panel, cards, modals, theme picker, ...)

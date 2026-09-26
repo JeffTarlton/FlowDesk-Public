@@ -2,7 +2,7 @@
 
 This is an honest list of what does not work yet, or works differently from what the UI suggests. It is written for contributors: every entry says what happens, where the code lives, and a suggested approach. Entries marked **good first issue** are small and self-contained.
 
-Before you start on one, check the [issue tracker](https://github.com/OWNER/flowdesk/issues) and comment there so nobody duplicates the work. [CONTRIBUTING.md](../CONTRIBUTING.md) explains the development setup and pull request process, and [ARCHITECTURE.md](ARCHITECTURE.md) explains how the code is organised. **Report security vulnerabilities privately** as described in [SECURITY.md](../SECURITY.md), not in a public issue.
+Before you start on one, check the [issue tracker](https://github.com/JeffTarlton/FlowDesk-Public/issues) and comment there so nobody duplicates the work. [CONTRIBUTING.md](../CONTRIBUTING.md) explains the development setup and pull request process, and [ARCHITECTURE.md](ARCHITECTURE.md) explains how the code is organised. **Report security vulnerabilities privately** as described in [SECURITY.md](../SECURITY.md), not in a public issue.
 
 Line numbers were accurate when this page was written; search for the quoted names if they have moved.
 
