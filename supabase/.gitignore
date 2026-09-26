@@ -1,0 +1,8 @@
+# Supabase CLI local state (.temp holds the linked project ref)
+.branches
+.temp
+
+# Local secrets (e.g. for supabase functions serve --env-file)
+.env
+.env.*
+!.env.example

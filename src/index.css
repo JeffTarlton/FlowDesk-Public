@@ -1,0 +1,206 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Color theme variables live in themes.css */
+  body {
+    @apply bg-canvas text-gray-900 dark:bg-canvas-dark dark:text-gray-50;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+}
+
+@layer utilities {
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgb(var(--gray-300));
+    border-radius: 10px;
+  }
+  .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgb(var(--gray-700));
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgb(var(--gray-400));
+  }
+  .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgb(var(--gray-600));
+  }
+}
+
+/* React DatePicker Tailwind Overrides */
+.react-datepicker {
+  @apply font-sans border border-gray-200 shadow-xl rounded-xl !important;
+}
+.dark .react-datepicker {
+  @apply bg-surface-dark border-gray-700 !important;
+}
+.react-datepicker__header {
+  @apply bg-gray-50 border-b border-gray-200 rounded-t-xl pt-3 pb-2 !important;
+}
+.dark .react-datepicker__header {
+  @apply bg-gray-800/50 border-gray-700 !important;
+}
+.react-datepicker__current-month {
+  @apply text-sm font-semibold text-gray-900 border-none pb-1 !important;
+}
+.dark .react-datepicker__current-month {
+  @apply text-white !important;
+}
+.react-datepicker__day-name {
+  @apply text-gray-400 text-xs font-medium !important;
+}
+.react-datepicker__day {
+  @apply text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors m-0.5 !important;
+}
+.dark .react-datepicker__day {
+  @apply text-gray-300 hover:bg-gray-800 !important;
+}
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected {
+  @apply bg-primary-500 text-white hover:bg-primary-600 font-bold !important;
+}
+.react-datepicker__day--outside-month {
+  @apply text-gray-300 !important;
+}
+.dark .react-datepicker__day--outside-month {
+  @apply text-gray-600 !important;
+}
+.react-datepicker-popper[data-placement^="bottom"] .react-datepicker__triangle {
+  @apply hidden !important; /* Hide the ugly triangle arrow */
+}
+.react-datepicker__navigation-icon::before {
+  @apply border-gray-400 top-[11px] h-2 w-2 !important;
+}
+.react-datepicker__navigation:hover *::before {
+  @apply border-primary-500 !important;
+}
+
+/* =========================================
+   FullCalendar — FlowDesk Theme Overrides
+   ========================================= */
+
+/* Base scaffold */
+.fc-container .fc {
+  font-family: 'Inter', system-ui, sans-serif;
+}
+.fc-container .fc-theme-standard td,
+.fc-container .fc-theme-standard th,
+.fc-container .fc-theme-standard .fc-scrollgrid {
+  border-color: rgb(var(--gray-200));
+}
+.dark .fc-container .fc-theme-standard td,
+.dark .fc-container .fc-theme-standard th,
+.dark .fc-container .fc-theme-standard .fc-scrollgrid {
+  border-color: rgb(var(--gray-800));
+}
+
+/* Toolbar */
+.fc-container .fc-toolbar-title {
+  @apply text-base font-bold text-gray-900;
+}
+.dark .fc-container .fc-toolbar-title {
+  @apply text-white;
+}
+.fc-container .fc-button-primary {
+  @apply bg-white border border-gray-200 text-gray-700 rounded-lg text-sm font-semibold shadow-none capitalize !important;
+}
+.dark .fc-container .fc-button-primary {
+  @apply bg-gray-800 border-gray-700 text-gray-300 !important;
+}
+.fc-container .fc-button-primary:hover {
+  @apply bg-gray-50 border-gray-300 text-gray-900 !important;
+}
+.dark .fc-container .fc-button-primary:hover {
+  @apply bg-gray-700 border-gray-600 text-white !important;
+}
+.fc-container .fc-button-primary:not(:disabled).fc-button-active {
+  @apply bg-primary-50 border-primary-300 text-primary-700 !important;
+}
+.dark .fc-container .fc-button-primary:not(:disabled).fc-button-active {
+  @apply bg-primary-900/30 border-primary-700 text-primary-400 !important;
+}
+.fc-container .fc-button-primary:focus {
+  box-shadow: none !important;
+}
+
+/* Day/column headers */
+.fc-container .fc-col-header-cell {
+  @apply bg-gray-50 py-2;
+}
+.dark .fc-container .fc-col-header-cell {
+  @apply bg-gray-800/50;
+}
+.fc-container .fc-col-header-cell-cushion {
+  @apply text-xs font-semibold text-gray-500 uppercase tracking-wider no-underline;
+}
+.dark .fc-container .fc-col-header-cell-cushion {
+  @apply text-gray-400;
+}
+
+/* Day number cells */
+.fc-container .fc-daygrid-day-number {
+  @apply text-xs font-medium text-gray-500 no-underline;
+}
+.dark .fc-container .fc-daygrid-day-number {
+  @apply text-gray-400;
+}
+.fc-container .fc-day-today {
+  @apply bg-primary-50/40 !important;
+}
+.dark .fc-container .fc-day-today {
+  @apply bg-primary-900/10 !important;
+}
+
+/* Events */
+.fc-container .fc-event {
+  @apply border-0 rounded-md px-1.5 py-0.5 text-xs font-semibold shadow-none cursor-pointer;
+}
+.fc-container .fc-event:hover {
+  @apply opacity-80;
+}
+
+/* "More" popover */
+.fc-container .fc-more-popover {
+  @apply bg-white border border-gray-100 rounded-xl shadow-xl;
+}
+.dark .fc-container .fc-more-popover {
+  @apply bg-surface-dark border-gray-800;
+}
+.fc-container .fc-more-popover .fc-popover-title {
+  @apply text-xs font-bold text-gray-600 uppercase tracking-wider bg-gray-50 rounded-t-xl px-3 py-2;
+}
+.dark .fc-container .fc-more-popover .fc-popover-title {
+  @apply bg-gray-800/50 text-gray-400;
+}
+
+/* Timeline resource area */
+.fc-container .fc-resource-area .fc-scroller {
+  @apply overflow-hidden;
+}
+.fc-container .fc-timeline-lane {
+  @apply border-b border-gray-100;
+}
+.dark .fc-container .fc-timeline-lane {
+  @apply border-gray-800;
+}
+.fc-container .fc-datagrid-cell-cushion {
+  @apply text-sm font-semibold text-gray-700;
+}
+.dark .fc-container .fc-datagrid-cell-cushion {
+  @apply text-gray-300;
+}
+.fc-container .fc-datagrid-header .fc-datagrid-cell-cushion {
+  @apply text-xs uppercase tracking-wider font-bold text-gray-400;
+}
+
+/* Scrollbar inside calendar */
+.fc-container .fc-scroller::-webkit-scrollbar { height: 4px; width: 4px; }
+.fc-container .fc-scroller::-webkit-scrollbar-track { background: transparent; }
+.fc-container .fc-scroller::-webkit-scrollbar-thumb { background: rgb(var(--gray-300)); border-radius: 10px; }
+.dark .fc-container .fc-scroller::-webkit-scrollbar-thumb { background: rgb(var(--gray-700)); }
