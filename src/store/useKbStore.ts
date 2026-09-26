@@ -126,14 +126,13 @@ export const useKbStore = create<KbState>((set, get) => ({
 
   incrementViewCount: async (id) => {
     try {
-      const article = get().articles.find(a => a.id === id);
-      if (!article) return;
-      await supabase
-        .from('kb_articles')
-        .update({ view_count: article.view_count + 1 })
-        .eq('id', id);
+      if (!get().articles.some(a => a.id === id)) return;
+      // An RPC rather than an UPDATE: every role that can read an article counts a
+      // view, but only staff may edit articles. It returns the new count.
+      const { data, error } = await supabase.rpc('increment_kb_view_count', { article_id: id });
+      if (error || typeof data !== 'number') return;
       // Update locally without full refetch
-      set({ articles: get().articles.map(a => a.id === id ? { ...a, view_count: a.view_count + 1 } : a) });
+      set({ articles: get().articles.map(a => a.id === id ? { ...a, view_count: data } : a) });
     } catch (err) {
       // Silent — view count is non-critical
     }

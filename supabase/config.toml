@@ -51,7 +51,10 @@ enable_signup = false
 enable_anonymous_sign_ins = false
 
 [auth.email]
-enable_signup = false
+# Despite its name, this switches the whole email provider (email + password
+# sign-in) on or off in the local stack. It must stay true or nobody can sign
+# in. New sign-ups are already blocked by [auth] enable_signup = false above.
+enable_signup = true
 enable_confirmations = false
 
 [edge_runtime]

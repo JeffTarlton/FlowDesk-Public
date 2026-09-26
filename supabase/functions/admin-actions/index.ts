@@ -4,6 +4,7 @@
 // needs the service role runs here instead:
 //   create-user                 admin only - create an auth user + profile (temp password, forced reset)
 //   update-password             self only  - change your own password and clear the first-login reset flag
+//                                            (keeps the current session, signs out the others)
 //   admin-force-password-reset  admin only - set another user's password and force a reset
 //   delete-comment              admin, or the comment's author
 //
@@ -250,11 +251,27 @@ Deno.serve(async (req: Request) => {
       const password = requireString(body, 'password');
       validateNewPassword(password);
 
-      const { error: updateError } = await adminSupabase.auth.admin.updateUserById(user.id, {
-        password: password
+      // Change the password as the caller, through Supabase Auth's own "update user"
+      // endpoint. Auth then keeps the session that made this request and signs out
+      // the user's other sessions. auth.admin.updateUserById() would end every
+      // session, including this one, so the app would sign the user out right after
+      // the first-login reset.
+      const authResponse = await fetch(`${supabaseUrl.replace(/\/+$/, '')}/auth/v1/user`, {
+        method: 'PUT',
+        headers: {
+          apikey: serviceKey,
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ password }),
       });
-
-      if (updateError) throw updateError;
+      if (!authResponse.ok) {
+        const detail = await authResponse.json().catch(() => null);
+        throw new HttpError(
+          authResponse.status,
+          detail?.msg || detail?.message || detail?.error_description || 'Failed to update password',
+        );
+      }
 
       // The password really changed, so the first-login reset is done. Clearing the
       // flag only here means the reset screen can't be skipped from the browser.

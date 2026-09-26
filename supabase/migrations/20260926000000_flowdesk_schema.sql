@@ -1118,6 +1118,33 @@ BEGIN
 END;
 $$;
 
+-- 5.8 Knowledge base ----------------------------------------------------------
+
+-- RPC behind the Knowledge Base view counter. Everyone who can read an article
+-- counts a view, but only staff may edit articles (RLS), so the counter cannot
+-- go through the UPDATE policy. Changes nothing but view_count and returns the
+-- new count, or NULL if the caller cannot see the article.
+CREATE OR REPLACE FUNCTION public.increment_kb_view_count(article_id uuid)
+RETURNS integer
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+DECLARE
+  v_role  public.user_role := public.get_my_role();
+  v_count integer;
+BEGIN
+  UPDATE public.kb_articles AS a
+     SET view_count = a.view_count + 1
+   WHERE a.id = increment_kb_view_count.article_id
+     AND v_role IS NOT NULL
+     AND (a.is_published OR v_role IN ('admin', 'developer', 'support_desk'))
+  RETURNING a.view_count INTO v_count;
+
+  RETURN v_count;
+END;
+$$;
+
 
 -- =============================================================================
 -- 6. TRIGGERS
@@ -1199,10 +1226,15 @@ CREATE TRIGGER trigger_track_first_response
   BEFORE UPDATE ON public.tickets
   FOR EACH ROW EXECUTE FUNCTION public.track_first_response();
 
+-- A WHEN condition rather than "UPDATE OF status": a column list only matches
+-- columns named in the UPDATE statement, so it would miss the move to Ready
+-- for Dev that ticket_auto_ready_for_dev makes when a customer approves.
 DROP TRIGGER IF EXISTS on_ticket_status_change ON public.tickets;
 CREATE TRIGGER on_ticket_status_change
-  AFTER UPDATE OF status ON public.tickets
-  FOR EACH ROW EXECUTE FUNCTION public.notify_ticket_status_change();
+  AFTER UPDATE ON public.tickets
+  FOR EACH ROW
+  WHEN (OLD.status IS DISTINCT FROM NEW.status)
+  EXECUTE FUNCTION public.notify_ticket_status_change();
 
 DROP TRIGGER IF EXISTS on_ticket_assignment ON public.tickets;
 CREATE TRIGGER on_ticket_assignment
@@ -1270,10 +1302,14 @@ CREATE TRIGGER set_timestamp_releases
   BEFORE UPDATE ON public.releases
   FOR EACH ROW EXECUTE FUNCTION public.trigger_set_timestamp();
 
+-- Counting a view (increment_kb_view_count) is not an edit, so it leaves
+-- updated_at (shown as "Updated ..." and used to sort the list) alone.
 DROP TRIGGER IF EXISTS set_timestamp_kb_articles ON public.kb_articles;
 CREATE TRIGGER set_timestamp_kb_articles
   BEFORE UPDATE ON public.kb_articles
-  FOR EACH ROW EXECUTE FUNCTION public.trigger_set_timestamp();
+  FOR EACH ROW
+  WHEN (OLD.view_count IS NOT DISTINCT FROM NEW.view_count)
+  EXECUTE FUNCTION public.trigger_set_timestamp();
 
 
 -- =============================================================================
@@ -1323,11 +1359,11 @@ GRANT USAGE, SELECT ON SEQUENCE public.ticket_seq TO authenticated, service_role
 -- RPCs and policy helpers: signed-in users only.
 REVOKE EXECUTE ON FUNCTION
   public.get_my_role(), public.get_my_branch_id(), public.get_my_email(),
-  public.delete_user_officially(uuid)
+  public.delete_user_officially(uuid), public.increment_kb_view_count(uuid)
 FROM PUBLIC, anon;
 GRANT EXECUTE ON FUNCTION
   public.get_my_role(), public.get_my_branch_id(), public.get_my_email(),
-  public.delete_user_officially(uuid)
+  public.delete_user_officially(uuid), public.increment_kb_view_count(uuid)
 TO authenticated, service_role;
 
 -- 7.2 Enable RLS

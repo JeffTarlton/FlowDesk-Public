@@ -17,28 +17,19 @@ export const useSlaStore = create<SlaState>((set, get) => ({
   fetchPolicies: async () => {
     set({ isLoading: true });
     try {
+      // PostgREST can only order by columns, so sort by severity here
+      // (critical, high, medium, low).
       const { data, error } = await supabase
         .from('sla_policies')
-        .select('*')
-        .order('CASE priority WHEN \'critical\' THEN 1 WHEN \'high\' THEN 2 WHEN \'medium\' THEN 3 WHEN \'low\' THEN 4 END');
+        .select('*');
 
-      if (error) {
-        // Fallback ordering if the CASE expression isn't supported in order
-        const { data: fallbackData, error: fallbackErr } = await supabase
-          .from('sla_policies')
-          .select('*');
+      if (error) throw error;
 
-        if (fallbackErr) throw fallbackErr;
-
-        // Sort client-side
-        const priorityOrder: Record<string, number> = { critical: 1, high: 2, medium: 3, low: 4 };
-        const sorted = (fallbackData || []).sort((a, b) =>
-          (priorityOrder[a.priority] || 99) - (priorityOrder[b.priority] || 99)
-        );
-        set({ policies: sorted as SlaPolicy[] });
-      } else {
-        set({ policies: (data || []) as SlaPolicy[] });
-      }
+      const priorityOrder: Record<string, number> = { critical: 1, high: 2, medium: 3, low: 4 };
+      const sorted = (data || []).sort((a, b) =>
+        (priorityOrder[a.priority] || 99) - (priorityOrder[b.priority] || 99)
+      );
+      set({ policies: sorted as SlaPolicy[] });
     } catch (err) {
       console.error('Error fetching SLA policies:', err);
       toast.error('Failed to load SLA policies');
