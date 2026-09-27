@@ -3,6 +3,7 @@ import { Command } from 'cmdk';
 import { useNavigate } from 'react-router-dom';
 import { useTicketStore } from '../store/useTicketStore';
 import { useAuthStore } from '../store/useAuthStore';
+import TicketDetailPanel from './TicketDetailPanel';
 import {
   Search, Ticket, Users, Shield, LogOut,
   Bug, Sparkles, FileText, ClipboardList, X, Zap, Briefcase
@@ -35,6 +36,9 @@ export default function CommandPalette({ open, onClose }: CommandPaletteProps) {
   const profile = useAuthStore((s) => s.profile);
   const { signOut } = useAuthStore();
   const isAdmin = profile?.role === 'admin';
+  // A ticket picked from the results opens in the detail panel, which stays open after the palette closes
+  const [openTicketId, setOpenTicketId] = useState<string | null>(null);
+  const openTicket = openTicketId ? tickets.find(t => t.id === openTicketId) ?? null : null;
 
   // Reset search when opened
   useEffect(() => {
@@ -67,9 +71,15 @@ export default function CommandPalette({ open, onClose }: CommandPaletteProps) {
         .slice(0, 12)
     : [];
 
-  if (!open) return null;
+  const ticketPanel = openTicket
+    ? <TicketDetailPanel ticket={openTicket} onClose={() => setOpenTicketId(null)} />
+    : null;
+
+  if (!open) return ticketPanel;
 
   return (
+    <>
+    {ticketPanel}
     <div
       className="fixed inset-0 z-[999] flex items-start justify-center pt-[15vh]"
       onClick={onClose}
@@ -120,7 +130,7 @@ export default function CommandPalette({ open, onClose }: CommandPaletteProps) {
                   <Command.Item
                     key={ticket.id}
                     value={ticket.id}
-                    onSelect={() => runAndClose(() => navigate(`/?ticket=${ticket.id}`))}
+                    onSelect={() => runAndClose(() => setOpenTicketId(ticket.id))}
                     className="flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors group aria-selected:bg-gray-100 dark:aria-selected:bg-gray-800"
                   >
                     {typeIcon(ticket.type)}
@@ -176,7 +186,8 @@ export default function CommandPalette({ open, onClose }: CommandPaletteProps) {
                   </div>
                 </Command.Item>
 
-                {(profile?.role === 'support_desk' || isAdmin) && (
+                {/* Same roles as the /portal route */}
+                {(profile?.role === 'support_desk' || profile?.role === 'branch_manager') && (
                   <Command.Item
                     value="go-to-portal"
                     onSelect={() => runAndClose(() => navigate('/portal'))}
@@ -242,5 +253,6 @@ export default function CommandPalette({ open, onClose }: CommandPaletteProps) {
         </Command>
       </div>
     </div>
+    </>
   );
 }

@@ -174,9 +174,10 @@ export default function KanbanBoard() {
         return;
       }
 
-      // Check approval gates before allowing the transition
+      // Check approval gates before allowing the transition. handleDragOver has already moved the
+      // dragged card (and activeTicket) to the new column, so check from the status it started in.
       if (activeTicket) {
-        const check = canTransition(activeTicket, newStatus as TicketStatus);
+        const check = canTransition({ ...activeTicket, status: originalStatus }, newStatus as TicketStatus);
         if (!check.allowed) {
           toast.error(check.reason || 'Transition blocked by approval gate.');
           fetchTickets(); // reset optimistic UI

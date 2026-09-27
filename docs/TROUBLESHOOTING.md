@@ -20,6 +20,7 @@ Two tools help with almost every problem:
 | Uploads fail | [Files](#attachments-or-avatars-fail-to-upload) |
 | License notice on the Timeline view | [Timeline](#a-license-notice-on-the-calendars-timeline-view) |
 | Missing tickets or changes that disappear | [Data looks wrong](#data-looks-wrong-or-incomplete) |
+| `npm` or `npx` fails in Windows PowerShell | [PowerShell scripts disabled](#npmps1-cannot-be-loaded-because-running-scripts-is-disabled-on-this-system) |
 | Build or Vercel problems | [Building and deploying](#building-and-deploying) |
 | Errors when running the SQL files | [Database scripts](#sql-errors-when-running-or-re-running-the-scripts) |
 
@@ -65,6 +66,12 @@ FlowDesk shows sign-in errors from Supabase in a browser alert.
 
 **Fix:** copy the **publishable** key (`sb_publishable_...`) or the legacy **anon** key again from **Project Settings > API Keys**, update `.env.local` or Vercel, then restart or redeploy. Never use the secret or `service_role` key.
 
+### "Email logins are disabled"
+
+**Why:** the **Email** provider is switched off in Supabase, so nobody can sign in with an email and password, including the default admin. This usually happens when the whole provider was turned off instead of only **Allow new users to sign up**. (On the local stack, the same happens if `enable_signup` under `[auth.email]` in `supabase/config.toml` is set to `false`: despite its name, that key switches the whole email provider.)
+
+**Fix:** in Supabase, open **Authentication > Sign In / Providers**, open **Email**, and turn the provider back on. To keep strangers from signing up, turn off only **Allow new users to sign up** ([SETUP.md step 5](SETUP.md#5-lock-down-authentication)). On the local stack, set `enable_signup = true` under `[auth.email]` and restart it with `npx supabase stop` and `npx supabase start`.
+
 ### Sign-in hangs, fails with a network error, or pages stay empty
 
 | Why | Fix |
@@ -90,6 +97,8 @@ This full-screen form appears at every new user's first sign-in, including the d
 | "Unauthorized" | The function could not verify your sign-in token, for example because the session expired. | Click **Sign out** under the form and sign in again. |
 | "Password must be at least 8 characters and include a number and a special character" | The server re-checks the rules. Only the listed special characters count. | Choose a password that meets every rule in the checklist. |
 | "Choose a password other than the default setup password" | You entered `Password2026!`. | Pick a different password. |
+| "New password should be different from the old password." | You entered the password you signed in with (for example your temporary password). Supabase Auth refuses to reuse it. | Pick a different password. |
+| Another message from Supabase about the password, for example about required characters or reauthentication | FlowDesk changes the password through Supabase Auth, which also applies your project's own password settings (**Authentication > Sign In / Providers > Email**). They can be stricter than FlowDesk's checklist; for example, FlowDesk never requires upper and lower case letters. | Choose a password that also meets your project's rules, or relax those settings in the Supabase dashboard. |
 | "Forbidden: Your account is deactivated" or "Forbidden: No FlowDesk profile for this account" | The account is deactivated, or has no profile. | An admin reactivates the account, or re-creates it with **Invite User**. |
 | "Server misconfigured: admin-actions needs SUPABASE_URL and SUPABASE_SECRET_KEYS or SUPABASE_SERVICE_ROLE_KEY" | The function cannot find a usable secret key. This is rare; Supabase provides it automatically. It can happen if the legacy keys are disabled and there is no secret key named `default`. | In **Project Settings > API Keys**, make sure a secret key named `default` exists, or re-enable the legacy keys. Then try again. |
 | "Your password was changed, but the reset flag could not be cleared. Please sign in again." | The password was saved but the screen could not confirm it. | Click **Sign out** and sign in with the **new** password. |
@@ -134,7 +143,7 @@ If **no** admin can sign in, use the SQL in [Locked out? Reset the admin passwor
 | "Missing or invalid field: role" or "Missing or invalid field: email" | The form was sent without a valid role or email. | Choose a role and enter a valid email. |
 | A message about the password, such as a minimum length | You raised Supabase's password requirements (in the Email provider settings under **Authentication**). FlowDesk's temporary passwords are 10 characters with upper and lower case letters, a number and a symbol. | Keep the minimum password length at 10 or lower. |
 
-**Admin > Users > Force Password Reset** (the key icon) uses the same function. In that dialog, "Failed to reset password" or a JSON "Unexpected token" error usually means the function is not deployed. "Password must be at least 6 characters" is FlowDesk's own minimum for the temporary password you type.
+**Admin > Users > Force Password Reset** (the key icon) uses the same function. In that dialog, "Failed to reset password" or a JSON "Unexpected token" error usually means the function is not deployed, or that its JWT verification is still on ([see below](#edge-function-returned-a-non-2xx-status-code)). "Password must be at least 6 characters" is FlowDesk's own minimum for the temporary password you type; if you raised Supabase's minimum password length, the temporary password must meet that too.
 
 ### "A user with this email already exists"
 
@@ -185,15 +194,13 @@ FlowDesk uses Supabase Realtime for the Kanban board, Backlog and My Work lists,
    order by tablename;
    ```
 
-   You should see `notifications`, `ticket_comments` and `tickets`. If any are missing, run the schema file again (it adds them), or add them directly:
+   You should see `notifications`, `ticket_comments` and `tickets`. If any are missing, the simplest fix is to run the schema file again: it adds only the missing tables. Or add a missing table directly, for example:
 
    ```sql
    alter publication supabase_realtime add table public.tickets;
-   alter publication supabase_realtime add table public.notifications;
-   alter publication supabase_realtime add table public.ticket_comments;
    ```
 
-   (Each statement fails harmlessly with "already member of publication" if the table is already there.)
+   Run one statement per missing table, **one at a time**. A table that is already published makes the statement fail with "is already member of publication", and the SQL Editor runs a pasted block as a single transaction, so one failing line stops the lines after it.
 3. **Keep public channels allowed.** FlowDesk uses public Realtime channels. In Supabase, open **Realtime > Settings** and make sure **Allow public access** is on. Realtime still applies your Row Level Security rules, so users only receive rows they may see.
 4. **Check the network.** Some company proxies and VPNs block WebSocket connections. Try another network.
 5. **Is the project paused?** See [Sign-in hangs](#sign-in-hangs-fails-with-a-network-error-or-pages-stay-empty).
@@ -220,11 +227,17 @@ FlowDesk uses Supabase Realtime for the Kanban board, Backlog and My Work lists,
 
 ### A Kanban card snaps back after dragging
 
-**Why:** the move was refused. A ticket can only move to **Released / Closed** when it has **Acceptance Criteria**; the message "Cannot move to Done. Acceptance Criteria is required." appears at the top of the screen. Dropping a card on **On-Hold** asks for a reason, and closing that dialog without choosing one also puts the card back.
+**Why:** the move was refused. The message at the top of the screen says why:
 
-**Fix:** open the ticket, add the acceptance criteria (or pick an on-hold reason), and try again. Branch managers cannot drag cards at all.
+| Message | Why |
+|---|---|
+| "Admin approval is required before this transition." (or the same for customer approval) | An approval gate (**Admin Panel > Gates**) needs an approval the ticket does not have yet. This is the most common cause. |
+| "Cannot move to Done. Acceptance Criteria is required." | A ticket can only move to **Released / Closed** when it has **Acceptance Criteria**. |
+| No message | You dropped the card on **On-Hold** and closed the "Why is this request on hold?" dialog without choosing a reason. |
 
-Approval gates (Admin > Gates) are checked when you change the status in the ticket panel. Dragging on the Kanban board currently skips them; see [KNOWN_ISSUES.md](KNOWN_ISSUES.md#kanban-drags-skip-approval-gates).
+**Fix:** open the ticket and record the missing approval in **QA & Approvals**, add the acceptance criteria, or pick an on-hold reason, then try again. Branch managers cannot drag cards at all.
+
+Approval gates are checked both in the ticket panel and on the Kanban board. Only the status dropdown on **Admin Panel > All Tickets**, and direct API calls, skip them ([known issue](KNOWN_ISSUES.md#approval-gates-are-enforced-in-the-browser-only)).
 
 ---
 
@@ -246,7 +259,7 @@ These are known limitations of the current version, not setup problems. Details 
 
 **What you see:** `npm install` warns `EBADENGINE Unsupported engine`, or `npm run dev` / `npm run build` fails with errors from inside `node_modules` (syntax errors or missing functions).
 
-**Why:** FlowDesk and its tools need **Node.js 20 or newer** (`"engines": { "node": ">=20" }` in `package.json`). The Supabase CLI (`npx supabase`) also needs Node 20+.
+**Why:** FlowDesk needs **Node.js 20 or newer** (`"engines": { "node": ">=20" }` in `package.json`). Node 20 or newer is also recommended for the other tooling: `@supabase/supabase-js` warns that Node 18 and below are deprecated.
 
 **Fix:**
 
@@ -267,6 +280,17 @@ These are known limitations of the current version, not setup problems. Details 
    On Windows PowerShell, use `Remove-Item -Recurse -Force node_modules` instead of `rm -rf node_modules`.
 
 On Vercel, the `engines` range makes Vercel build with its newest Node.js version, so an old Node version is not the cause there. If a Vercel build fails, open the build log: `npm run build` runs `tsc -b` (TypeScript) first, so a type error in changed code stops the build. Run `npm run build` locally to see the same error. Warnings about chunk sizes are normal.
+
+### "npm.ps1 cannot be loaded because running scripts is disabled on this system"
+
+**What you see:** in Windows PowerShell, `npm install`, `npm run dev` or `npx supabase ...` stops immediately with an error like `npm.ps1 cannot be loaded because running scripts is disabled on this system` (or the same for `npx.ps1`).
+
+**Why:** Node.js installs small PowerShell scripts called `npm.ps1` and `npx.ps1`, and PowerShell prefers them over the `.cmd` versions. Windows blocks PowerShell scripts by default, so the command fails before npm even starts. Nothing is wrong with Node.js or with FlowDesk.
+
+**Fix:** use one of these, no settings change needed:
+
+- Run the commands in **Command Prompt** instead (press the Windows key, type `cmd`, press Enter, then `cd` to the repository folder).
+- Or, in PowerShell, type `npm.cmd` and `npx.cmd` instead of `npm` and `npx`, for example `npm.cmd install` or `npx.cmd supabase login`.
 
 ### 404 Not Found when opening or refreshing a page on Vercel
 

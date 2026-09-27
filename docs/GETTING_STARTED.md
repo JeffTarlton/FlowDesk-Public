@@ -73,7 +73,7 @@ From top to bottom:
 
 | Area | What it does |
 |---|---|
-| **FlowDesk logo and bell** | The bell opens your notifications. A red dot means you have unread ones. See [Notifications](USER_GUIDE.md#notifications). |
+| **Logo and bell** | The LokdIT logo with the FlowDesk label under it. The bell next to it opens your notifications. A red dot means you have unread ones. See [Notifications](USER_GUIDE.md#notifications). |
 | **Your profile card** | Shows your name, email and role. Click it to edit your name, phone, company and avatar. Your email and role are read-only. Only admins can change a branch. |
 | **Omni-Search** | Opens the command palette. The shortcut is **Ctrl+K** (Windows and Linux) or **Cmd+K** (macOS); the button only shows "Cmd K". |
 | **Navigation links** | The pages your role can use. The admin section at the bottom (**Admin Panel**, **Executive**, **Reports**) is visible to admins only. |
@@ -95,7 +95,7 @@ Theme and light/dark choices are saved in your browser, so they apply per browse
 
 ### Ctrl+K, the command palette
 
-Press **Ctrl+K** (or **Cmd+K**) on any page to search tickets by ID, title, customer name, customer email or description, or to jump to the Backlog, Kanban board or Admin Panel. Press **Esc** to close it. See [Command palette](USER_GUIDE.md#command-palette-and-keyboard-shortcuts) for details and a current limitation.
+Press **Ctrl+K** (or **Cmd+K**) on any page to search tickets by ID, title, customer name, customer email or description, or to jump to the Backlog, Kanban board or Admin Panel. Choosing a ticket opens it in the ticket panel. Press **Esc** to close it. See [Command palette](USER_GUIDE.md#command-palette-and-keyboard-shortcuts) for details (for example, **Go to Backlog** actually opens your home page).
 
 ### Notifications
 
@@ -192,7 +192,7 @@ Things to know:
 
 - Approvals are given on the ticket itself, in the **QA & Approvals** box of the ticket panel. Only admins see the **Approve** button for admin approval, and the database refuses admin approval from anyone else. The **Customer Approval** buttons are shown to everyone who opens the ticket: there is no customer login, so your team records the customer's sign-off.
 - Approving the customer side of a ticket that is **Awaiting Customer Approval** moves it to **Ready for Dev** automatically.
-- Gates are checked when someone changes the ticket's **Status** dropdown in the ticket panel. **Dragging a card on the Kanban board does not check gates yet**, because of a bug, and neither does the status dropdown on **Admin Panel > All Tickets**. Until that is fixed, treat gates as a guide for your team rather than a lock. See [Known Issues](KNOWN_ISSUES.md#kanban-drags-skip-approval-gates).
+- Gates are checked by the ticket panel's **Status** dropdown and by Kanban drags: a refused move shows the reason, for example "Admin approval is required before this transition.", and the card snaps back. The status dropdown on **Admin Panel > All Tickets**, and direct API calls, skip them, because gates are enforced in the browser only. See [Known Issues](KNOWN_ISSUES.md#approval-gates-are-enforced-in-the-browser-only).
 - Separately from gates, a ticket cannot be moved to **Released / Closed**, on the board or in the panel, until it has **Acceptance Criteria**.
 
 ---
@@ -232,10 +232,10 @@ Each row in the Users table has a **Change Role** dropdown that saves immediatel
 | Pencil | **Edit** the full name, company, branch and role. Email addresses cannot be changed anywhere in FlowDesk. |
 | Eye | **Impersonate**: preview FlowDesk with that user's menus. An orange banner offers **Stop Impersonating**. Only the menus change; all data is still loaded and saved with your admin permissions. |
 | Key | **Force Password Reset**: type a temporary password (at least 6 characters) and click **Reset Password**. The user must choose a new password at their next sign-in. While a reset is pending the key is orange; clicking the orange key cancels the pending reset without changing the password. |
-| Ban / check | **Deactivate** or **Reactivate**. A deactivated user can still sign in but only sees an "Account Deactivated" screen, and the database gives them no ticket or team data. |
+| Ban / check | **Deactivate** or **Reactivate**. Deactivating takes effect immediately, with no confirmation. A deactivated user can still sign in but only sees an "Account Deactivated" screen (on a phone, an empty ticket list instead), and the database gives them no ticket or team data. |
 | Trash | **Permanently Delete**, after a confirmation. Their open tickets become unassigned; their comments and history stay and show as "Deleted user". You cannot delete yourself. |
 
-Role changes, activations, deactivations, user deletions and ticket deletions are recorded on the **Audit Logs** tab. Click **Refresh** there if actor names show as IDs.
+Role changes, activations, deactivations, user deletions and ticket deletions are recorded on the **Audit Logs** tab. Inviting a user is logged as a role change from `customer` with no actor, and a new installation starts with one such row for the default admin. The tab does not refresh on its own: click **Refresh** to see recent changes, or if actor names show as IDs.
 
 ### Accounts created outside FlowDesk
 
@@ -300,6 +300,7 @@ The database also contains a fifth role, `customer`. It has no screens yet: a us
 | Link tickets (blocks, duplicate of, and so on) | Yes | Yes | Yes | No | Database |
 | Add or remove watchers | Yes | Yes | Yes | Yes | Database |
 | Read internal notes | Yes | Yes | Yes | **No** | Database |
+| Write internal notes | Yes | Yes | Yes | No | UI and database |
 | Post comments | Yes | Yes | Yes | Yes | Database |
 | Delete comments | Any | Own | Own | Own | Server (Edge Function) |
 | Dev Tasks and Branch Info sections of a ticket | Yes | Yes | Yes | Hidden | UI |
@@ -362,7 +363,7 @@ Open **Kanban** in the sidebar. The board has six columns: Intake / New Request,
 6. Open the ticket and click **Approve** next to **Customer Approval**. That satisfies the second default gate (Approved / Ready to Release to Released / Closed).
 7. Drag the card to **Released / Closed**. If the ticket had no Acceptance Criteria, the card would snap back with "Cannot move to Done. Acceptance Criteria is required."
 
-> **Record approvals before you drag.** Because of a [known bug](KNOWN_ISSUES.md#kanban-drags-skip-approval-gates), a Kanban drag does not check approval gates yet. Only the Status dropdown in the ticket panel enforces them.
+> **Tip: record approvals before you drag.** The board checks approval gates too. A drag that needs a missing approval is refused with a message, and the card snaps back to where it was.
 
 The ticket is now closed. Its resolution time counts towards the Executive dashboard and Reports, and the SLA boxes in the ticket panel show **Met** or **Breached**.
 
@@ -401,8 +402,8 @@ The most common first-day problems are below. [TROUBLESHOOTING.md](TROUBLESHOOTI
 | "The admin-actions Edge Function is not deployed or not reachable" | The `admin-actions` function is missing or has another name. | Deploy it with the exact name `admin-actions` ([SETUP.md](SETUP.md)). Password changes, creating users and deleting comments all need it. |
 | "Account Deactivated" | The account's `is_active` flag is off, or it was created outside FlowDesk. | An admin reactivates it on the Users tab. |
 | "No Role Assigned" | The account has the placeholder `customer` role. | An admin picks a role for it on the Users tab. |
-| A Kanban move to Released / Closed snaps back | The ticket has no Acceptance Criteria. | Read the message at the top of the screen, add the criteria in the ticket panel, and try again. |
-| A status change in the ticket panel is refused | An approval gate needs admin or customer approval first. | Approve it in **QA & Approvals**, then change the status again. |
+| A Kanban move snaps back | A move to Released / Closed needs Acceptance Criteria, or an approval gate needs an admin or customer approval first. | Read the message at the top of the screen, add the criteria or record the approval in the ticket panel, and try again. |
+| A status change is refused, in the ticket panel or on the board | An approval gate needs admin or customer approval first. | Approve it in **QA & Approvals**, then change the status again. |
 | Pages load slowly, then show nothing, or sign-in fails with a network error | Free Supabase projects are paused after about a week without activity. | Restore the project from the Supabase dashboard. |
 | You are locked out of every admin account | Forgotten password, or the account was deactivated. | Run the SQL below. |
 

@@ -1,0 +1,2155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FlowDesk Setup Guide</title>
+<meta name="description" content="A step-by-step, beginner-friendly guide to getting your own copy of FlowDesk running on GitHub, Supabase and Vercel.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@500;600;700&family=Geist+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+  /* LokdIT design system: "Warm canvas, crisp system."
+     Cream foundation, warm-charcoal text, one deep-teal accent, amber as the
+     single warm signal (placeholder values), hairlines, Geist / Inter / Geist Mono. */
+  :root {
+    --bg: #f6f1e9;            /* cream page */
+    --bg-elevated: #fcfaf6;   /* warm white */
+    --surface: #fffdf9;       /* cards */
+    --surface-2: #faf6ef;
+    --surface-3: #f1ebe0;     /* sand */
+    --line: rgba(31, 27, 22, .10);
+    --line-2: rgba(31, 27, 22, .18);
+    --dot: rgba(92, 78, 62, .14);
+    --text: #1f1b16;          /* ink */
+    --text-2: #5e564e;        /* ink-muted */
+    --text-3: #6e655c;        /* ink-dim */
+    --accent: #14b8a6;        /* teal-500: graphics only */
+    --accent-strong: #0f766e; /* teal-700: accent text */
+    --accent-soft: rgba(20, 184, 166, .10);
+    --accent-line: rgba(20, 184, 166, .28);
+    --grad-from: #0d9488;
+    --grad-to: #115e59;
+    --accent-ink: #ffffff;
+    --code-bg: #201d1a;
+    --code-text: #f2eee6;
+    --code-fill: #fbbf24;
+    --code-filled: #2dd4bf;
+    --fill-bg: rgba(180, 83, 9, .12);
+    --fill-text: #b45309;
+    --ok: #15803d;
+    --ok-soft: rgba(21, 128, 61, .09);
+    --warn: #b45309;
+    --warn-soft: rgba(180, 83, 9, .09);
+    --bad: #b91c1c;
+    --bad-soft: rgba(185, 28, 28, .08);
+    --info: #0f766e;
+    --info-soft: rgba(20, 184, 166, .09);
+    --shadow: 0 1px 2px 0 rgba(61, 45, 30, .05), 0 14px 34px -18px rgba(61, 45, 30, .22);
+    --shadow-glow: 0 0 0 1px rgba(20, 184, 166, .25), 0 22px 54px -20px rgba(20, 184, 166, .45);
+    --page-glow: radial-gradient(110% 60% at 50% -10%, rgba(255, 251, 244, .95) 0%, transparent 60%),
+                 radial-gradient(60% 45% at 92% 0%, rgba(20, 184, 166, .07) 0%, transparent 55%);
+    --r-sm: 8px;
+    --r: 12px;
+    --r-lg: 18px;
+    --r-xl: 24px;
+    --font-display: "Geist", "Inter", ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+    --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --font-mono: "Geist Mono", ui-monospace, "Cascadia Code", "SF Mono", Menlo, Consolas, monospace;
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #141210;
+      --bg-elevated: #191714;
+      --surface: #201d1a;
+      --surface-2: #292521;
+      --surface-3: #36312c;
+      --line: rgba(255, 250, 240, .10);
+      --line-2: rgba(255, 250, 240, .18);
+      --dot: rgba(168, 158, 145, .12);
+      --text: #f2eee6;
+      --text-2: #b0a89c;
+      --text-3: #968e84;
+      --accent: #2dd4bf;
+      --accent-strong: #2dd4bf;
+      --accent-soft: rgba(45, 212, 191, .12);
+      --accent-line: rgba(45, 212, 191, .30);
+      --grad-from: #2dd4bf;
+      --grad-to: #14b8a6;
+      --accent-ink: #041816;
+      --code-bg: #0f0d0b;
+      --code-text: #f2eee6;
+      --fill-bg: rgba(251, 191, 36, .14);
+      --fill-text: #fbbf24;
+      --ok: #34d399;
+      --ok-soft: rgba(52, 211, 153, .10);
+      --warn: #fbbf24;
+      --warn-soft: rgba(251, 191, 36, .10);
+      --bad: #f87171;
+      --bad-soft: rgba(248, 113, 113, .10);
+      --info: #2dd4bf;
+      --info-soft: rgba(45, 212, 191, .10);
+      --shadow: inset 0 1px 0 0 rgba(255, 250, 240, .04), 0 12px 34px -14px rgba(0, 0, 0, .7);
+      --shadow-glow: 0 0 0 1px rgba(45, 212, 191, .25), 0 0 46px -8px rgba(45, 212, 191, .35);
+      --page-glow: radial-gradient(120% 80% at 50% -20%, rgba(45, 212, 191, .07) 0%, transparent 60%);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #141210;
+    --bg-elevated: #191714;
+    --surface: #201d1a;
+    --surface-2: #292521;
+    --surface-3: #36312c;
+    --line: rgba(255, 250, 240, .10);
+    --line-2: rgba(255, 250, 240, .18);
+    --dot: rgba(168, 158, 145, .12);
+    --text: #f2eee6;
+    --text-2: #b0a89c;
+    --text-3: #968e84;
+    --accent: #2dd4bf;
+    --accent-strong: #2dd4bf;
+    --accent-soft: rgba(45, 212, 191, .12);
+    --accent-line: rgba(45, 212, 191, .30);
+    --grad-from: #2dd4bf;
+    --grad-to: #14b8a6;
+    --accent-ink: #041816;
+    --code-bg: #0f0d0b;
+    --code-text: #f2eee6;
+    --fill-bg: rgba(251, 191, 36, .14);
+    --fill-text: #fbbf24;
+    --ok: #34d399;
+    --ok-soft: rgba(52, 211, 153, .10);
+    --warn: #fbbf24;
+    --warn-soft: rgba(251, 191, 36, .10);
+    --bad: #f87171;
+    --bad-soft: rgba(248, 113, 113, .10);
+    --info: #2dd4bf;
+    --info-soft: rgba(45, 212, 191, .10);
+    --shadow: inset 0 1px 0 0 rgba(255, 250, 240, .04), 0 12px 34px -14px rgba(0, 0, 0, .7);
+    --shadow-glow: 0 0 0 1px rgba(45, 212, 191, .25), 0 0 46px -8px rgba(45, 212, 191, .35);
+    --page-glow: radial-gradient(120% 80% at 50% -20%, rgba(45, 212, 191, .07) 0%, transparent 60%);
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 16px; -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background-color: var(--bg);
+    background-image: var(--page-glow);
+    background-repeat: no-repeat;
+    color: var(--text);
+    font: 16px/1.65 var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection { background: var(--accent-soft); color: var(--text); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+  a { color: var(--accent-strong); text-underline-offset: 3px; text-decoration-color: var(--accent-line); }
+  a:hover { text-decoration-color: currentColor; }
+  h1, h2, h3, h4 { font-family: var(--font-display); line-height: 1.2; margin: 0; text-wrap: balance; }
+  p { margin: 0 0 12px; }
+  ul, ol { margin: 0 0 12px; padding-left: 22px; }
+  li { margin: 4px 0; }
+  li > ul, li > ol { margin: 6px 0 4px; }
+  li::marker { color: var(--text-3); }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 28px 0; }
+  code {
+    font-family: var(--font-mono);
+    font-size: .86em;
+    background: var(--surface-3);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 1px 5px;
+    overflow-wrap: anywhere;
+  }
+  kbd {
+    font-family: var(--font-mono);
+    font-size: .8em;
+    background: var(--surface);
+    border: 1px solid var(--line-2);
+    border-bottom-width: 2px;
+    border-radius: 6px;
+    padding: 1px 6px;
+    white-space: nowrap;
+  }
+  /* "Click this on screen" labels */
+  .ui {
+    font-weight: 600;
+    background: var(--accent-soft);
+    border: 1px solid var(--accent-line);
+    color: var(--text);
+    border-radius: 6px;
+    padding: 0 6px;
+    white-space: nowrap;
+  }
+  .path { font-weight: 600; }
+  .path .sep { color: var(--accent); font-weight: 400; padding: 0 4px; }
+
+  /* Brand mark */
+  /* LokdIT icon artwork (same as lokdit.net icon.svg and FlowDesk's favicon) */
+  .logo-mark {
+    flex: 0 0 34px; width: 34px; height: 34px;
+    display: block;
+    filter: drop-shadow(0 6px 14px rgba(13, 148, 136, .25));
+  }
+  .wordmark { font-family: var(--font-display); font-weight: 700; font-size: 21px; letter-spacing: -.02em; line-height: 1; color: var(--text); }
+  .wordmark .it, .text-accent-grad {
+    background: linear-gradient(135deg, var(--grad-from), var(--grad-to));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+
+  /* Layout */
+  .shell {
+    display: grid;
+    grid-template-columns: 272px minmax(0, 1fr);
+    gap: 48px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+  .sidebar {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    align-self: start;
+    max-height: 100vh;
+    overflow-y: auto;
+    padding-block: 28px;
+  }
+  main { padding-block: 32px 80px; min-width: 0; }
+
+  .brand { display: flex; align-items: center; gap: 11px; margin-bottom: 22px; text-decoration: none; }
+  .brand-sub {
+    font-family: var(--font-mono); font-size: 10.5px; text-transform: uppercase;
+    letter-spacing: .14em; color: var(--text-3); margin-top: 5px;
+  }
+
+  .progress-box {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    padding: 12px 14px;
+    margin-bottom: 14px;
+  }
+  .progress-label {
+    display: flex; justify-content: space-between;
+    font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: .12em;
+    color: var(--text-3); margin-bottom: 9px;
+  }
+  .progress-count { color: var(--accent-strong); font-variant-numeric: tabular-nums; }
+  .progress-track { height: 6px; background: var(--surface-3); border-radius: 99px; overflow: hidden; }
+  .progress-fill { height: 100%; width: 0; background: linear-gradient(90deg, var(--grad-from), var(--accent)); border-radius: 99px; transition: width .4s var(--ease); }
+
+  .toc { list-style: none; padding: 0; margin: 0; }
+  .toc li { margin: 0; }
+  .toc a {
+    display: flex; align-items: center; gap: 10px;
+    padding: 6px 8px; border-radius: var(--r-sm);
+    color: var(--text-2); text-decoration: none; font-size: 14px; line-height: 1.35;
+    transition: background-color .2s var(--ease), color .2s var(--ease);
+  }
+  .toc a:hover { background: var(--surface-2); color: var(--text); }
+  .toc a.active { background: var(--surface); color: var(--text); font-weight: 600; box-shadow: inset 2px 0 0 var(--accent); }
+  .toc .num {
+    flex: 0 0 22px; height: 22px; border-radius: 7px;
+    display: grid; place-items: center;
+    font-family: var(--font-mono); font-size: 11px; font-weight: 500;
+    border: 1px solid var(--line-2); color: var(--text-3); background: var(--surface);
+  }
+  .toc a.done .num { background: var(--ok); border-color: var(--ok); color: var(--surface); }
+  .toc a.done .num::after { content: "✓"; font-family: var(--font-sans); font-weight: 700; }
+  .toc a.done .num span { display: none; }
+  .toc-group {
+    font-family: var(--font-mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: .16em;
+    color: var(--text-3); margin: 16px 8px 5px; font-weight: 500;
+  }
+
+  .side-tools { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+  .btn {
+    font: 500 13px var(--font-sans); cursor: pointer;
+    background: var(--surface); color: var(--text-2);
+    border: 1px solid var(--line-2); border-radius: 999px; padding: 6px 13px;
+    transition: border-color .2s var(--ease), color .2s var(--ease);
+  }
+  .btn:hover { color: var(--text); border-color: var(--text-3); }
+
+  .mobile-toc { display: none; }
+
+  /* Hero */
+  .hero {
+    position: relative;
+    margin-bottom: 32px;
+    padding: 40px 36px 34px;
+    border-radius: var(--r-xl);
+    border: 1px solid var(--line);
+    background-color: var(--bg-elevated);
+    background-image: radial-gradient(var(--dot) 1px, transparent 1px);
+    background-size: 26px 26px;
+    overflow: hidden;
+  }
+  .hero::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 3px;
+    background: linear-gradient(90deg, transparent, var(--accent) 30%, var(--grad-to));
+  }
+  .hero-brand { display: flex; align-items: center; gap: 11px; margin-bottom: 26px; }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 9px;
+    font-family: var(--font-mono); font-size: 12px; font-weight: 500;
+    text-transform: uppercase; letter-spacing: .18em;
+    color: var(--accent-strong); margin-bottom: 14px;
+  }
+  .eyebrow::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+  .hero h1 {
+    font-size: clamp(2.1rem, 1.3rem + 3vw, 3.4rem);
+    font-weight: 700; line-height: 1.04; letter-spacing: -.03em;
+    margin-bottom: 16px; max-width: 18ch;
+  }
+  .hero h1 em { font-style: normal; color: var(--accent-strong); }
+  .hero .lede { font-size: 18px; color: var(--text-2); max-width: 62ch; }
+  .facts { display: flex; flex-wrap: wrap; gap: 8px 10px; margin-top: 22px; }
+  .fact {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 999px;
+    padding: 5px 13px; font-size: 14px; color: var(--text-2);
+  }
+  .fact b { color: var(--text); font-weight: 600; }
+
+  /* Step cards */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow);
+    padding: 30px 32px;
+    margin-bottom: 24px;
+  }
+  .step-head { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 18px; }
+  .step-badge {
+    flex: 0 0 46px; height: 46px; border-radius: 13px;
+    background: linear-gradient(135deg, var(--grad-from), var(--grad-to)); color: var(--accent-ink);
+    display: grid; place-items: center;
+    font-family: var(--font-mono); font-weight: 600; font-size: 18px;
+    box-shadow: 0 10px 26px -12px var(--accent);
+  }
+  .step-badge.alt { background: var(--surface-2); color: var(--accent-strong); border: 1px solid var(--line-2); box-shadow: none; }
+  .step-head h2 { font-size: 25px; font-weight: 600; letter-spacing: -.02em; margin-top: 1px; }
+  .step-meta {
+    font-family: var(--font-mono); font-size: 11.5px; text-transform: uppercase; letter-spacing: .1em;
+    color: var(--text-3); margin-top: 7px;
+  }
+  .step-meta a { color: var(--accent-strong); }
+  .step-meta b { color: var(--text-2); font-weight: 600; }
+  .card h3 { font-size: 18px; font-weight: 600; letter-spacing: -.01em; margin: 28px 0 10px; }
+  .card h3:first-of-type { margin-top: 8px; }
+  .card h4 { font-size: 15.5px; font-weight: 600; margin: 18px 0 8px; }
+
+  /* Numbered instructions */
+  ol.steps { counter-reset: s; list-style: none; padding-left: 0; }
+  ol.steps > li {
+    counter-increment: s;
+    position: relative;
+    padding-left: 40px;
+    margin: 0 0 14px;
+  }
+  ol.steps > li::before {
+    content: counter(s);
+    position: absolute; left: 0; top: 1px;
+    width: 26px; height: 26px; border-radius: 8px;
+    background: var(--accent-soft); color: var(--accent-strong);
+    border: 1px solid var(--accent-line);
+    font-family: var(--font-mono); font-weight: 600; font-size: 12px;
+    display: grid; place-items: center;
+  }
+
+  /* Callouts: status colors carry meaning only */
+  .callout {
+    border-radius: var(--r);
+    padding: 13px 16px 13px 46px;
+    margin: 16px 0;
+    position: relative;
+    border: 1px solid var(--line);
+  }
+  .callout > :last-child { margin-bottom: 0; }
+  .callout::before {
+    position: absolute; left: 15px; top: 13px;
+    width: 20px; height: 20px; border-radius: 6px;
+    display: grid; place-items: center;
+    font-size: 12px; font-weight: 700; color: var(--surface);
+  }
+  .callout-title { font-family: var(--font-display); font-weight: 600; display: block; margin-bottom: 2px; }
+  .callout.note { background: var(--info-soft); border-color: var(--accent-line); }
+  .callout.note::before { content: "i"; background: var(--info); font-family: var(--font-mono); }
+  .callout.warn { background: var(--warn-soft); border-color: color-mix(in srgb, var(--warn) 28%, transparent); }
+  .callout.warn::before { content: "!"; background: var(--warn); }
+  .callout.danger { background: var(--bad-soft); border-color: color-mix(in srgb, var(--bad) 26%, transparent); }
+  .callout.danger::before { content: "!"; background: var(--bad); }
+  .callout.check { background: var(--ok-soft); border-color: color-mix(in srgb, var(--ok) 26%, transparent); }
+  .callout.check::before { content: "✓"; background: var(--ok); }
+
+  /* Code blocks */
+  .code {
+    position: relative;
+    background: var(--code-bg);
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    margin: 10px 0 14px;
+  }
+  .code pre {
+    margin: 0;
+    padding: 14px 16px;
+    padding-right: 88px;
+    overflow-x: auto;
+    color: var(--code-text);
+    font: 13.5px/1.65 var(--font-mono);
+  }
+  .code pre code { background: none; border: 0; padding: 0; color: inherit; font-size: inherit; overflow-wrap: normal; }
+  .code .copy {
+    position: absolute; top: 8px; right: 8px;
+    font: 500 11px var(--font-mono); text-transform: uppercase; letter-spacing: .1em;
+    background: rgba(255, 250, 240, .08); color: #f2eee6;
+    border: 1px solid rgba(255, 250, 240, .16); border-radius: 999px;
+    padding: 5px 11px; cursor: pointer;
+    transition: background-color .2s var(--ease);
+  }
+  .code .copy:hover { background: rgba(255, 250, 240, .16); }
+  .code .copy.ok { background: #0d9488; border-color: #0d9488; color: #fff; }
+  .code-label {
+    font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: .12em;
+    color: var(--text-3); margin: 16px 0 -4px;
+  }
+
+  /* Placeholder values waiting for the worksheet: amber, the one warm signal */
+  .v {
+    background: var(--fill-bg); color: var(--fill-text);
+    border-radius: 4px; padding: 0 4px;
+    font-weight: 600;
+  }
+  .v.filled { background: transparent; color: inherit; font-weight: inherit; padding: 0; }
+  .code .v { background: rgba(251, 191, 36, .16); color: var(--code-fill); }
+  .code .v.filled { background: transparent; color: var(--code-filled); }
+
+  /* Tables */
+  .table-wrap { overflow-x: auto; margin: 12px 0 16px; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); }
+  table { border-collapse: collapse; width: 100%; font-size: 14.5px; }
+  th, td { text-align: left; vertical-align: top; padding: 10px 13px; border-bottom: 1px solid var(--line); }
+  th {
+    background: var(--surface-2);
+    font-family: var(--font-mono); font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: .1em;
+    color: var(--text-3);
+  }
+  tr:last-child td { border-bottom: 0; }
+
+  /* Worksheet */
+  .card.worksheet {
+    border: 1px solid var(--accent-line);
+    background-color: var(--surface);
+    background-image: radial-gradient(var(--dot) 1px, transparent 1px);
+    background-size: 26px 26px;
+    box-shadow: var(--shadow-glow);
+  }
+  .field { margin: 16px 0; }
+  .field label { display: block; font-family: var(--font-display); font-weight: 600; margin-bottom: 4px; }
+  .field label span { font-family: var(--font-sans); }
+  .field .hint { font-size: 13.5px; color: var(--text-2); margin-bottom: 7px; }
+  .field input {
+    width: 100%;
+    font: 14.5px var(--font-mono);
+    padding: 11px 13px;
+    border: 1px solid var(--line-2);
+    border-radius: var(--r-sm);
+    background: var(--surface);
+    color: var(--text);
+    transition: border-color .2s var(--ease), box-shadow .2s var(--ease);
+  }
+  .field input::placeholder { color: var(--text-3); opacity: .7; }
+  .field input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .field .status { font-family: var(--font-mono); font-size: 12.5px; margin-top: 6px; min-height: 1.2em; }
+  .status.ok { color: var(--ok); }
+  .status.bad { color: var(--bad); }
+
+  .shortcut {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 13.5px; font-weight: 600; color: var(--accent-strong);
+    background: var(--accent-soft); border: 1px solid var(--accent-line);
+    border-radius: 999px; padding: 3px 12px; margin-top: 6px; text-decoration: none;
+    transition: background-color .2s var(--ease);
+  }
+  .shortcut:hover { background: color-mix(in srgb, var(--accent) 18%, transparent); }
+  .shortcut::after { content: "↗"; font-weight: 400; }
+  .needs-ref { display: none; }
+  body.has-ref .needs-ref { display: inline-flex; }
+  body.has-ref .no-ref { display: none; }
+
+  /* Done checkbox at the end of each step */
+  .done-row {
+    margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  }
+  .done-check {
+    display: inline-flex; align-items: center; gap: 10px; cursor: pointer;
+    font-weight: 600; font-size: 14.5px; padding: 8px 16px; border-radius: 999px;
+    background: var(--surface-2); border: 1px solid var(--line-2);
+    transition: background-color .2s var(--ease), border-color .2s var(--ease), color .2s var(--ease);
+  }
+  .done-check input { width: 17px; height: 17px; accent-color: var(--ok); cursor: pointer; margin: 0; }
+  .done-check:has(input:checked) { background: var(--ok-soft); border-color: var(--ok); color: var(--ok); }
+  .next-link {
+    font-family: var(--font-mono); font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: .1em;
+    text-decoration: none;
+  }
+
+  /* Architecture diagram */
+  .diagram {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr;
+    align-items: stretch;
+    gap: 10px;
+    margin: 18px 0 8px;
+  }
+  .node {
+    background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r);
+    padding: 15px 14px; text-align: center;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .node b { display: block; font-family: var(--font-display); font-size: 15.5px; font-weight: 600; }
+  .node span { font-size: 13px; color: var(--text-2); line-height: 1.45; display: block; margin-top: 4px; }
+  .arrow { color: var(--accent); font-size: 20px; text-align: center; line-height: 1; align-self: center; }
+  .arrow small { display: block; font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: .1em; color: var(--text-3); margin-top: 3px; }
+  .diagram-foot {
+    margin-top: 10px; background: var(--accent-soft); border: 1px solid var(--accent-line);
+    border-radius: var(--r); padding: 12px 14px; font-size: 14px; color: var(--text-2);
+  }
+  .diagram-foot b { color: var(--text); }
+
+  .glance { list-style: none; padding: 0; margin: 12px 0 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+  .glance li { margin: 0; background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r); padding: 11px 13px; font-size: 14px; }
+  .glance b { display: block; font-family: var(--font-display); font-weight: 600; font-size: 14.5px; }
+  .glance span { color: var(--text-3); font-size: 13px; }
+
+  dl.gloss { margin: 0; display: grid; grid-template-columns: minmax(150px, 220px) 1fr; gap: 0 24px; }
+  dl.gloss dt { font-family: var(--font-display); font-weight: 600; padding: 12px 0; border-top: 1px solid var(--line); }
+  dl.gloss dd { margin: 0; color: var(--text-2); padding: 12px 0; border-top: 1px solid var(--line); }
+
+  /* Footer */
+  .site-footer {
+    margin-top: 44px; padding: 26px 28px;
+    border: 1px solid var(--line); border-radius: var(--r-lg);
+    background-color: var(--bg-elevated);
+    background-image: radial-gradient(var(--dot) 1px, transparent 1px);
+    background-size: 26px 26px;
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px 28px;
+  }
+  .site-footer .f-brand { display: flex; align-items: center; gap: 11px; }
+  .site-footer p { margin: 0; font-size: 13.5px; color: var(--text-2); max-width: 46ch; }
+  .site-footer .f-links { display: flex; flex-wrap: wrap; gap: 8px 18px; font-family: var(--font-mono); font-size: 12px; letter-spacing: .04em; }
+  .site-footer .f-links a { text-decoration: none; }
+  .site-footer .f-links a:hover { text-decoration: underline; }
+
+  /* Two setup paths: online (Vercel) and on my computer (localhost).
+     body[data-choice] hides the other path's content; with no choice, both show, tagged. */
+  body[data-choice="online"] [data-path="local"],
+  body[data-choice="local"] [data-path="online"] { display: none !important; }
+  .path-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--font-mono); font-size: 10.5px; font-weight: 500;
+    text-transform: uppercase; letter-spacing: .12em;
+    border-radius: 999px; padding: 3px 9px; vertical-align: middle;
+    border: 1px solid var(--line-2); color: var(--text-2); background: var(--surface-2);
+    white-space: nowrap;
+  }
+  .path-tag::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  .path-tag.online { color: var(--accent-strong); border-color: var(--accent-line); background: var(--accent-soft); }
+  .path-tag.local { color: var(--text); }
+  .step-head .path-tag { margin-top: 8px; }
+  .path-block { border-left: 2px solid var(--line-2); padding-left: 16px; margin: 18px 0; }
+  .path-block.online { border-left-color: var(--accent); }
+  .path-block > .path-tag { margin-bottom: 6px; }
+
+  .chooser { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin: 16px 0 12px; }
+  .path-card {
+    font: inherit; color: inherit; text-align: left; cursor: pointer;
+    display: flex; flex-direction: column; gap: 8px;
+    background: var(--surface-2); border: 1.5px solid var(--line-2); border-radius: var(--r-lg);
+    padding: 18px 18px 16px;
+    transition: border-color .2s var(--ease), box-shadow .2s var(--ease), background-color .2s var(--ease);
+  }
+  .path-card:hover { border-color: var(--accent-line); }
+  .path-card[aria-pressed="true"] { border-color: var(--accent); background: var(--surface); box-shadow: var(--shadow-glow); }
+  .path-card .pc-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 10px; }
+  .path-card .pc-title { font-family: var(--font-display); font-weight: 600; font-size: 19px; letter-spacing: -.01em; }
+  .path-card .pc-sub { color: var(--text-2); font-size: 14.5px; }
+  .path-card ul { margin: 2px 0 0; padding-left: 18px; font-size: 14px; color: var(--text-2); }
+  .path-card li { margin: 3px 0; }
+  .path-card .pc-pick {
+    margin-top: 6px; align-self: flex-start;
+    font-family: var(--font-mono); font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .12em;
+    color: var(--accent-strong); border: 1px solid var(--accent-line); border-radius: 999px; padding: 5px 12px;
+  }
+  .path-card[aria-pressed="true"] .pc-pick {
+    color: var(--accent-ink); background: linear-gradient(135deg, var(--grad-from), var(--grad-to)); border-color: transparent;
+  }
+  .path-card[aria-pressed="true"] .pc-pick::before { content: "✓ "; }
+  .chooser-foot { font-size: 14px; color: var(--text-2); }
+  .chooser-foot button { font: inherit; color: var(--accent-strong); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--accent-line); }
+
+  .seg { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3px; background: var(--surface-3); border-radius: 999px; padding: 3px; margin-bottom: 14px; }
+  .seg button {
+    font: 500 12px var(--font-sans); cursor: pointer; border: 0; border-radius: 999px;
+    padding: 6px 4px; background: transparent; color: var(--text-2);
+  }
+  .seg button[aria-pressed="true"] { background: var(--surface); color: var(--text); box-shadow: 0 1px 2px rgba(0, 0, 0, .08); }
+  .seg-label {
+    font-family: var(--font-mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: .14em;
+    color: var(--text-3); margin: 0 0 6px 2px;
+  }
+
+  @media (max-width: 960px) {
+    .chooser { grid-template-columns: minmax(0, 1fr); }
+    .shell { grid-template-columns: minmax(0, 1fr); padding: 0 16px; gap: 0; }
+    .sidebar { display: none; }
+    main { padding-block: 16px 60px; }
+    .mobile-toc {
+      display: block;
+      background: var(--surface); border: 1px solid var(--line); border-radius: var(--r);
+      margin-bottom: 20px;
+    }
+    .mobile-toc summary { cursor: pointer; padding: 12px 16px; font-family: var(--font-display); font-weight: 600; }
+    .mobile-toc .inner { padding: 0 10px 12px; }
+    .hero { padding: 26px 20px 24px; border-radius: var(--r-lg); }
+    .hero .lede { font-size: 16.5px; }
+    .card { padding: 22px 18px; border-radius: var(--r); }
+    .step-head { gap: 12px; }
+    .step-badge { flex-basis: 40px; height: 40px; font-size: 16px; border-radius: 11px; }
+    .step-head h2 { font-size: 21px; }
+    .diagram { grid-template-columns: minmax(0, 1fr); }
+    .arrow { padding: 2px 0; }
+    .arrow .ar { display: inline-block; transform: rotate(90deg); }
+    dl.gloss { grid-template-columns: minmax(0, 1fr); }
+    dl.gloss dd { border-top: 0; padding-top: 0; }
+    .site-footer { padding: 20px 18px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition-duration: .001ms !important; animation-duration: .001ms !important; scroll-behavior: auto !important; }
+  }
+  @media print {
+    .sidebar, .mobile-toc, .copy, .done-row, .side-tools { display: none !important; }
+    .shell { display: block; max-width: none; }
+    .card { box-shadow: none; break-inside: avoid-page; }
+    body { background: #fff; }
+  }
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- ===================== Sidebar ===================== -->
+  <aside class="sidebar" aria-label="Guide contents">
+    <a class="brand" href="https://www.lokdit.net" target="_blank" rel="noopener" aria-label="LokdIT website">
+      <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="lk1" x1="9" y1="9" x2="23" y2="23" gradientUnits="userSpaceOnUse"><stop stop-color="#2DD4BF"/><stop offset="1" stop-color="#0D9488"/></linearGradient></defs><rect width="32" height="32" rx="8" fill="#201D1A"/><rect x="1" y="1" width="30" height="30" rx="7" fill="none" stroke="#2DD4BF" stroke-opacity="0.28"/><rect x="9" y="9" width="14" height="14" rx="4" fill="url(#lk1)"/></svg>
+      <span>
+        <span class="wordmark">Lokd<span class="it">IT</span></span>
+        <span class="brand-sub" style="display:block">FlowDesk Setup Guide</span>
+      </span>
+    </a>
+    <div class="seg-label">Your setup path</div>
+    <div class="seg" role="group" aria-label="Setup path">
+      <button type="button" data-choose="online" aria-pressed="false">Online</button>
+      <button type="button" data-choose="local" aria-pressed="false">My computer</button>
+      <button type="button" data-choose="" aria-pressed="true">Show both</button>
+    </div>
+    <div class="progress-box">
+      <div class="progress-label"><span>Your progress</span><span class="progress-count">0 of 12</span></div>
+      <div class="progress-track"><div class="progress-fill"></div></div>
+    </div>
+    <nav class="toc-host"></nav>
+    <div class="side-tools">
+      <button class="btn" type="button" data-action="theme">Light / dark</button>
+      <button class="btn" type="button" data-action="reset">Reset progress</button>
+    </div>
+  </aside>
+
+  <!-- ===================== Main ===================== -->
+  <main>
+
+    <header class="hero">
+      <div class="hero-brand">
+        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="lk2" x1="9" y1="9" x2="23" y2="23" gradientUnits="userSpaceOnUse"><stop stop-color="#2DD4BF"/><stop offset="1" stop-color="#0D9488"/></linearGradient></defs><rect width="32" height="32" rx="8" fill="#201D1A"/><rect x="1" y="1" width="30" height="30" rx="7" fill="none" stroke="#2DD4BF" stroke-opacity="0.28"/><rect x="9" y="9" width="14" height="14" rx="4" fill="url(#lk2)"/></svg>
+        <span class="wordmark">Lokd<span class="it">IT</span></span>
+      </div>
+      <div class="eyebrow">FlowDesk setup guide · no coding needed</div>
+      <h1>Set up your own <em>FlowDesk.</em></h1>
+      <p class="lede">This guide takes you from nothing to your own working FlowDesk, one click at a time. Put it online for your team, or run it on your own computer. You don't need any experience with GitHub, Supabase or Vercel. Do the steps in order and don't skip any.</p>
+      <div class="facts">
+        <span class="fact"><b>About 45 minutes</b> in total</span>
+        <span class="fact"><b>$0</b>: every service has a free plan</span>
+        <span class="fact"><b>Two ways to run it</b>: online, or on your computer</span>
+      </div>
+    </header>
+
+    <details class="mobile-toc">
+      <summary>Contents and progress</summary>
+      <div class="inner">
+        <div class="seg-label">Your setup path</div>
+        <div class="seg" role="group" aria-label="Setup path">
+          <button type="button" data-choose="online" aria-pressed="false">Online</button>
+          <button type="button" data-choose="local" aria-pressed="false">My computer</button>
+          <button type="button" data-choose="" aria-pressed="true">Show both</button>
+        </div>
+        <div class="progress-box">
+          <div class="progress-label"><span>Your progress</span><span class="progress-count">0 of 12</span></div>
+          <div class="progress-track"><div class="progress-fill"></div></div>
+        </div>
+        <nav class="toc-host"></nav>
+      </div>
+    </details>
+
+    <!-- ===================== Step 0 ===================== -->
+    <section class="card" id="start" data-title="Before you start" data-num="0">
+      <div class="step-head">
+        <div class="step-badge">0</div>
+        <div>
+          <h2>Before you start</h2>
+          <div class="step-meta">5 minutes · read this once</div>
+        </div>
+      </div>
+
+      <h3>What you are building</h3>
+      <p>FlowDesk is an app you use in your web browser. It has two parts:</p>
+      <ul>
+        <li><b>The database</b>, which holds your tickets, users, comments and files, and handles signing in. It always lives in <b>Supabase</b>, a free online service. Both setup paths use it.</li>
+        <li><b>The FlowDesk app</b>, the screens you click around in. <b>You choose where it runs</b>: online, or on your own computer.</li>
+      </ul>
+
+      <h3 id="choose">Choose how you'll run FlowDesk</h3>
+      <p>Pick the path that fits you. The guide then shows only the steps for that path. You can change your choice at any time with the switcher at the top of the contents list.</p>
+      <div class="chooser" role="group" aria-label="Choose your setup path">
+        <button type="button" class="path-card" data-choose="online" aria-pressed="false">
+          <span class="pc-top"><span class="pc-title">Online</span><span class="path-tag online">Supabase + Vercel</span></span>
+          <span class="pc-sub">Your FlowDesk gets its own web address that your whole team can open from anywhere.</span>
+          <ul>
+            <li>Best for real use by a team</li>
+            <li>Always on, nothing to install</li>
+            <li>Needs free GitHub, Supabase and Vercel accounts</li>
+          </ul>
+          <span class="pc-pick">Choose online</span>
+        </button>
+        <button type="button" class="path-card" data-choose="local" aria-pressed="false">
+          <span class="pc-top"><span class="pc-title">On my computer</span><span class="path-tag local">Supabase + localhost</span></span>
+          <span class="pc-sub">FlowDesk runs on your own computer at <code>http://localhost:5173</code>. Nothing is published on the internet.</span>
+          <ul>
+            <li>Best for trying it out, one person, or developers</li>
+            <li>Runs only while your computer is on and FlowDesk is started</li>
+            <li>Needs a free Supabase account and a free install (Node.js)</li>
+          </ul>
+          <span class="pc-pick">Choose my computer</span>
+        </button>
+      </div>
+      <p class="chooser-foot">Not sure yet? <button type="button" data-choose="">Show both paths</button>, or start with <b>On my computer</b>. You can move to online later without losing anything, because both paths use the same Supabase database.</p>
+
+      <div class="table-wrap"><table>
+        <tr><th></th><th>Online <small>(Vercel)</small></th><th>On my computer <small>(localhost)</small></th></tr>
+        <tr><td><b>Who can use it</b></td><td>Anyone you invite, from any device, at your web address</td><td>Only people using this computer, at <code>http://localhost:5173</code></td></tr>
+        <tr><td><b>When it's available</b></td><td>All the time</td><td>Only while your computer is on and FlowDesk is running</td></tr>
+        <tr><td><b>Accounts needed</b></td><td>GitHub, Supabase, Vercel (all free)</td><td>Supabase only (free)</td></tr>
+        <tr><td><b>Software to install</b></td><td>None</td><td>Node.js (free); Visual Studio Code recommended</td></tr>
+        <tr><td><b>Getting updates</b></td><td>One click on GitHub; the website rebuilds itself</td><td>Download the new version and restart it</td></tr>
+        <tr><td><b>Time to set up</b></td><td>About 45 minutes</td><td>About 40 minutes</td></tr>
+      </table></div>
+
+      <div data-path="online">
+        <div class="diagram" role="img" aria-label="Online path: GitHub holds the code, Vercel builds it into a website, and your team opens it">
+          <div class="node"><b>GitHub</b><span>Holds <em>your own copy</em> of the FlowDesk code</span></div>
+          <div class="arrow"><span class="ar">→</span><small>code</small></div>
+          <div class="node"><b>Vercel</b><span>Turns the code into a website with its own web address</span></div>
+          <div class="arrow"><span class="ar">→</span><small>visits</small></div>
+          <div class="node"><b>Your team's browsers</b><span>People open the web address and sign in</span></div>
+        </div>
+        <div class="diagram-foot"><span class="path-tag online">Online</span> <b>Supabase</b> sits behind the website. It stores the data and handles signing in.</div>
+      </div>
+      <div data-path="local">
+        <div class="diagram" role="img" aria-label="On my computer path: the code is downloaded to your computer, runs there, and you open it in your browser">
+          <div class="node"><b>The code</b><span>Downloaded from GitHub to a folder on your computer</span></div>
+          <div class="arrow"><span class="ar">→</span><small>runs</small></div>
+          <div class="node"><b>Your computer</b><span>Runs FlowDesk with one command: <code>npm run dev</code></span></div>
+          <div class="arrow"><span class="ar">→</span><small>opens</small></div>
+          <div class="node"><b>Your browser</b><span>At <code>http://localhost:5173</code>, on this computer</span></div>
+        </div>
+        <div class="diagram-foot"><span class="path-tag local">On my computer</span> <b>Supabase</b> still stores the data online, so it's safe even if your computer is switched off.</div>
+      </div>
+
+      <h3>What you need</h3>
+      <ul>
+        <li>A computer (Windows or Mac) with <b>Chrome, Edge, Firefox or Safari</b>. A phone or tablet is not enough for setup.</li>
+        <li>An <b>email address</b> you can open right now (for confirmation codes).</li>
+        <li>A safe place to save passwords and a few values: a <b>password manager</b>, or at least a private text note. You will be told exactly what to save.</li>
+        <li data-path="local"><span class="path-tag local">On my computer</span> Permission to install free software on this computer (Node.js).</li>
+      </ul>
+
+      <h3>Tips that prevent most mistakes</h3>
+      <ul>
+        <li><b>Keep this guide open in its own tab.</b> Links in this guide open in a new tab, so you won't lose your place.</li>
+        <li><b>Words in a <span class="ui">shaded box</span></b> are buttons, links or menu items to click on screen.</li>
+        <li><b>A path like <span class="path">Authentication<span class="sep">›</span>Sign In / Providers</span></b> means: click <span class="ui">Authentication</span>, then click <span class="ui">Sign In / Providers</span>.</li>
+        <li><b>Green "You should see" boxes</b> tell you what success looks like. If you don't see it, stop and check the step again, or go to <a href="#troubleshooting">Troubleshooting</a>.</li>
+        <li>Websites change their look from time to time. If a button has moved or been renamed slightly, look for the same words nearby.</li>
+        <li>Tick <b>"I've finished this step"</b> at the end of each step. Your progress is saved in this browser.</li>
+      </ul>
+
+      <h3>The journey at a glance</h3>
+      <ul class="glance">
+        <li data-path="online"><b>1. GitHub</b><span>Account + your copy of the code · 10 min</span></li>
+        <li data-path="local"><b>1. Download</b><span>Get the code, no account needed · 5 min</span></li>
+        <li><b>2. Supabase</b><span>Account + new project · 5 min</span></li>
+        <li><b>3. Database</b><span>Run two scripts · 5 min</span></li>
+        <li><b>4. Edge Function</b><span>Paste and deploy one file · 5 min</span></li>
+        <li><b>5. Sign-ups off</b><span>One switch · 1 min</span></li>
+        <li><b>6. Copy keys</b><span>Two values · 2 min</span></li>
+        <li data-path="online"><b>7. Vercel</b><span>Account + deploy the website · 10 min</span></li>
+        <li data-path="local"><b>7. Run it</b><span>Install Node.js + start FlowDesk · 10 min</span></li>
+        <li><b>8. Connect</b><span>Tell Supabase your address · 2 min</span></li>
+        <li><b>9. First sign-in</b><span>Choose your admin password · 2 min</span></li>
+        <li><b>10. Set up</b><span>Branches, products, your team</span></li>
+      </ul>
+
+      <div class="done-row">
+        <label class="done-check"><input type="checkbox" data-step="start"> I've finished this step</label>
+        <a class="next-link" href="#worksheet">Next: your worksheet ↓</a>
+      </div>
+    </section>
+
+    <!-- ===================== Worksheet ===================== -->
+    <section class="card worksheet" id="worksheet" data-title="Your worksheet" data-num="✎">
+      <div class="step-head">
+        <div class="step-badge alt">✎</div>
+        <div>
+          <h2>Your worksheet (fill in as you go)</h2>
+          <div class="step-meta">Optional, but it makes the rest of the guide much easier</div>
+        </div>
+      </div>
+      <p>As you go through the steps you will get a few values. Type them here and this guide fills them into every instruction and link for you, so you can copy exact web addresses instead of editing them by hand. <span class="v">Highlighted yellow text</span> in this guide is a placeholder waiting for one of these values.</p>
+
+      <p data-path="local"><span class="path-tag local">On my computer</span> You only need the <b>Supabase project ref</b>. Your FlowDesk address is always <code>http://localhost:5173</code>.</p>
+      <div class="field" data-path="online">
+        <label for="f-gh">Your GitHub username <span style="font-weight:400;color:var(--text-3)">(from step 1)</span></label>
+        <div class="hint">Example: <code>janesmith</code></div>
+        <input id="f-gh" type="text" autocomplete="off" spellcheck="false" placeholder="your-github-username">
+        <div class="status" data-status="gh"></div>
+      </div>
+      <div class="field">
+        <label for="f-ref">Your Supabase project ref <span style="font-weight:400;color:var(--text-3)">(from step 2)</span></label>
+        <div class="hint">20 lowercase letters and numbers. You can also paste your Supabase project's address and the ref is picked out automatically.</div>
+        <input id="f-ref" type="text" autocomplete="off" spellcheck="false" placeholder="abcdefghijklmnopqrst">
+        <div class="status" data-status="ref"></div>
+      </div>
+      <div class="field" data-path="online">
+        <label for="f-vc">Your Vercel website address <span style="font-weight:400;color:var(--text-3)">(from step 7)</span></label>
+        <div class="hint">The short address listed under <b>Domains</b> on your Vercel project, for example <code>https://your-project.vercel.app</code></div>
+        <input id="f-vc" type="text" autocomplete="off" spellcheck="false" placeholder="https://your-project.vercel.app">
+        <div class="status" data-status="vc"></div>
+      </div>
+
+      <div class="callout danger">
+        <span class="callout-title">Never type passwords or secret keys here</span>
+        Your database password and your FlowDesk password belong in your password manager, not in this page. The values above are not secret. They are saved only in this browser, on this computer.
+      </div>
+    </section>
+
+    <!-- ===================== Step 1 ===================== -->
+    <section class="card" id="step1" data-title="GitHub: get your copy of the code" data-num="1" data-path="online">
+      <div class="step-head">
+        <div class="step-badge">1</div>
+        <div>
+          <h2>GitHub: create an account and get your own copy of the code</h2>
+          <div class="step-meta">10 minutes · <a href="https://github.com" target="_blank" rel="noopener">github.com</a></div>
+          <span class="path-tag online">Online path</span>
+        </div>
+      </div>
+
+      <p><b>What is GitHub?</b> A website that stores code. The FlowDesk code lives there. You will make your <b>own copy</b> of it (called a <b>fork</b>). Vercel will build your website from your copy in step 7.</p>
+
+      <h3>1.1 Create a free GitHub account</h3>
+      <p>Already have one? Sign in and skip to 1.2.</p>
+      <ol class="steps">
+        <li>Open <a href="https://github.com/signup" target="_blank" rel="noopener">github.com/signup</a>.</li>
+        <li>Enter your <b>email</b>, create a <b>password</b>, and choose a <b>username</b> (letters, numbers and single hyphens, for example <code>janesmith</code>). <b>Write the username in the <a href="#worksheet">worksheet</a>.</b></li>
+        <li>Click <span class="ui">Continue</span> / <span class="ui">Create account</span> and complete the "verify you're human" puzzle if one appears.</li>
+        <li>GitHub emails you a code. Open your email, copy the code and type it into GitHub.</li>
+        <li>If GitHub asks questions about you or your team, you can answer them or click <span class="ui">Skip personalization</span>. Choose the <b>Free</b> plan if asked.</li>
+      </ol>
+      <div class="callout check"><span class="callout-title">You should see</span>Your GitHub home page (the "Dashboard"), with your profile picture in the top-right corner.</div>
+
+      <h3>1.2 Fork the FlowDesk repository (make your own copy)</h3>
+      <p>A <b>repository</b> ("repo") is a project folder on GitHub. <b>Forking</b> copies it into your account.</p>
+      <ol class="steps">
+        <li>While signed in, open <a href="https://github.com/JeffTarlton/FlowDesk-Public" target="_blank" rel="noopener">github.com/JeffTarlton/FlowDesk-Public</a>.</li>
+        <li>Near the top-right of the page, click <span class="ui">Fork</span> (it has an icon like a branching "Y").</li>
+        <li>On the <b>Create a new fork</b> page:
+          <ul>
+            <li><b>Owner</b>: your username (already selected).</li>
+            <li><b>Repository name</b>: leave it as <code>FlowDesk-Public</code>.</li>
+            <li>Leave <b>Copy the <code>main</code> branch only</b> ticked.</li>
+          </ul>
+        </li>
+        <li>Click <span class="ui">Create fork</span> and wait a few seconds.</li>
+      </ol>
+      <div class="callout check"><span class="callout-title">You should see</span>A page whose address is <code>https://github.com/<span class="v" data-v="gh">YOUR-USERNAME</span>/FlowDesk-Public</code>, with the words <b>"forked from JeffTarlton/FlowDesk-Public"</b> under the name. This is <b>your copy</b>. From now on, "your fork" means this page.</div>
+
+      <h3>1.3 Optional: download the code to your computer</h3>
+      <p>You <b>don't need</b> to download anything for this guide. In steps 3 and 4 you will copy files directly from your fork on GitHub. If you'd like a copy on your computer anyway:</p>
+      <ol class="steps">
+        <li>On your fork's page, click the green <span class="ui">&lt;&gt; Code</span> button.</li>
+        <li>Click <span class="ui">Download ZIP</span>.</li>
+        <li>Find the downloaded <code>FlowDesk-Public-main.zip</code> (usually in your <b>Downloads</b> folder). On Windows, right-click it and choose <span class="ui">Extract All…</span>. On a Mac, double-click it.</li>
+      </ol>
+      <div class="callout note">Want a copy running on your own computer as well, or to use the command line? See <a href="#appendix-a">Appendix A</a> after you finish the main steps. It isn't needed to get your website live.</div>
+
+      <h3>How to find a file in your fork</h3>
+      <p>You will need this in steps 3 and 4. Files are organised in folders, just like on your computer:</p>
+      <ol class="steps">
+        <li>On your fork's main page, you'll see a list of folders and files. Click a folder name (for example <code>supabase</code>) to open it.</li>
+        <li>Keep clicking folder names until you reach the file, then click the file name to open it.</li>
+        <li>To copy a whole file, click the <span class="ui">Copy raw file</span> button above the file's contents, on the right. It looks like two overlapping squares ⧉. A small "Copied!" message confirms it.</li>
+      </ol>
+
+      <div class="done-row">
+        <label class="done-check"><input type="checkbox" data-step="step1"> I've finished this step</label>
+        <a class="next-link" href="#step2">Next: Supabase ↓</a>
+      </div>
+    </section>
+
+    <!-- ===================== Step 1 (local) ===================== -->
+    <section class="card" id="step1-local" data-title="Download the code" data-num="1" data-path="local">
+      <div class="step-head">
+        <div class="step-badge">1</div>
+        <div>
+          <h2>Download the FlowDesk code to your computer</h2>
+          <div class="step-meta">5 minutes · no GitHub account needed</div>
+          <span class="path-tag local">On my computer path</span>
+        </div>
+      </div>
+
+      <p>The FlowDesk code is stored on <b>GitHub</b>, a website for sharing code. Anyone can download it, and you don't need a GitHub account for this path.</p>
+
+      <h3>1.1 Download the ZIP file</h3>
+      <ol class="steps">
+        <li>Open <a href="https://github.com/JeffTarlton/FlowDesk-Public" target="_blank" rel="noopener">github.com/JeffTarlton/FlowDesk-Public</a>.</li>
+        <li>Click the green <span class="ui">&lt;&gt; Code</span> button, then <span class="ui">Download ZIP</span>.</li>
+        <li>Your browser saves <code>FlowDesk-Public-main.zip</code>, usually in your <b>Downloads</b> folder.</li>
+      </ol>
+
+      <h3>1.2 Unzip it into your Documents folder</h3>
+      <ol class="steps">
+        <li><b>Windows:</b> right-click the ZIP file and choose <span class="ui">Extract All…</span>. Click <span class="ui">Browse…</span>, choose your <b>Documents</b> folder, and click <span class="ui">Extract</span>.
+          <br><b>Mac:</b> double-click the ZIP file, then drag the new <code>FlowDesk-Public-main</code> folder into your <b>Documents</b> folder.</li>
+        <li>Open <code>Documents › FlowDesk-Public-main</code>. You should see folders such as <code>src</code> and <code>supabase</code>, and a file called <code>package.json</code>.</li>
+      </ol>
+      <div class="callout warn">
+        <span class="callout-title">A folder inside a folder?</span>
+        On Windows, unzipping sometimes creates <code>FlowDesk-Public-main</code> <b>inside</b> another <code>FlowDesk-Public-main</code>. The one you want is the folder that directly contains <code>package.json</code>. You'll open that folder in step 7.
+      </div>
+      <div class="callout check"><span class="callout-title">You should see</span>A <code>FlowDesk-Public-main</code> folder in <b>Documents</b> that contains <code>package.json</code>, <code>src</code> and <code>supabase</code>.</div>
+
+      <div class="callout note">
+        <span class="callout-title">Already use Git?</span>
+        You can clone instead: <code>git clone https://github.com/JeffTarlton/FlowDesk-Public.git</code>. The folder is then called <code>FlowDesk-Public</code>, and later updates are a simple <code>git pull</code>.
+      </div>
+
+      <div class="done-row">
+        <label class="done-check"><input type="checkbox" data-step="step1local"> I've finished this step</label>
+        <a class="next-link" href="#step2">Next: Supabase ↓</a>
+      </div>
+    </section>
+
+    <!-- ===================== Step 2 ===================== -->
+    <section class="card" id="step2" data-title="Supabase: create a project" data-num="2">
+      <div class="step-head">
+        <div class="step-badge">2</div>
+        <div>
+          <h2>Supabase: create an account and a project</h2>
+          <div class="step-meta">5 minutes · <a href="https://supabase.com" target="_blank" rel="noopener">supabase.com</a></div>
+        </div>
+      </div>
+
+      <p><b>What is Supabase?</b> The service that stores FlowDesk's data and handles signing in. A <b>project</b> is one database with everything around it. You'll create one project for FlowDesk.</p>
+
+      <h3>2.1 Create a free Supabase account</h3>
+      <ol class="steps">
+        <li>Open <a href="https://supabase.com/dashboard/sign-up" target="_blank" rel="noopener">supabase.com/dashboard/sign-up</a>.</li>
+        <li>Click <span class="ui">Continue with GitHub</span>. This is the easiest option because you're already signed in to GitHub.</li>
+        <li>GitHub asks whether to let Supabase use your account. Click <span class="ui">Authorize supabase</span>.</li>
+      </ol>
+      <p data-path="local"><span class="path-tag local">On my computer</span> No GitHub account? Sign up with your <b>email and a password</b> on the same page instead. Supabase emails you a confirmation link: open it, then sign in.</p>
+
+      <h3>2.2 Create an organization (first time only)</h3>
+      <p>Supabase may ask you to create an <b>organization</b> first. It is just a folder for your projects.</p>
+      <ol class="steps">
+        <li><b>Name</b>: anything, for example your company name or your own name.</li>
+        <li><b>Type</b>: <b>Personal</b> is fine.</li>
+        <li><b>Plan</b>: <b>Free - $0/month</b>.</li>
+        <li>Click <span class="ui">Create organization</span>.</li>
+      </ol>
+
+      <h3>2.3 Create the project</h3>
+      <ol class="steps">
+        <li>If the new-project form isn't already open, click <span class="ui">New project</span> (or open <a href="https://database.new" target="_blank" rel="noopener">database.new</a>).</li>
+        <li>Fill in the form:
+          <div class="table-wrap"><table>
+            <tr><th>Field</th><th>What to enter</th></tr>
+            <tr><td><b>Organization</b></td><td>The one you just created.</td></tr>
+            <tr><td><b>Project name</b></td><td><code>flowdesk</code> (or anything you like).</td></tr>
+            <tr><td><b>Database password</b></td><td>Click <span class="ui">Generate a password</span>, then <b>copy it and save it in your password manager now</b>. You won't normally need it, but you can't view it again later.</td></tr>
+            <tr><td><b>Region</b></td><td>The location closest to the people who will use FlowDesk. <b>This can't be changed later.</b></td></tr>
+            <tr><td>Anything else (security, Data API, advanced options)</td><td><b>Leave the defaults.</b> FlowDesk needs the Data API switched on, which is the default. An option to automatically expose new tables can stay unticked: FlowDesk grants access to its own tables itself.</td></tr>
+          </table></div>
+        </li>
+        <li>Click <span class="ui">Create new project</span>.</li>
+        <li>Wait one or two minutes while Supabase sets it up. Don't close the tab.</li>
+      </ol>
+      <div class="callout check"><span class="callout-title">You should see</span>Your project's home page, with a menu down the left side (Table Editor, SQL Editor, Authentication, Edge Functions and so on).</div>
+
+      <h3>2.4 Find your project ref</h3>
+      <p>Every Supabase project has a <b>project ref</b>: a random-looking ID of 20 lowercase letters and numbers. You'll use it several times.</p>
+      <ol class="steps">
+        <li>Look at your browser's address bar. It shows something like <code>supabase.com/dashboard/project/<b>abcdefghijklmnopqrst</b></code>.</li>
+        <li>The part after <code>/project/</code> is your project ref. (It is also shown as <b>Project ID</b> under <span class="path">Project Settings<span class="sep">›</span>General</span>.)</li>
+        <li><b>Copy the whole address and paste it into the <a href="#worksheet">worksheet</a></b>. The ref is picked out automatically.</li>
+      </ol>
+
+      <div class="callout warn">
+        <span class="callout-title">Free projects go to sleep</span>
+        Supabase pauses free projects after about <b>one week with no activity</b>. When that happens, FlowDesk looks broken (pages stay empty or sign-in fails). The fix: open the Supabase dashboard and click <span class="ui">Resume project</span> (or <span class="ui">Restore</span>). Regular use keeps it awake.
+      </div>
+
+      <div class="done-row">
+        <label class="done-check"><input type="checkbox" data-step="step2"> I've finished this step</label>
+        <a class="next-link" href="#step3">Next: build the database ↓</a>
+      </div>
+    </section>
+
+    <!-- ===================== Step 3 ===================== -->
+    <section class="card" id="step3" data-title="Build the database (2 scripts)" data-num="3">
+      <div class="step-head">
+        <div class="step-badge">3</div>
+        <div>
+          <h2>Build the database: run the two scripts</h2>
+          <div class="step-meta">5 minutes · in the Supabase dashboard</div>
+        </div>
+      </div>
+
+      <p>FlowDesk's database is described in two script files (SQL files) that come with the code. You'll paste each one into Supabase's <b>SQL Editor</b> and click Run. <b>Order matters: script 1 first, then script 2.</b></p>
+      <p data-path="local"><span class="path-tag local">On my computer</span> The instructions below copy the files from GitHub, which works without an account. If you prefer, open the same files from your downloaded folder instead (<code>supabase › migrations</code>) in Visual Studio Code or Notepad, select everything and copy it.</p>
+
+      <div class="table-wrap"><table>
+        <tr><th>Order</th><th>File (folder <code>supabase/migrations/</code>)</th><th>What it does</th></tr>
+        <tr><td><b>1</b></td><td><code>20260926000000_flowdesk_schema.sql</code></td><td>Creates all of FlowDesk's tables, security rules, file storage and default settings. Long file (about 1,900 lines).</td></tr>
+        <tr><td><b>2</b></td><td><code>20260926000100_seed_admin.sql</code></td><td>Creates the first account you'll sign in with: <code>admin@flowdesk.com</code>.</td></tr>
+      </table></div>
+
+      <h3>3.1 Run script 1: the schema</h3>
+      <ol class="steps">
+        <li>In a new tab, open the code on GitHub (<span data-path="online">your fork</span><span data-path="local">the FlowDesk repository</span>), then open the folder <code>supabase</code>, then <code>migrations</code>, then click <code>20260926000000_flowdesk_schema.sql</code>.
+          <br><a class="shortcut" data-link="fileSchema" href="#" target="_blank" rel="noopener">Open script 1 on GitHub</a>
+        </li>
+        <li>Click the <span class="ui">Copy raw file</span> button ⧉ (top-right of the file contents). You've now copied the whole file.
+          <br><small style="color:var(--text-3)">Can't find it? Click <span class="ui">Raw</span> instead, press <kbd>Ctrl</kbd>+<kbd>A</kbd> (Mac: <kbd>⌘</kbd>+<kbd>A</kbd>) to select everything, then <kbd>Ctrl</kbd>+<kbd>C</kbd> (Mac: <kbd>⌘</kbd>+<kbd>C</kbd>) to copy.</small>
+        </li>
+        <li>Go back to your Supabase project. In the left menu, click <span class="ui">SQL Editor</span>. Start a new, empty query with the <span class="ui">+</span> / <span class="ui">New query</span> button.
+          <br><a class="shortcut needs-ref" data-link="sql" href="#" target="_blank" rel="noopener">Open a new SQL query</a>
+        </li>
+        <li>Click inside the empty editor and paste: <kbd>Ctrl</kbd>+<kbd>V</kbd> (Mac: <kbd>⌘</kbd>+<kbd>V</kbd>).</li>
+        <li><b>Click once in the editor so no text is highlighted.</b> (If some text is highlighted, only that part runs.)</li>
+        <li>Click <span class="ui">Run</span> (bottom-right), or press <kbd>Ctrl</kbd>+<kbd>Enter</kbd> (Mac: <kbd>⌘</kbd>+<kbd>Enter</kbd>).</li>
+        <li>If a pop-up warns that the query has <b>"destructive operations"</b>, confirm and run it anyway. That's expected: the script replaces its own settings so it can safely be run again. It does not delete any data.</li>
+      </ol>
+      <div class="callout check"><span class="callout-title">You should see</span><b>Success. No rows returned</b> in the results panel under the editor, after a few seconds.</div>
+
+      <h3>3.2 Run script 2: the admin account</h3>
+      <ol class="steps">
+        <li>On GitHub, go back to the <code>supabase/migrations</code> folder and open <code>20260926000100_seed_admin.sql</code>. Click <span class="ui">Copy raw file</span> ⧉.
+          <br><a class="shortcut" data-link="fileSeed" href="#" target="_blank" rel="noopener">Open script 2 on GitHub</a>
+        </li>
+        <li>In Supabase's SQL Editor, start <b>another new query</b> (<span class="ui">+</span> / <span class="ui">New query</span>). Don't paste it after script 1.</li>
+        <li>Paste, make sure nothing is highlighted, and click <span class="ui">Run</span>.</li>
+      </ol>
+      <div class="callout check"><span class="callout-title">You should see</span>A success message (for example <b>Success. No rows returned</b>).</div>
+
+      <h3>3.3 Check that it worked</h3>
+      <p>Start one more new query, paste the line below, and click <span class="ui">Run</span>:</p>
+      <div class="code"><button class="copy" type="button">Copy</button><pre><code>select email, role, is_active, force_password_reset from public.profiles;</code></pre></div>
+      <div class="callout check"><span class="callout-title">You should see</span>Exactly one row: <code>admin@flowdesk.com</code> · <code>admin</code> · <code>true</code> · <code>true</code>.</div>
+
+      <div class="callout note">
+        <span class="callout-title">Made a mistake? Just run it again</span>
+        Both scripts are safe to run more than once. If script 1 showed an error, make sure you copied the <b>whole</b> file (it's long) into a fresh, empty query, and run it again. Then run script 2. If you ran script 2 first, simply run script 1 and then script 2 again.
+      </div>
+
+      <div class="done-row">
+        <label class="done-check"><input type="checkbox" data-step="step3"> I've finished this step</label>
+        <a class="next-link" href="#step4">Next: the Edge Function ↓</a>
+      </div>
+    </section>
+
+    <!-- ===================== Step 4 ===================== -->
+    <section class="card" id="step4" data-title="Deploy the admin-actions function" data-num="4">
+      <div class="step-head">
+        <div class="step-badge">4</div>
+        <div>
+          <h2>Deploy the <code>admin-actions</code> Edge Function</h2>
+          <div class="step-meta">5 minutes · in the Supabase dashboard · <b>required</b></div>
+        </div>
+      </div>
+
+      <p><b>What is this?</b> A small piece of code that runs inside Supabase and does the few jobs the website isn't allowed to do on its own, like creating user accounts and changing passwords. <b>Without it, nobody can finish signing in for the first time</b>, including you.</p>
+
+      <h3>4.1 Copy the function code</h3>
+      <ol class="steps">
+        <li>On GitHub (or in your downloaded folder), open the folder <code>supabase</code>, then <code>functions</code>, then <code>admin-actions</code>, then click <code>index.ts</code>.
+          <br><a class="shortcut" data-link="fileFn" href="#" target="_blank" rel="noopener">Open index.ts on GitHub</a>
+        </li>
+        <li>Click <span class="ui">Copy raw file</span> ⧉.</li>
+      </ol>
+
+      <h3>4.2 Create the function in Supabase</h3>
+      <ol class="steps">
+        <li>In your Supabase project's left menu, click <span class="ui">Edge Functions</span>.
+          <br><a class="shortcut needs-ref" data-link="functions" href="#" target="_blank" rel="noopener">Open Edge Functions</a>
+        </li>
+        <li>Click <span class="ui">Deploy a new function</span>, then choose <span class="ui">Via Editor</span>.</li>
+        <li>The editor opens with some example code. Click inside it, select everything with <kbd>Ctrl</kbd>+<kbd>A</kbd> (Mac: <kbd>⌘</kbd>+<kbd>A</kbd>) and press <kbd>Delete</kbd>, so the editor is completely empty.</li>
+        <li>Paste the code you copied: <kbd>Ctrl</kbd>+<kbd>V</kbd> (Mac: <kbd>⌘</kbd>+<kbd>V</kbd>).</li>
+        <li>Find the <b>function name</b> box (next to the deploy button). Delete whatever name is there and type exactly:
+          <div class="code"><button class="copy" type="button">Copy</button><pre><code>admin-actions</code></pre></div>
+          All lowercase, with a hyphen, no spaces. <b>The name can't be changed later</b>, so double-check it.
+        </li>
+        <li>Click <span class="ui">Deploy function</span> and wait for the success message.</li>
+      </ol>
+
+      <h3>4.3 Turn off "Verify JWT" (important)</h3>
+      <p>The function checks who is calling it by itself, so Supabase's built-in check must be switched off. If it stays on, it can block real users.</p>
+      <ol class="steps">
+        <li>Open your new <code>admin-actions</code> function (click its name in the Edge Functions list) and go to its <span class="ui">Details</span> tab.</li>
+        <li>Under <b>Function configuration</b>, turn <b>OFF</b> the switch called <b>Verify JWT with legacy secret</b> (it may just say <b>Enforce JWT Verification</b> or <b>Verify JWT</b>).</li>
+        <li>Click <span class="ui">Save changes</span>.</li>
+      </ol>
+
+      <h3>4.4 Check that it works</h3>
+      <p>Open this address in a new browser tab:</p>
+      <div class="code"><button class="copy" type="button">Copy</button><pre><code>https://<span class="v" data-v="ref">YOUR-PROJECT-REF</span>.supabase.co/functions/v1/admin-actions</code></pre></div>
+      <p><a class="shortcut needs-ref" data-link="fnCheck" href="#" target="_blank" rel="noopener">Open the check address</a><span class="no-ref" style="font-size:14px;color:var(--text-3)">Fill in your project ref in the <a href="#worksheet">worksheet</a> to get a clickable link here.</span></p>
+      <div class="table-wrap"><table>
+        <tr><th>The page shows</th><th>What it means</th></tr>
+        <tr><td><code>{"error":"Method not allowed"}</code></td><td><b style="color:var(--ok)">Perfect.</b> The function is deployed and set up correctly. (Yes, an "error" is the good result here.)</td></tr>
+        <tr><td>A message such as <code>Missing authorization header</code> or <code>Invalid JWT</code></td><td>Deployed, but "Verify JWT" is still <b>on</b>. Repeat 4.3.</td></tr>
+        <tr><td>"Not found" or "Requested function was not found"</td><td>Not deployed, or deployed with a different name. Repeat 4.2 with the exact name <code>admin-actions</code>, then delete the wrongly named function.</td></tr>
+      </table></div>
+
+      <div class="done-row">
+        <label class="done-check"><input type="checkbox" data-step="step4"> I've finished this step</label>
+        <a class="next-link" href="#step5">Next: turn off sign-ups ↓</a>
+      </div>
+    </section>
+
+    <!-- ===================== Step 5 ===================== -->
+    <section class="card" id="step5" data-title="Turn off public sign-ups" data-num="5">
+      <div class="step-head">
+        <div class="step-badge">5</div>
+        <div>
+          <h2>Turn off public sign-ups</h2>
+          <div class="step-meta">1 minute · in the Supabase dashboard</div>
+        </div>
+      </div>
+      <p>In FlowDesk, only an admin creates accounts. Supabase allows strangers to sign up by default, so switch that off. Creating users from inside FlowDesk keeps working.</p>
+      <ol class="steps">
+        <li>In your Supabase project's left menu, go to <span class="path">Authentication<span class="sep">›</span>Sign In / Providers</span>.
+          <br><a class="shortcut needs-ref" data-link="providers" href="#" target="_blank" rel="noopener">Open Sign In / Providers</a>
+        </li>
+        <li>Find <b>Allow new users to sign up</b> and turn it <b>OFF</b>.</li>
+        <li>Click <span class="ui">Save changes</span>.</li>
+      </ol>
+      <div class="callout warn">Only turn off <b>"Allow new users to sign up"</b>. Leave the <b>Email</b> provider itself switched <b>on</b>, or nobody can sign in.</div>
+
+      <div class="done-row">
+        <label class="done-check"><input type="checkbox" data-step="step5"> I've finished this step</label>
+        <a class="next-link" href="#step6">Next: copy your keys ↓</a>
+      </div>
+    </section>
+
+    <!-- ===================== Step 6 ===================== -->
+    <section class="card" id="step6" data-title="Copy your two Supabase values" data-num="6">
+      <div class="step-head">
+        <div class="step-badge">6</div>
+        <div>
+          <h2>Copy your two Supabase values</h2>
+          <div class="step-meta">2 minutes · in the Supabase dashboard</div>
+        </div>
+      </div>
+      <p>FlowDesk needs two values so it knows which Supabase project to talk to. In the next step you'll paste them <span data-path="online">into Vercel</span><span data-path="local">into a small settings file on your computer</span>.</p>
+
+      <h3>Value 1: the Project URL</h3>
+      <p>It's your project ref inside a web address:</p>
+      <div class="code"><button class="copy" type="button">Copy</button><pre><code>https://<span class="v" data-v="ref">YOUR-PROJECT-REF</span>.supabase.co</code></pre></div>
+      <p>If you filled in the worksheet, the box above already shows your real Project URL. You can double-check it with the <span class="ui">Connect</span> button at the top of your project (or under <span class="path">Integrations<span class="sep">›</span>Data API</span>).</p>
+
+      <h3>Value 2: the publishable key</h3>
+      <ol class="steps">
+        <li>In the left menu, open <span class="path">Project Settings</span> (the gear icon at the bottom), then <span class="ui">API Keys</span>.
+          <br><a class="shortcut needs-ref" data-link="apiKeys" href="#" target="_blank" rel="noopener">Open API Keys</a>
+        </li>
+        <li>Find the <b>Publishable key</b>. It starts with <code>sb_publishable_</code>. Click its copy button.</li>
+        <li>Paste it into your private note for a moment. It's not a secret, but you'll need it in step 7.</li>
+      </ol>
+      <p style="font-size:14.5px;color:var(--text-2)">Only see "anon" and "service_role" keys? Your project uses the older key style. Use the <b>anon</b> (<b>public</b>) key instead, a long value starting with <code>eyJ</code>. It works the same way.</p>
+
+      <div class="callout danger">
+        <span class="callout-title">Never use the secret key</span>
+        On the same page there is a <b>secret key</b> (<code>sb_secret_…</code>) and possibly a <b>service_role</b> key. <b>Never</b> copy either of those into Vercel, into <code>.env.local</code>, or anywhere else in FlowDesk. Anything you give the website can be read by everyone who visits it, and a secret key would give them full control of your database.
+      </div>
+
+      <div class="done-row">
+        <label class="done-check"><input type="checkbox" data-step="step6"> I've finished this step</label>
+        <a class="next-link" href="#step7" data-path="online">Next: deploy on Vercel ↓</a>
+        <a class="next-link" href="#step7-local" data-path="local">Next: run it on your computer ↓</a>
+      </div>
+    </section>
+
+    <!-- ===================== Step 7 ===================== -->
+    <section class="card" id="step7" data-title="Vercel: deploy the website" data-num="7" data-path="online">
+      <div class="step-head">
+        <div class="step-badge">7</div>
+        <div>
+          <h2>Vercel: create an account and deploy the website</h2>
+          <div class="step-meta">10 minutes · <a href="https://vercel.com" target="_blank" rel="noopener">vercel.com</a></div>
+          <span class="path-tag online">Online path</span>
+        </div>
+      </div>
+      <p><b>What is Vercel?</b> A service that takes the code in your GitHub fork, builds it into a website and puts it online at a web address. Every time your fork changes, Vercel rebuilds the site automatically.</p>
+
+      <h3>7.1 Create a free Vercel account</h3>
+      <ol class="steps">
+        <li>Open <a href="https://vercel.com/signup" target="_blank" rel="noopener">vercel.com/signup</a>.</li>
+        <li>Choose <b>Hobby</b> ("I'm working on personal projects"). It's free. Enter your name if asked and click <span class="ui">Continue</span>.</li>
+        <li>Click <span class="ui">Continue with GitHub</span>, then click <span class="ui">Authorize Vercel</span> on the GitHub page that opens.</li>
+      </ol>
+      <div class="callout note">The Hobby plan is for personal and non-commercial use. If you run FlowDesk for a business, check <a href="https://vercel.com/pricing" target="_blank" rel="noopener">Vercel's pricing</a>.</div>
+
+      <h3>7.2 Import your fork</h3>
+      <ol class="steps">
+        <li>Open <a href="https://vercel.com/new" target="_blank" rel="noopener">vercel.com/new</a> (or click <span class="ui">Add New…</span> › <span class="ui">Project</span>).</li>
+        <li>Under <b>Import Git Repository</b>, find <code>FlowDesk-Public</code> and click <span class="ui">Import</span> next to it.</li>
+        <li><b>Don't see it?</b> Click <span class="ui">Install</span> or <span class="ui">Adjust GitHub App Permissions</span>. On the GitHub page that opens, choose <b>Only select repositories</b>, pick <code>FlowDesk-Public</code>, and click <span class="ui">Install</span> / <span class="ui">Save</span>. You're sent back to Vercel, where it now appears. Click <span class="ui">Import</span>.</li>
+      </ol>
+      <div class="callout warn">You're now on the <b>Configure Project</b> page. <b>Don't click Deploy yet.</b> First do 7.3 and 7.4.</div>
+
+      <h3>7.3 Check the build settings (normally nothing to change)</h3>
+      <div class="table-wrap"><table>
+        <tr><th>Setting</th><th>Should be</th></tr>
+        <tr><td><b>Project Name</b></td><td>Anything lowercase, for example <code>flowdesk</code>. It becomes part of your web address.</td></tr>
+        <tr><td><b>Framework Preset</b></td><td><b>Vite</b></td></tr>
+        <tr><td><b>Root Directory</b></td><td><code>./</code></td></tr>
+        <tr><td><b>Build and Output Settings</b></td><td>Leave as is: build command <code>npm run build</code>, output directory <code>dist</code>.</td></tr>
+      </table></div>
+
+      <h3>7.4 Add the environment variables</h3>
+      <p><b>Environment variables</b> are settings you give the website when it's built. FlowDesk needs exactly two. Open the <span class="ui">Environment Variables</span> section on the same page and add these, one at a time. Type the <b>Key</b> (name) exactly as shown, paste the <b>Value</b>, then click <span class="ui">Add</span>:</p>
+      <div class="table-wrap"><table>
+        <tr><th>Key (copy exactly)</th><th>Value</th></tr>
+        <tr><td><code>VITE_SUPABASE_URL</code></td><td>Your Project URL from step 6: <code>https://<span class="v" data-v="ref">YOUR-PROJECT-REF</span>.supabase.co</code></td></tr>
+        <tr><td><code>VITE_SUPABASE_ANON_KEY</code></td><td>Your publishable key from step 6 (<code>sb_publishable_…</code>, or the older <code>eyJ…</code> anon key)</td></tr>
+      </table></div>
+      <p>Copy-friendly versions of the two names:</p>
+      <div class="code"><button class="copy" type="button">Copy</button><pre><code>VITE_SUPABASE_URL</code></pre></div>
+      <div class="code"><button class="copy" type="button">Copy</button><pre><code>VITE_SUPABASE_ANON_KEY</code></pre></div>
+      <div class="callout warn">
+        <span class="callout-title">Common mistakes to avoid</span>
+        <ul style="margin:4px 0 0">
+          <li>No quotation marks and no spaces, before or after the value.</li>
+          <li>No slash at the end of the URL (<code>.supabase.co</code>, not <code>.supabase.co/</code>).</li>
+          <li>The key name is <code>VITE_SUPABASE_ANON_KEY</code> even if you use the new publishable key. That's correct.</li>
+          <li>If Vercel shows environment checkboxes, keep <b>Production</b> and <b>Preview</b> ticked.</li>
+        </ul>
+      </div>
+
+      <h3>7.5 Deploy</h3>
+      <ol class="steps">
+        <li>Click <span class="ui">Deploy</span>.</li>
+        <li>Wait one to three minutes while Vercel builds the site. Yellow <b>warnings</b> in the build log (for example about "large chunks") are normal and harmless.</li>
+        <li>When you see <b>Congratulations</b> (or a screenshot of the site), click <span class="ui">Continue to Dashboard</span>.</li>
+        <li>On the project page, find <b>Domains</b>. The short address listed there (for example <code>https://your-project.vercel.app</code>) is your website. <b>Write it in the <a href="#worksheet">worksheet</a>.</b>
+          <br><small style="color:var(--text-3)">Vercel also shows longer addresses with random letters in them. Those belong to one specific build. Use the short one under <b>Domains</b>.</small>
+        </li>
+      </ol>
+      <div class="callout check"><span class="callout-title">You should see</span>When you open your website address, the <b>FlowDesk sign-in page</b>. (Don't sign in yet. Do step 8 first.)</div>
+      <div class="callout note">
+        <span class="callout-title">Seeing "FlowDesk isn't configured yet" instead?</span>
+        One of the two environment variables is missing or misspelled. Go to your Vercel project's <span class="path">Settings<span class="sep">›</span>Environment Variables</span>, fix it, then <b>redeploy</b>: open <span class="ui">Deployments</span>, click the <span class="ui">⋯</span> menu on the newest one, and choose <span class="ui">Redeploy</span>. Changes to variables only take effect after a redeploy.
+      </div>
+
+      <div class="done-row">
+        <label class="done-check"><input type="checkbox" data-step="step7"> I've finished this step</label>
+        <a class="next-link" href="#step8">Next: connect Supabase ↓</a>
+      </div>
+    </section>
+
+    <!-- ===================== Step 7 (local) ===================== -->
+    <section class="card" id="step7-local" data-title="Install Node.js & start FlowDesk" data-num="7" data-path="local">
+      <div class="step-head">
+        <div class="step-badge">7</div>
+        <div>
+          <h2>Install Node.js and start FlowDesk on your computer</h2>
+          <div class="step-meta">10 minutes · one-time install</div>
+          <span class="path-tag local">On my computer path</span>
+        </div>
+      </div>
+      <p><b>What is Node.js?</b> Free software that lets your computer run apps like FlowDesk. <b>Visual Studio Code</b> ("VS Code") is a free editor that makes the next steps easy: you'll use it to create one settings file and type two commands.</p>
+
+      <h3>7.1 Install Node.js and VS Code (once)</h3>
+      <ol class="steps">
+        <li>Open <a href="https://nodejs.org" target="_blank" rel="noopener">nodejs.org</a> and download the <b>LTS</b> version (the one recommended for most users). Run the installer and click <span class="ui">Next</span> through it, keeping the default options.</li>
+        <li>Open <a href="https://code.visualstudio.com" target="_blank" rel="noopener">code.visualstudio.com</a>, download VS Code for your computer and install it with the default options.</li>
+      </ol>
+
+      <h3>7.2 Open the FlowDesk folder in VS Code</h3>
+      <ol class="steps">
+        <li>Start VS Code. Click <span class="path">File<span class="sep">›</span>Open Folder…</span> (Mac: <span class="path">File<span class="sep">›</span>Open…</span>).</li>
+        <li>Go to <b>Documents</b>, click the <code>FlowDesk-Public-main</code> folder that contains <code>package.json</code> (step 1.2), and click <span class="ui">Select Folder</span> / <span class="ui">Open</span>.</li>
+        <li>If VS Code asks <b>"Do you trust the authors of the files in this folder?"</b>, click <span class="ui">Yes, I trust the authors</span>.</li>
+      </ol>
+      <div class="callout check"><span class="callout-title">You should see</span>A file list on the left side of VS Code (the <b>Explorer</b>) that includes <code>src</code>, <code>supabase</code> and <code>package.json</code>.</div>
+
+      <h3>7.3 Create your settings file: <code>.env.local</code></h3>
+      <p>This small file tells FlowDesk which Supabase project to use. It stays on your computer.</p>
+      <ol class="steps">
+        <li>In the Explorer on the left, right-click an empty area below the files and choose <span class="ui">New File…</span>.</li>
+        <li>Type the name exactly, including the dot at the start, and press <kbd>Enter</kbd>:
+          <div class="code"><button class="copy" type="button">Copy</button><pre><code>.env.local</code></pre></div>
+        </li>
+        <li>The new, empty file opens. Copy the two lines below and paste them into it:
+          <div class="code"><button class="copy" type="button">Copy</button><pre><code>VITE_SUPABASE_URL=https://<span class="v" data-v="ref">YOUR-PROJECT-REF</span>.supabase.co
+VITE_SUPABASE_ANON_KEY=paste_your_publishable_key_here</code></pre></div>
+        </li>
+        <li>Replace <code>paste_your_publishable_key_here</code> with your publishable key from step 6 (<code>sb_publishable_…</code>). If the first line still shows <code>YOUR-PROJECT-REF</code>, replace that with your project ref too.</li>
+        <li>Save the file: <kbd>Ctrl</kbd>+<kbd>S</kbd> (Mac: <kbd>⌘</kbd>+<kbd>S</kbd>).</li>
+      </ol>
+      <div class="callout warn">
+        <span class="callout-title">Common mistakes to avoid</span>
+        <ul style="margin:4px 0 0">
+          <li>No quotation marks and no spaces around the <code>=</code>.</li>
+          <li>The file name must be exactly <code>.env.local</code>, in the same folder as <code>package.json</code>, not inside <code>src</code>.</li>
+          <li>Use the <b>publishable</b> (or anon) key, never the secret key.</li>
+        </ul>
+      </div>
+
+      <h3>7.4 Open the terminal inside VS Code</h3>
+      <p>A <b>terminal</b> is a panel where you type commands. You'll type two.</p>
+      <ol class="steps">
+        <li>Click <span class="path">Terminal<span class="sep">›</span>New Terminal</span> in the menu at the top. A panel opens at the bottom of VS Code, already inside your FlowDesk folder.</li>
+        <li><b>Windows only:</b> in the terminal panel's top-right corner, click the small <span class="ui">˅</span> next to <span class="ui">+</span> and choose <span class="ui">Command Prompt</span>. (This avoids a Windows security setting that can block the next commands in PowerShell.)</li>
+        <li>Check that Node.js is installed: type this and press <kbd>Enter</kbd>. It should print a version such as <code>v22.12.0</code> (20 or higher is fine).
+          <div class="code"><button class="copy" type="button">Copy</button><pre><code>node -v</code></pre></div>
+          <small style="color:var(--text-3)">Seeing "node is not recognized" or "command not found"? Close VS Code completely, open it again, and retry. If it still fails, reinstall Node.js (7.1).</small>
+        </li>
+      </ol>
+
+      <h3>7.5 Install and start FlowDesk</h3>
+      <ol class="steps">
+        <li>Install FlowDesk's building blocks. This downloads them from the internet and takes one to three minutes. Yellow <b>warnings</b> are normal.
+          <div class="code"><button class="copy" type="button">Copy</button><pre><code>npm install</code></pre></div>
+          You only need to do this once (and again after updating FlowDesk).
+        </li>
+        <li>Start FlowDesk:
+          <div class="code"><button class="copy" type="button">Copy</button><pre><code>npm run dev</code></pre></div>
+        </li>
+        <li>After a few seconds the terminal shows a line like <code>➜ Local: http://localhost:5173/</code>. Open <a href="http://localhost:5173" target="_blank" rel="noopener">http://localhost:5173</a> in your browser. (If it shows a different number, such as <code>5174</code>, use that address instead.)</li>
+      </ol>
+      <div class="callout check"><span class="callout-title">You should see</span>The <b>FlowDesk sign-in page</b> in your browser. (Don't sign in yet. Do step 8 first.)</div>
+      <div class="callout warn">
+        <span class="callout-title">Keep the terminal open</span>
+        FlowDesk runs only while <code>npm run dev</code> is running. Closing VS Code or the terminal, or pressing <kbd>Ctrl</kbd>+<kbd>C</kbd> in it, stops FlowDesk. Step 11 shows how to start it again next time.
+      </div>
+      <div class="callout note">
+        <span class="callout-title">Seeing "FlowDesk isn't configured yet"?</span>
+        Something in <code>.env.local</code> is missing or misspelled; the screen tells you which value. Fix the file and save it, then restart: click the terminal, press <kbd>Ctrl</kbd>+<kbd>C</kbd>, and run <code>npm run dev</code> again. FlowDesk only reads <code>.env.local</code> when it starts.
+      </div>
+
+      <div class="done-row">
+        <label class="done-check"><input type="checkbox" data-step="step7local"> I've finished this step</label>
+        <a class="next-link" href="#step8-local">Next: connect Supabase ↓</a>
+      </div>
+    </section>
+
+    <!-- ===================== Step 8 ===================== -->
+    <section class="card" id="step8" data-title="Tell Supabase your web address" data-num="8" data-path="online">
+      <div class="step-head">
+        <div class="step-badge">8</div>
+        <div>
+          <h2>Tell Supabase your website address</h2>
+          <div class="step-meta">2 minutes · in the Supabase dashboard</div>
+          <span class="path-tag online">Online path</span>
+        </div>
+      </div>
+      <p>This tells Supabase where your FlowDesk lives, so any link it creates points to your site.</p>
+      <ol class="steps">
+        <li>In your Supabase project, go to <span class="path">Authentication<span class="sep">›</span>URL Configuration</span>.
+          <br><a class="shortcut needs-ref" data-link="urlConfig" href="#" target="_blank" rel="noopener">Open URL Configuration</a>
+        </li>
+        <li>In <b>Site URL</b>, replace what's there (usually <code>http://localhost:3000</code>) with your Vercel address, then click <span class="ui">Save changes</span>:
+          <div class="code"><button class="copy" type="button">Copy</button><pre><code><span class="v" data-v="vc">https://your-project.vercel.app</span></code></pre></div>
+        </li>
+        <li>Under <b>Redirect URLs</b>, click <span class="ui">Add URL</span>, paste the line below (your address followed by <code>/**</code>), and save:
+          <div class="code"><button class="copy" type="button">Copy</button><pre><code><span class="v" data-v="vc">https://your-project.vercel.app</span>/**</code></pre></div>
+        </li>
+      </ol>
+      <div class="callout note">If you will also run FlowDesk on your own computer (<a href="#appendix-a">Appendix A</a>), add <code>http://localhost:5173/**</code> as a second Redirect URL.</div>
+
+      <div class="done-row">
+        <label class="done-check"><input type="checkbox" data-step="step8"> I've finished this step</label>
+        <a class="next-link" href="#step9">Next: sign in ↓</a>
+      </div>
+    </section>
+
+    <!-- ===================== Step 8 (local) ===================== -->
+    <section class="card" id="step8-local" data-title="Tell Supabase your local address" data-num="8" data-path="local">
+      <div class="step-head">
+        <div class="step-badge">8</div>
+        <div>
+          <h2>Tell Supabase where FlowDesk runs</h2>
+          <div class="step-meta">2 minutes · in the Supabase dashboard</div>
+          <span class="path-tag local">On my computer path</span>
+        </div>
+      </div>
+      <p>This tells Supabase that your FlowDesk lives at <code>http://localhost:5173</code>, so any link it creates points to your computer.</p>
+      <ol class="steps">
+        <li>In your Supabase project, go to <span class="path">Authentication<span class="sep">›</span>URL Configuration</span>.
+          <br><a class="shortcut needs-ref" data-link="urlConfig" href="#" target="_blank" rel="noopener">Open URL Configuration</a>
+        </li>
+        <li>In <b>Site URL</b>, replace what's there (usually <code>http://localhost:3000</code>) with the address below, then click <span class="ui">Save changes</span>:
+          <div class="code"><button class="copy" type="button">Copy</button><pre><code>http://localhost:5173</code></pre></div>
+        </li>
+        <li>Under <b>Redirect URLs</b>, click <span class="ui">Add URL</span>, paste the line below, and save:
+          <div class="code"><button class="copy" type="button">Copy</button><pre><code>http://localhost:5173/**</code></pre></div>
+        </li>
+      </ol>
+      <div class="callout note">It's <code>http</code>, not <code>https</code>, and the number is <code>5173</code> (not <code>3000</code>).</div>
+
+      <div class="done-row">
+        <label class="done-check"><input type="checkbox" data-step="step8local"> I've finished this step</label>
+        <a class="next-link" href="#step9">Next: sign in ↓</a>
+      </div>
+    </section>
+
+    <!-- ===================== Step 9 ===================== -->
+    <section class="card" id="step9" data-title="First sign-in & new password" data-num="9">
+      <div class="step-head">
+        <div class="step-badge">9</div>
+        <div>
+          <h2>Sign in for the first time and choose your password</h2>
+          <div class="step-meta">2 minutes · in your new FlowDesk</div>
+        </div>
+      </div>
+      <ol class="steps">
+        <li data-path="online">Open your website: <a class="v" data-v="vc" data-href="vc" href="#" target="_blank" rel="noopener">https://your-project.vercel.app</a></li>
+        <li data-path="local">Make sure <code>npm run dev</code> is still running in VS Code (step 7.5), then open <a href="http://localhost:5173" target="_blank" rel="noopener">http://localhost:5173</a>.</li>
+        <li>Sign in with the starter account:
+          <div class="table-wrap"><table>
+            <tr><th>Email</th><th>Password</th></tr>
+            <tr><td><code>admin@flowdesk.com</code></td><td><code>Password2026!</code></td></tr>
+          </table></div>
+        </li>
+        <li>A <b>Set Your Password</b> screen appears. This is expected: the starter password is public, so you must replace it. Choose a new password that:
+          <ul>
+            <li>is at least <b>8 characters</b> long,</li>
+            <li>contains at least <b>1 number</b>,</li>
+            <li>contains at least <b>1 special character</b> from this list: <code>! @ # $ % ^ &amp; * ( ) , . ? " : { } | &lt; &gt;</code> (a hyphen <code>-</code>, underscore <code>_</code> or plus <code>+</code> does <b>not</b> count),</li>
+            <li>is not <code>Password2026!</code>.</li>
+          </ul>
+          Type it in both boxes and <b>save it in your password manager</b>.
+        </li>
+        <li>Click <span class="ui">Save &amp; Continue</span>.</li>
+      </ol>
+      <div class="callout check"><span class="callout-title">You should see</span>"Password updated successfully! Welcome to FlowDesk." and then the <b>Backlog</b> page, with a menu on the left. <b><span data-path="online">Your FlowDesk is live.</span><span data-path="local">FlowDesk is running on your computer.</span></b></div>
+      <div class="callout note">
+        <span class="callout-title">"The admin-actions Edge Function is not deployed or not reachable"?</span>
+        Go back to <a href="#step4">step 4</a> and check it, including the 4.4 test. Nothing was changed, so just try again afterwards.
+      </div>
+      <div class="callout note">
+        <span class="callout-title">"Invalid login credentials"?</span>
+        Check for typos (the password has a capital P and ends with <code>!</code>). If it still fails, script 2 in <a href="#step3">step 3</a> probably didn't run. Run the check in 3.3.
+      </div>
+
+      <div class="done-row">
+        <label class="done-check"><input type="checkbox" data-step="step9"> I've finished this step</label>
+        <a class="next-link" href="#step10">Next: set up your workspace ↓</a>
+      </div>
+    </section>
+
+    <!-- ===================== Step 10 ===================== -->
+    <section class="card" id="step10" data-title="Set up your workspace & team" data-num="10">
+      <div class="step-head">
+        <div class="step-badge">10</div>
+        <div>
+          <h2>Set up your workspace and invite your team</h2>
+          <div class="step-meta">15 minutes · inside FlowDesk · use a computer, not a phone</div>
+        </div>
+      </div>
+      <p>Everything below is in the <span class="ui">Admin Panel</span>, at the bottom of FlowDesk's left menu. Do it in this order, because each part is used by the next.</p>
+
+      <h3>10.1 Branches</h3>
+      <p>A branch is a location, office or customer site that tickets belong to.</p>
+      <ol class="steps">
+        <li><span class="path">Admin Panel<span class="sep">›</span>Branches</span> › <span class="ui">Add Branch</span>.</li>
+        <li><b>Branch ID</b>: a short code such as <code>HQ</code> (can't be changed later). <b>Branch Name</b>: for example <code>Headquarters</code>.</li>
+        <li>Click <span class="ui">Create Branch</span>.</li>
+      </ol>
+
+      <h3>10.2 Products</h3>
+      <p>What your tickets are about: an app, a service, a product line.</p>
+      <ol class="steps">
+        <li><span class="path">Admin Panel<span class="sep">›</span>Products</span> › <span class="ui">Add Product</span>.</li>
+        <li>Enter a <b>Name</b>, an optional description, pick a color, and click <span class="ui">Create Product</span>.</li>
+      </ol>
+
+      <h3>10.3 SLA targets and approval gates</h3>
+      <ul>
+        <li><span class="path">Admin Panel<span class="sep">›</span>SLA</span>: how many hours your team has to respond to and resolve tickets of each priority. The defaults are sensible. Edit with the pencil icon.</li>
+        <li><span class="path">Admin Panel<span class="sep">›</span>Gates</span>: status changes that need an approval first. Three are set up for you. Keep them, change them or switch them off.</li>
+      </ul>
+
+      <h3>10.4 Invite your team</h3>
+      <p>There is no sign-up page. You create every account yourself.</p>
+      <ol class="steps">
+        <li><span class="path">Admin Panel<span class="sep">›</span>Users</span> › <span class="ui">Invite User</span>.</li>
+        <li>Fill in their <b>Email</b>, <b>Full Name</b> (needed for @mentions), optional company and <b>Branch</b>, and pick a <b>System Role</b>:
+          <div class="table-wrap"><table>
+            <tr><th>Role</th><th>For</th></tr>
+            <tr><td><b>Admin</b></td><td>People who run FlowDesk: users, settings, reports.</td></tr>
+            <tr><td><b>Developer</b></td><td>People who work on tickets, log time and ship releases.</td></tr>
+            <tr><td><b>Support desk</b></td><td>People who sort incoming requests and reply to requesters.</td></tr>
+            <tr><td><b>Branch manager</b></td><td>People who submit and follow requests for one branch. Needs a branch.</td></tr>
+          </table></div>
+        </li>
+        <li>Click <span class="ui">Create User</span>. A <b>temporary password</b> is shown <b>only once</b>. Click <span class="ui">Copy Password</span> before clicking <span class="ui">Done</span>.</li>
+        <li><b>FlowDesk doesn't send emails.</b> Send the person your website address, their email and the temporary password yourself, securely (for example via a password manager, or tell them in person). At their first sign-in they choose their own password, just like you did.</li>
+      </ol>
+      <div class="callout warn">Always create people with <span class="ui">Invite User</span> in FlowDesk, <b>not</b> with "Add user" in the Supabase dashboard. Accounts made in Supabase start switched off and show "Account Deactivated".</div>
+      <div class="callout note" data-path="local">
+        <span class="callout-title">On my computer: who can reach it?</span>
+        Only people using this computer can open <code>http://localhost:5173</code>. You can still create accounts now. When you want your team to use FlowDesk from their own devices, switch to the online path (<a href="#appendix-a">Appendix A</a>). Your users, tickets and settings carry over, because they're stored in Supabase.
+      </div>
+
+      <h3>10.5 Recommended: replace the starter admin</h3>
+      <p>The starter email <code>admin@flowdesk.com</code> is public knowledge. Once you're comfortable:</p>
+      <ol class="steps">
+        <li>Invite yourself with <b>your own email</b> and the <b>Admin</b> role.</li>
+        <li>Sign out, sign in as your new admin and set your password.</li>
+        <li>In <span class="path">Admin Panel<span class="sep">›</span>Users</span>, deactivate (ban icon) or delete <code>admin@flowdesk.com</code>.</li>
+      </ol>
+      <p>For a full tour of every page and feature, open <code>docs/GETTING_STARTED.md</code> and <code>docs/USER_GUIDE.md</code> in the code (on GitHub or in your downloaded folder).</p>
+
+      <div class="done-row">
+        <label class="done-check"><input type="checkbox" data-step="step10"> I've finished this step</label>
+        <a class="next-link" href="#step11">Next: keeping it running ↓</a>
+      </div>
+    </section>
+
+    <!-- ===================== Step 11 ===================== -->
+    <section class="card" id="step11" data-title="Keeping FlowDesk running" data-num="11">
+      <div class="step-head">
+        <div class="step-badge">11</div>
+        <div>
+          <h2>Keeping FlowDesk running and up to date</h2>
+          <div class="step-meta">Read once · come back when you need it</div>
+        </div>
+      </div>
+
+      <h3>If FlowDesk suddenly stops working</h3>
+      <p>The most common reason is that the free Supabase project was <b>paused</b> after a week without use. Open <a href="https://supabase.com/dashboard" target="_blank" rel="noopener">supabase.com/dashboard</a>, open your project, and click <span class="ui">Resume project</span> / <span class="ui">Restore</span>. It's back in a few minutes.</p>
+
+      <div data-path="local" class="path-block">
+        <span class="path-tag local">On my computer</span>
+        <h3 style="margin-top:6px">Starting FlowDesk again next time</h3>
+        <p>FlowDesk stops when you close VS Code or restart your computer. Your data is safe in Supabase. To start it again:</p>
+        <ol class="steps">
+          <li>Open VS Code. It usually reopens your FlowDesk folder; if not, use <span class="path">File<span class="sep">›</span>Open Folder…</span> as in step 7.2.</li>
+          <li>Open <span class="path">Terminal<span class="sep">›</span>New Terminal</span> (on Windows, switch it to <span class="ui">Command Prompt</span> as in step 7.4).</li>
+          <li>Run the command below, then open <a href="http://localhost:5173" target="_blank" rel="noopener">http://localhost:5173</a>.
+            <div class="code"><button class="copy" type="button">Copy</button><pre><code>npm run dev</code></pre></div>
+          </li>
+        </ol>
+        <p>To stop it, click the terminal and press <kbd>Ctrl</kbd>+<kbd>C</kbd>, or just close VS Code.</p>
+
+        <h3>Getting updates</h3>
+        <ol class="steps">
+          <li>Download the new ZIP from <a href="https://github.com/JeffTarlton/FlowDesk-Public" target="_blank" rel="noopener">the FlowDesk repository</a> and unzip it into Documents, as in step 1. (Used <code>git clone</code>? Run <code>git pull</code> instead, then skip to step 3.)</li>
+          <li>Copy your <code>.env.local</code> file from the old folder into the new one. (It starts with a dot, so on a Mac press <kbd>⌘</kbd>+<kbd>Shift</kbd>+<kbd>.</kbd> in Finder to see it. In VS Code it's always visible.)</li>
+          <li>Open the new folder in VS Code and run <code>npm install</code>, then <code>npm run dev</code>.</li>
+          <li><b>Check whether the update changed the database or the Edge Function</b>: read <code>CHANGELOG.md</code>, and look in <code>supabase/migrations/</code> for <b>new</b> files. Run only the new SQL files in the SQL Editor, oldest first, as in step 3. If <code>supabase/functions/admin-actions/index.ts</code> changed, replace the function's code in <span class="ui">Edge Functions</span>, redeploy it, and check that <b>Verify JWT</b> is still off (step 4.3).</li>
+        </ol>
+
+        <h3>Changing a setting</h3>
+        <p>Edit <code>.env.local</code> in VS Code and save it, then restart FlowDesk: press <kbd>Ctrl</kbd>+<kbd>C</kbd> in the terminal and run <code>npm run dev</code> again.</p>
+
+        <h3>Ready to share it with your team?</h3>
+        <p>Move to the online path whenever you like. See <a href="#appendix-a">Appendix A</a>.</p>
+      </div>
+
+      <div data-path="online" class="path-block online">
+      <span class="path-tag online">Online</span>
+      <h3 style="margin-top:6px">Getting updates from the original FlowDesk project</h3>
+      <ol class="steps">
+        <li>Open your fork on GitHub. If there are updates, you'll see "This branch is X commits behind".</li>
+        <li>Click <span class="ui">Sync fork</span> › <span class="ui">Update branch</span>.</li>
+        <li>Vercel notices the change and <b>rebuilds your website automatically</b> within a few minutes.</li>
+        <li><b>Check whether the update changed the database or the Edge Function.</b> Vercel only updates the website, not Supabase. Read <code>CHANGELOG.md</code> in your fork, and look in <code>supabase/migrations/</code> for <b>new</b> files:
+          <ul>
+            <li><b>New SQL file(s)?</b> Run only the new ones in the SQL Editor, oldest first (the file names start with a date), exactly as in step 3.</li>
+            <li><b>Changed <code>supabase/functions/admin-actions/index.ts</code>?</b> Open the function in <span class="ui">Edge Functions</span>, replace its code with the new file, redeploy, and re-check that <b>Verify JWT</b> is still off (step 4.3).</li>
+          </ul>
+        </li>
+      </ol>
+
+      <h3>Changing an environment variable later</h3>
+      <ol class="steps">
+        <li>In Vercel, open your project › <span class="path">Settings<span class="sep">›</span>Environment Variables</span>, edit the value and click <span class="ui">Save</span>.</li>
+        <li>Open <span class="ui">Deployments</span>, click <span class="ui">⋯</span> on the newest deployment, and choose <span class="ui">Redeploy</span>. The change doesn't apply until you do.</li>
+      </ol>
+
+      <h3>Using your own domain (optional)</h3>
+      <ol class="steps">
+        <li>In Vercel: your project › <span class="path">Settings<span class="sep">›</span>Domains</span> › <span class="ui">Add Domain</span>. Enter it (for example <code>help.yourcompany.com</code>) and follow the DNS instructions Vercel shows, at the company where you bought the domain.</li>
+        <li>In Supabase: <span class="path">Authentication<span class="sep">›</span>URL Configuration</span>. Set <b>Site URL</b> to the new domain and add <code>https://help.yourcompany.com/**</code> to <b>Redirect URLs</b>.</li>
+      </ol>
+      </div>
+
+      <div class="done-row">
+        <label class="done-check"><input type="checkbox" data-step="step11"> I've finished this step</label>
+        <a class="next-link" href="#troubleshooting">Troubleshooting ↓</a>
+      </div>
+    </section>
+
+    <!-- ===================== Troubleshooting ===================== -->
+    <section class="card" id="troubleshooting" data-title="Troubleshooting" data-num="?" data-group="Help">
+      <div class="step-head">
+        <div class="step-badge alt">?</div>
+        <div>
+          <h2>Troubleshooting</h2>
+          <div class="step-meta">Find what you see in the left column</div>
+        </div>
+      </div>
+      <div class="table-wrap"><table>
+        <tr><th>What you see</th><th>Why</th><th>What to do</th></tr>
+        <tr data-path="online">
+          <td>"FlowDesk isn't configured yet" <span class="path-tag online">Online</span></td>
+          <td>An environment variable is missing, misspelled or has extra characters. The screen tells you which one.</td>
+          <td>Fix it in Vercel (<span class="path">Settings<span class="sep">›</span>Environment Variables</span>), then <b>Redeploy</b> (step 7.5 note).</td>
+        </tr>
+        <tr data-path="local">
+          <td>"FlowDesk isn't configured yet" <span class="path-tag local">My computer</span></td>
+          <td>A value in <code>.env.local</code> is missing or misspelled, or the file is in the wrong folder or has the wrong name.</td>
+          <td>Check step 7.3, save the file, then press <kbd>Ctrl</kbd>+<kbd>C</kbd> in the terminal and run <code>npm run dev</code> again.</td>
+        </tr>
+        <tr data-path="local">
+          <td>"'node' / 'npm' is not recognized" or "command not found" <span class="path-tag local">My computer</span></td>
+          <td>Node.js isn't installed, or VS Code was open while you installed it.</td>
+          <td>Close VS Code completely and open it again. If it still fails, install Node.js (step 7.1).</td>
+        </tr>
+        <tr data-path="local">
+          <td>"running scripts is disabled on this system" <span class="path-tag local">My computer</span></td>
+          <td>A Windows PowerShell security setting blocks <code>npm</code>.</td>
+          <td>Switch the VS Code terminal to <span class="ui">Command Prompt</span> (step 7.4), or type <code>npm.cmd</code> instead of <code>npm</code>.</td>
+        </tr>
+        <tr data-path="local">
+          <td>"This site can't be reached" at <code>localhost:5173</code> <span class="path-tag local">My computer</span></td>
+          <td>FlowDesk isn't running.</td>
+          <td>Start it with <code>npm run dev</code> in the VS Code terminal (step 11), and keep the terminal open.</td>
+        </tr>
+        <tr data-path="local">
+          <td>"Could not read package.json" or "ENOENT" <span class="path-tag local">My computer</span></td>
+          <td>VS Code has the wrong folder open, often the outer of two <code>FlowDesk-Public-main</code> folders.</td>
+          <td>Open the folder that directly contains <code>package.json</code> (step 7.2), then open a new terminal.</td>
+        </tr>
+        <tr>
+          <td>"Invalid login credentials"</td>
+          <td>Wrong email/password, or database script 2 didn't run.</td>
+          <td>Check for typos. Run the check query in step 3.3. If there's no row, run script 2.</td>
+        </tr>
+        <tr>
+          <td>"Invalid API key"</td>
+          <td>The key in <code>VITE_SUPABASE_ANON_KEY</code> is wrong or incomplete.</td>
+          <td>Copy the publishable key again (step 6) with its copy button. Online: update it in Vercel and redeploy. My computer: update <code>.env.local</code> and restart <code>npm run dev</code>.</td>
+        </tr>
+        <tr>
+          <td>"The admin-actions Edge Function is not deployed or not reachable" or "Edge Function returned a non-2xx status code"</td>
+          <td>The function is missing, has the wrong name, or "Verify JWT" is on.</td>
+          <td>Redo step 4, including the 4.4 test.</td>
+        </tr>
+        <tr>
+          <td>Pages load slowly then stay empty, or sign-in fails with a network error</td>
+          <td>The free Supabase project is paused.</td>
+          <td>Open the Supabase dashboard and click <span class="ui">Resume project</span>.</td>
+        </tr>
+        <tr>
+          <td>"Account Deactivated"</td>
+          <td>The account was switched off, or was created in the Supabase dashboard instead of in FlowDesk.</td>
+          <td>An admin reactivates it in <span class="path">Admin Panel<span class="sep">›</span>Users</span>, or re-invites the same email with <span class="ui">Invite User</span>.</td>
+        </tr>
+        <tr>
+          <td>"No Role Assigned"</td>
+          <td>The account has no real role.</td>
+          <td>An admin picks a role for it in <span class="path">Admin Panel<span class="sep">›</span>Users</span>.</td>
+        </tr>
+        <tr data-path="online">
+          <td>"404: NOT_FOUND" when refreshing a page on the website</td>
+          <td>The <code>vercel.json</code> file is missing from your fork.</td>
+          <td>Make sure <code>vercel.json</code> exists in the top folder of your fork (sync your fork, step 11), then redeploy.</td>
+        </tr>
+        <tr data-path="online">
+          <td>The Vercel build fails (red "Error")</td>
+          <td>Usually a changed build setting or a problem in the code.</td>
+          <td>Check 7.3 matches (framework <b>Vite</b>, root <code>./</code>). Open the failed deployment and read the last red lines of the <b>Build Logs</b>.</td>
+        </tr>
+        <tr>
+          <td>An SQL error when running a script</td>
+          <td>Part of the file was missed when copying, or the scripts ran in the wrong order.</td>
+          <td>Use <span class="ui">Copy raw file</span>, paste into a <b>new, empty</b> query with nothing highlighted, and run script 1 then script 2 again. Both are safe to re-run.</td>
+        </tr>
+        <tr>
+          <td>A Kanban card snaps back when moved to Released / Closed</td>
+          <td>The ticket has no Acceptance Criteria.</td>
+          <td>Open the ticket, add Acceptance Criteria, try again.</td>
+        </tr>
+        <tr>
+          <td>You're locked out of every admin account</td>
+          <td>Forgotten password, or the admin was deactivated.</td>
+          <td>Use the reset in <a href="#appendix-c">Appendix C</a>.</td>
+        </tr>
+      </table></div>
+      <p>More detail: <code>docs/TROUBLESHOOTING.md</code> in the code.</p>
+    </section>
+
+    <!-- ===================== Appendix A ===================== -->
+    <section class="card" id="appendix-a" data-title="A · Switch paths or use both" data-num="A" data-group="Appendices (optional)">
+      <div class="step-head">
+        <div class="step-badge alt">A</div>
+        <div>
+          <h2>Appendix A: Switch paths, or use both</h2>
+          <div class="step-meta">Both paths share one Supabase database, so nothing is lost</div>
+        </div>
+      </div>
+      <p>Your data (users, tickets, settings) is stored in Supabase, not in Vercel or on your computer. That means you can move between the two paths, or use both at once, without redoing steps 2 to 6 and without losing anything.</p>
+
+      <h3>From "On my computer" to "Online"</h3>
+      <p>For when you're ready to let your team in:</p>
+      <ol class="steps">
+        <li>Do online <a href="#step1" data-switch="online">step 1</a>: create a GitHub account and fork FlowDesk.</li>
+        <li>Do online <a href="#step7" data-switch="online">step 7</a>: deploy on Vercel with the same two values that are in your <code>.env.local</code>.</li>
+        <li>Do online <a href="#step8" data-switch="online">step 8</a>: set the Site URL to your Vercel address, and <b>keep</b> <code>http://localhost:5173/**</code> in Redirect URLs if you'll still run it locally.</li>
+        <li>Sign in at your Vercel address with the admin password you already chose. Then invite your team (step 10.4).</li>
+      </ol>
+
+      <h3>From "Online" to also running it on your computer</h3>
+      <p>Handy for trying changes privately before they go live:</p>
+      <ol class="steps">
+        <li>Do local <a href="#step7-local" data-switch="local">step 7</a> on your computer. For the code, either download the ZIP (local <a href="#step1-local" data-switch="local">step 1</a>) or clone your fork: <code>git clone https://github.com/<span class="v" data-v="gh">YOUR-USERNAME</span>/FlowDesk-Public.git</code>.</li>
+        <li>Add <code>http://localhost:5173/**</code> to Supabase's Redirect URLs (local <a href="#step8-local" data-switch="local">step 8</a>). Leave the Site URL set to your Vercel address.</li>
+      </ol>
+      <div class="callout warn">Both copies use the <b>same data</b>. Anything you change while running locally (tickets, users, settings) is immediately visible on your live site.</div>
+      <p>Use the path switcher at the top of the contents list to see either path's full steps at any time.</p>
+    </section>
+
+    <!-- ===================== Appendix B ===================== -->
+    <section class="card" id="appendix-b" data-title="B · Command-line option for steps 3–4" data-num="B" data-group="Appendices (optional)">
+      <div class="step-head">
+        <div class="step-badge alt">B</div>
+        <div>
+          <h2>Appendix B: Steps 3 and 4 from the command line (optional)</h2>
+          <div class="step-meta">An alternative for people comfortable with a terminal</div>
+        </div>
+      </div>
+      <p>Instead of pasting into the dashboard, you can build the database and deploy the function with the Supabase command-line tool. You need Node.js and the code on your computer, as in the On my computer path's <a href="#step1-local" data-switch="local">step 1</a> and <a href="#step7-local" data-switch="local">steps 7.1 to 7.4</a>. Run these in the VS Code terminal, inside the FlowDesk folder. The first time, answer <code>y</code> if asked to install <code>supabase</code>.</p>
+      <div class="code-label">Sign in (press Enter, approve in the browser, then paste the verification code it shows)</div>
+      <div class="code"><button class="copy" type="button">Copy</button><pre><code>npx supabase login</code></pre></div>
+      <div class="code-label">Connect this folder to your project (asks for the database password from step 2)</div>
+      <div class="code"><button class="copy" type="button">Copy</button><pre><code>npx supabase link --project-ref <span class="v" data-v="ref">YOUR-PROJECT-REF</span></code></pre></div>
+      <p><small style="color:var(--text-3)">A <code>WARNING: Local config differs from linked project</code> message after <code>link</code> is expected and harmless: the repository's <code>supabase/config.toml</code> is for running Supabase on your own computer. There is nothing to run.</small></p>
+      <div class="code-label">Run both database scripts, in order (replaces step 3)</div>
+      <div class="code"><button class="copy" type="button">Copy</button><pre><code>npx supabase db push</code></pre></div>
+      <div class="code-label">Deploy the Edge Function with JWT verification off (replaces 4.1 to 4.3)</div>
+      <div class="code"><button class="copy" type="button">Copy</button><pre><code>npx supabase functions deploy admin-actions --no-verify-jwt</code></pre></div>
+      <p>Then do the check in step 4.4 and carry on with step 5. Later updates are the same: <code>npx supabase db push</code> applies only new database files.</p>
+    </section>
+
+    <!-- ===================== Appendix C ===================== -->
+    <section class="card" id="appendix-c" data-title="C · Locked out? Reset the admin" data-num="C" data-group="Appendices (optional)">
+      <div class="step-head">
+        <div class="step-badge alt">C</div>
+        <div>
+          <h2>Appendix C: Locked out? Reset the admin account</h2>
+          <div class="step-meta">In the Supabase SQL Editor</div>
+        </div>
+      </div>
+      <p>If you forget the admin password, or every admin gets deactivated, open the <span class="ui">SQL Editor</span> in Supabase, start a new query, paste the following and click <span class="ui">Run</span>. It sets <code>admin@flowdesk.com</code> back to the starter password <code>Password2026!</code>, switches it on, makes it an admin, and asks for a new password at the next sign-in.</p>
+      <p><a class="shortcut needs-ref" data-link="sql" href="#" target="_blank" rel="noopener">Open a new SQL query</a></p>
+      <div class="code"><button class="copy" type="button">Copy</button><pre><code>UPDATE auth.users
+   SET encrypted_password = extensions.crypt('Password2026!', extensions.gen_salt('bf')),
+       updated_at = now()
+ WHERE email = 'admin@flowdesk.com';
+
+UPDATE public.profiles
+   SET role = 'admin', is_active = true, force_password_reset = true
+ WHERE email = 'admin@flowdesk.com';</code></pre></div>
+      <p>For a different person, replace <code>admin@flowdesk.com</code> (both places) with their email, and <code>Password2026!</code> with a temporary password of your own.</p>
+    </section>
+
+    <!-- ===================== Appendix D ===================== -->
+    <section class="card" id="appendix-d" data-title="D · Optional settings" data-num="D" data-group="Appendices (optional)">
+      <div class="step-head">
+        <div class="step-badge alt">D</div>
+        <div>
+          <h2>Appendix D: Optional settings</h2>
+          <div class="step-meta">Everything works without these</div>
+        </div>
+      </div>
+      <h3>Calendar "Timeline" license key</h3>
+      <p>The Calendar page's <b>Timeline</b> view uses a paid add-on from FullCalendar. Without a key, everything works and that view shows a small license notice. If you buy a key from <a href="https://fullcalendar.io/license" target="_blank" rel="noopener">fullcalendar.io</a>, add it as a third setting. Online: add an environment variable in Vercel and redeploy. On my computer: add a line <code>VITE_FULLCALENDAR_LICENSE_KEY=your-key</code> to <code>.env.local</code> and restart <code>npm run dev</code>.</p>
+      <div class="table-wrap"><table>
+        <tr><th>Key</th><th>Value</th></tr>
+        <tr><td><code>VITE_FULLCALENDAR_LICENSE_KEY</code></td><td>Your FullCalendar license key</td></tr>
+      </table></div>
+      <h3>Vercel's Supabase integration</h3>
+      <p>Vercel offers a Supabase integration that fills in the variables automatically. FlowDesk supports it, but it doesn't replace steps 3 to 5, and typing the two variables yourself (step 7.4) is simpler. Details are in <code>docs/DEPLOY_VERCEL.md</code>.</p>
+    </section>
+
+    <!-- ===================== Glossary ===================== -->
+    <section class="card" id="glossary" data-title="Glossary" data-num="Aa" data-group="Appendices (optional)">
+      <div class="step-head">
+        <div class="step-badge alt" style="font-size:16px">Aa</div>
+        <div>
+          <h2>Glossary: plain-English meanings</h2>
+        </div>
+      </div>
+      <dl class="gloss">
+        <dt>Repository (repo)</dt><dd>A project folder on GitHub that holds all of a project's files and their history.</dd>
+        <dt>Fork</dt><dd>Your own copy of someone else's repository, in your GitHub account. You can change it without affecting the original, and pull in the original's updates with "Sync fork".</dd>
+        <dt>Clone</dt><dd>Downloading a repository to your computer with Git, so it stays connected to GitHub.</dd>
+        <dt>Branch (<code>main</code>)</dt><dd>A line of work inside a repository. <code>main</code> is the official version, the one Vercel publishes. (Not the same as a FlowDesk "branch", which is a location.)</dd>
+        <dt>Deploy</dt><dd>Publishing code so it runs online. Vercel deploys the website; you deploy the Edge Function to Supabase.</dd>
+        <dt>Project ref</dt><dd>The 20-character ID of your Supabase project, found in its web address.</dd>
+        <dt>SQL / SQL Editor</dt><dd>SQL is the language databases understand. The SQL Editor is the page in Supabase where you paste and run SQL scripts.</dd>
+        <dt>Migration</dt><dd>A SQL script that builds or changes the database. FlowDesk's live in <code>supabase/migrations/</code> and run oldest first.</dd>
+        <dt>Edge Function</dt><dd>A small program that runs on Supabase's servers. FlowDesk's is called <code>admin-actions</code>.</dd>
+        <dt>JWT</dt><dd>The digital "ticket" that proves who is signed in. FlowDesk's Edge Function checks it itself, which is why Supabase's own check is switched off.</dd>
+        <dt>Environment variable</dt><dd>A named setting (like <code>VITE_SUPABASE_URL</code>) given to the website when it's built, instead of being written into the code.</dd>
+        <dt>Publishable key / anon key</dt><dd>A <b>public</b> Supabase key that's safe to put in a website. The database's security rules decide what it can do.</dd>
+        <dt>Secret key / service_role key</dt><dd>A <b>private</b> Supabase key with full access. Never put it in the website or in Vercel.</dd>
+        <dt>Redirect URL / Site URL</dt><dd>Web addresses Supabase is allowed to send people back to after signing in. They should be your website's address.</dd>
+        <dt>Terminal</dt><dd>A panel or window for typing commands. In this guide you use the one built into VS Code. Only needed on the On my computer path and in Appendix B.</dd>
+        <dt>localhost</dt><dd>Your browser's name for "this computer". <code>http://localhost:5173</code> is FlowDesk running on your own machine; other people can't open it.</dd>
+        <dt>Node.js / npm</dt><dd>Node.js is free software that runs apps like FlowDesk on your computer. <code>npm</code> comes with it: <code>npm install</code> downloads FlowDesk's building blocks and <code>npm run dev</code> starts FlowDesk.</dd>
+        <dt><code>.env.local</code></dt><dd>The settings file for running FlowDesk on your computer. It holds the same two values you'd give Vercel, and is never uploaded anywhere.</dd>
+      </dl>
+    </section>
+
+    <footer class="site-footer">
+      <div class="f-brand">
+        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="lk3" x1="9" y1="9" x2="23" y2="23" gradientUnits="userSpaceOnUse"><stop stop-color="#2DD4BF"/><stop offset="1" stop-color="#0D9488"/></linearGradient></defs><rect width="32" height="32" rx="8" fill="#201D1A"/><rect x="1" y="1" width="30" height="30" rx="7" fill="none" stroke="#2DD4BF" stroke-opacity="0.28"/><rect x="9" y="9" width="14" height="14" rx="4" fill="url(#lk3)"/></svg>
+        <div>
+          <span class="wordmark">Lokd<span class="it">IT</span></span>
+          <p style="margin-top:6px">The digital operating system behind your business. FlowDesk is open source under the MIT License.</p>
+        </div>
+      </div>
+      <nav class="f-links" aria-label="Links">
+        <a href="https://www.lokdit.net" target="_blank" rel="noopener">lokdit.net</a>
+        <a href="https://www.lokdit.net/contact" target="_blank" rel="noopener">Contact</a>
+        <a href="https://github.com/JeffTarlton/FlowDesk-Public" target="_blank" rel="noopener">FlowDesk on GitHub</a>
+      </nav>
+    </footer>
+  </main>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var STORE_KEY = "flowdesk-setup-guide-v1";
+
+  function load() {
+    try { return JSON.parse(localStorage.getItem(STORE_KEY) || "{}") || {}; }
+    catch (e) { return {}; }
+  }
+  function save(state) {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) { /* storage unavailable: page still works */ }
+  }
+  var state = load();
+  state.done = state.done || {};
+  state.values = state.values || {};
+
+  /* ---------- Setup path: "online" (Vercel), "local" (localhost) or "" (show both) ---------- */
+  if (state.path !== "online" && state.path !== "local") state.path = "";
+  function onPath(el) {
+    var tagged = el.closest("[data-path]");
+    return !state.path || !tagged || tagged.getAttribute("data-path") === state.path;
+  }
+
+  /* ---------- Table of contents ---------- */
+  var sections = Array.prototype.slice.call(document.querySelectorAll("main section[data-title]"));
+  function buildToc(host) {
+    host.innerHTML = "";
+    var ul = document.createElement("ul");
+    ul.className = "toc";
+    var lastGroup = null;
+    sections.filter(onPath).forEach(function (sec) {
+      var group = sec.getAttribute("data-group");
+      if (group && group !== lastGroup) {
+        var g = document.createElement("li");
+        g.className = "toc-group";
+        g.textContent = group;
+        ul.appendChild(g);
+        lastGroup = group;
+      }
+      var li = document.createElement("li");
+      var a = document.createElement("a");
+      a.href = "#" + sec.id;
+      a.setAttribute("data-target", sec.id);
+      var num = document.createElement("span");
+      num.className = "num";
+      var inner = document.createElement("span");
+      inner.textContent = sec.getAttribute("data-num");
+      num.appendChild(inner);
+      var label = document.createElement("span");
+      label.textContent = sec.getAttribute("data-title");
+      a.appendChild(num);
+      a.appendChild(label);
+      // With both paths showing, mark which path a step belongs to
+      var p = sec.getAttribute("data-path");
+      if (p && !state.path) label.textContent += p === "online" ? " (online)" : " (my computer)";
+      a.addEventListener("click", function () {
+        var d = document.querySelector(".mobile-toc");
+        if (d && window.matchMedia("(max-width: 960px)").matches) d.open = false;
+      });
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+    host.appendChild(ul);
+  }
+  /* ---------- Progress ---------- */
+  var boxes = Array.prototype.slice.call(document.querySelectorAll("input[data-step]"));
+  function renderProgress() {
+    var done = 0, total = 0;
+    boxes.forEach(function (b) {
+      var id = b.getAttribute("data-step");
+      var sec = b.closest("section");
+      b.checked = !!state.done[id];
+      // Count only the steps on the chosen path
+      if (onPath(b)) {
+        total++;
+        if (b.checked) done++;
+      }
+      if (sec) {
+        document.querySelectorAll('.toc a[data-target="' + sec.id + '"]').forEach(function (a) {
+          a.classList.toggle("done", b.checked);
+        });
+      }
+    });
+    document.querySelectorAll(".progress-count").forEach(function (el) { el.textContent = done + " of " + total; });
+    document.querySelectorAll(".progress-fill").forEach(function (el) { el.style.width = (total ? (done / total) * 100 : 0) + "%"; });
+  }
+  boxes.forEach(function (b) {
+    b.addEventListener("change", function () {
+      state.done[b.getAttribute("data-step")] = b.checked;
+      save(state);
+      renderProgress();
+    });
+  });
+
+  function applyPath() {
+    document.body.setAttribute("data-choice", state.path);
+    document.querySelectorAll("[data-choose]").forEach(function (btn) {
+      btn.setAttribute("aria-pressed", String(btn.getAttribute("data-choose") === state.path));
+    });
+    document.querySelectorAll(".toc-host").forEach(buildToc);
+    renderProgress();
+  }
+  function setPath(p) {
+    state.path = p;
+    save(state);
+    applyPath();
+  }
+  document.querySelectorAll("[data-choose]").forEach(function (btn) {
+    btn.addEventListener("click", function () { setPath(btn.getAttribute("data-choose")); });
+  });
+  // Links into the other path's steps switch the view first, so the target is visible
+  document.querySelectorAll("a[data-switch]").forEach(function (a) {
+    a.addEventListener("click", function () {
+      var p = a.getAttribute("data-switch");
+      if (state.path && state.path !== p) setPath(p);
+    });
+  });
+  applyPath();
+
+  /* ---------- Active section highlight ---------- */
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        var id = en.target.id;
+        document.querySelectorAll(".toc a").forEach(function (a) {
+          a.classList.toggle("active", a.getAttribute("data-target") === id);
+        });
+      });
+    }, { rootMargin: "-20% 0px -70% 0px" });
+    sections.forEach(function (s) { io.observe(s); });
+  }
+
+  /* ---------- Worksheet ---------- */
+  var placeholders = { gh: "YOUR-USERNAME", ref: "YOUR-PROJECT-REF", vc: "https://your-project.vercel.app" };
+
+  function parseGh(s) {
+    s = (s || "").trim().replace(/^@/, "").replace(/^https?:\/\/(www\.)?github\.com\//i, "").split("/")[0];
+    return /^[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})$/.test(s) ? s : "";
+  }
+  function parseRef(s) {
+    var m = (s || "").trim().toLowerCase().match(/[a-z0-9]{20}/);
+    return m ? m[0] : "";
+  }
+  function parseVc(s) {
+    s = (s || "").trim();
+    if (!s) return "";
+    if (!/^https?:\/\//i.test(s)) s = "https://" + s;
+    try {
+      var u = new URL(s);
+      if (!u.hostname || u.hostname.indexOf(".") === -1) return "";
+      return u.origin;
+    } catch (e) { return ""; }
+  }
+
+  var inputs = { gh: document.getElementById("f-gh"), ref: document.getElementById("f-ref"), vc: document.getElementById("f-vc") };
+  var parsers = { gh: parseGh, ref: parseRef, vc: parseVc };
+
+  function links(v) {
+    var ref = v.ref, gh = v.gh;
+    var dash = ref ? "https://supabase.com/dashboard/project/" + ref : "";
+    var repo = gh ? "https://github.com/" + gh + "/FlowDesk-Public/blob/main/" : "https://github.com/JeffTarlton/FlowDesk-Public/blob/main/";
+    return {
+      sql: dash && dash + "/sql/new",
+      functions: dash && dash + "/functions",
+      providers: dash && dash + "/auth/providers",
+      urlConfig: dash && dash + "/auth/url-configuration",
+      apiKeys: dash && dash + "/settings/api-keys",
+      fnCheck: ref && "https://" + ref + ".supabase.co/functions/v1/admin-actions",
+      fileSchema: repo + "supabase/migrations/20260926000000_flowdesk_schema.sql",
+      fileSeed: repo + "supabase/migrations/20260926000100_seed_admin.sql",
+      fileFn: repo + "supabase/functions/admin-actions/index.ts"
+    };
+  }
+
+  function render() {
+    var v = {};
+    Object.keys(parsers).forEach(function (k) { v[k] = parsers[k](state.values[k]); });
+
+    document.querySelectorAll(".v[data-v]").forEach(function (el) {
+      var k = el.getAttribute("data-v");
+      el.textContent = v[k] || placeholders[k];
+      el.classList.toggle("filled", !!v[k]);
+    });
+    document.querySelectorAll("a[data-href='vc']").forEach(function (a) {
+      if (v.vc) a.href = v.vc; else a.removeAttribute("href");
+    });
+
+    var L = links(v);
+    document.querySelectorAll("a[data-link]").forEach(function (a) {
+      var url = L[a.getAttribute("data-link")];
+      if (url) a.href = url;
+    });
+    document.body.classList.toggle("has-ref", !!v.ref);
+
+    var st = {
+      gh: !state.values.gh ? "" : v.gh ? ["ok", "✓ Your fork: github.com/" + v.gh + "/FlowDesk-Public"] : ["bad", "That doesn't look like a GitHub username."],
+      ref: !state.values.ref ? "" : v.ref ? ["ok", "✓ Project ref: " + v.ref] : ["bad", "Couldn't find a project ref. It's 20 lowercase letters and numbers."],
+      vc: !state.values.vc ? "" : v.vc ? ["ok", "✓ Website: " + v.vc] : ["bad", "That doesn't look like a web address."]
+    };
+    Object.keys(st).forEach(function (k) {
+      var el = document.querySelector('[data-status="' + k + '"]');
+      if (!el) return;
+      el.className = "status" + (st[k] ? " " + st[k][0] : "");
+      el.textContent = st[k] ? st[k][1] : "";
+    });
+  }
+
+  Object.keys(inputs).forEach(function (k) {
+    var el = inputs[k];
+    if (!el) return;
+    el.value = state.values[k] || "";
+    el.addEventListener("input", function () {
+      state.values[k] = el.value;
+      save(state);
+      render();
+    });
+  });
+  render();
+
+  /* ---------- Copy buttons ---------- */
+  function copyText(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(text);
+    }
+    return new Promise(function (resolve, reject) {
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand("copy") ? resolve() : reject(); } catch (e) { reject(e); }
+      document.body.removeChild(ta);
+    });
+  }
+  document.querySelectorAll(".code .copy").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var code = btn.parentNode.querySelector("code");
+      copyText(code.textContent).then(function () {
+        btn.textContent = "Copied!";
+        btn.classList.add("ok");
+        setTimeout(function () { btn.textContent = "Copy"; btn.classList.remove("ok"); }, 1600);
+      }, function () {
+        btn.textContent = "Select & copy";
+      });
+    });
+  });
+
+  /* ---------- Theme + reset ---------- */
+  var root = document.documentElement;
+  if (state.theme) root.setAttribute("data-theme", state.theme);
+  document.querySelectorAll('[data-action="theme"]').forEach(function (b) {
+    b.addEventListener("click", function () {
+      var current = root.getAttribute("data-theme") ||
+        (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      state.theme = current === "dark" ? "light" : "dark";
+      root.setAttribute("data-theme", state.theme);
+      save(state);
+    });
+  });
+  document.querySelectorAll('[data-action="reset"]').forEach(function (b) {
+    // Two-click confirmation (confirm() dialogs are blocked in some viewers)
+    var armed = null;
+    b.addEventListener("click", function () {
+      if (!armed) {
+        b.textContent = "Click again to clear ticks";
+        armed = setTimeout(function () { armed = null; b.textContent = "Reset progress"; }, 4000);
+        return;
+      }
+      clearTimeout(armed);
+      armed = null;
+      b.textContent = "Reset progress";
+      state.done = {};
+      save(state);
+      renderProgress();
+    });
+  });
+})();
+</script>
+</body>
+</html>

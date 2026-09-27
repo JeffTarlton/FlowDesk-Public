@@ -201,8 +201,8 @@ export default function Admin() {
       </div>
 
       {/* Tabs & Actions */}
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex gap-1 p-1 bg-gray-100 dark:bg-gray-800 rounded-xl w-fit">
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
+        <div className="flex flex-wrap gap-1 p-1 bg-gray-100 dark:bg-gray-800 rounded-xl w-fit">
           <button
             onClick={() => setActiveTab('users')}
             className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-all ${
@@ -320,7 +320,7 @@ export default function Admin() {
 
       {/* Users Tab */}
       {activeTab === 'users' && (
-        <div className="bg-white dark:bg-surface-dark rounded-2xl border border-gray-100 dark:border-gray-800 overflow-hidden">
+        <div className="bg-white dark:bg-surface-dark rounded-2xl border border-gray-100 dark:border-gray-800 overflow-x-auto">
           {loadingUsers ? (
             <div className="flex items-center justify-center py-20">
               <Loader2 className="animate-spin text-primary-500" size={32} />

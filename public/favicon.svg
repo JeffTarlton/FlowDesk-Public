@@ -1,8 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="8" fill="#2563eb"/>
-  <g fill="#ffffff">
-    <rect x="7.5" y="8" width="4.5" height="16" rx="2.25"/>
-    <rect x="13.75" y="8" width="4.5" height="11" rx="2.25"/>
-    <rect x="20" y="8" width="4.5" height="6.5" rx="2.25"/>
-  </g>
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="32" height="32" rx="8" fill="#201D1A"/>
+  <rect x="1" y="1" width="30" height="30" rx="7" stroke="#2DD4BF" stroke-opacity="0.28"/>
+  <defs>
+    <linearGradient id="g" x1="9" y1="9" x2="23" y2="23" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2DD4BF"/>
+      <stop offset="1" stop-color="#0D9488"/>
+    </linearGradient>
+  </defs>
+  <rect x="9" y="9" width="14" height="14" rx="4" fill="url(#g)"/>
 </svg>

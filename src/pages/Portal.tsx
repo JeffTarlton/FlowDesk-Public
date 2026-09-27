@@ -8,7 +8,7 @@ import Skeleton from '../components/Skeleton';
 import EmptyState from '../components/EmptyState';
 import CustomerTicketDetail from '../components/CustomerTicketDetail';
 import BranchRequestModal from '../components/BranchRequestModal';
-import FlowDeskLogo from '../components/FlowDeskLogo';
+import LokdITLogo from '../components/LokdITLogo';
 
 interface PortalTicket {
   id: string;
@@ -24,6 +24,9 @@ interface PortalTicket {
   billed_hours?: number;
   product_family?: string;
   branch_id?: string;
+  target_start_date?: string | null;
+  target_test_date?: string | null;
+  target_completion_date?: string | null;
 }
 
 const statusConfig: Record<string, { label: string; className: string }> = {
@@ -34,6 +37,23 @@ const statusConfig: Record<string, { label: string; className: string }> = {
   in_review:       { label: 'In Review',        className: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300' },
   beta_testing:    { label: 'Beta Testing',     className: 'bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-300' },
   done:            { label: 'Resolved',         className: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300' },
+  sow_in_progress: { label: 'SOW In Progress',  className: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300' },
+  awaiting_customer_approval: { label: 'Awaiting Approval', className: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300' },
+  on_hold_customer: { label: 'On Hold: Customer', className: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300' },
+  on_hold_dev:     { label: 'On Hold: Dev',     className: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300' },
+  on_hold_support: { label: 'On Hold: Support', className: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300' },
+  on_hold_sow:     { label: 'On Hold: SOW',     className: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300' },
+  rejected:        { label: 'Rejected',         className: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300' },
+};
+
+const typeLabels: Record<string, string> = {
+  bug: 'Bug',
+  feature_request: 'Feature',
+  improvement: 'Improvement',
+  task: 'Task',
+  documentation: 'Documentation',
+  professional_service: 'Service',
+  project: 'Project',
 };
 
 const priorityColors: Record<string, string> = {
@@ -84,7 +104,7 @@ export default function Portal() {
       
       const { data: mine, error: err1 } = await supabase
         .from('tickets')
-        .select('id, readable_id, title, type, priority, status, updated_at, created_at, estimated_hours, billed_hours, product_family, branch_id')
+        .select('id, readable_id, title, type, priority, status, updated_at, created_at, estimated_hours, billed_hours, product_family, branch_id, target_start_date, target_test_date, target_completion_date')
         .eq('branch_id', profile?.branch_id || 'no-branch')
         .eq('archived_by_customer', false)
         .is('parent_ticket_id', null)
@@ -233,7 +253,7 @@ export default function Portal() {
             )}
           </div>
           <div className="hidden md:flex">
-            <FlowDeskLogo size="md" inverted className="h-fit self-start" />
+            <LokdITLogo size="md" subtitle="FlowDesk" inverted className="h-fit self-start" />
           </div>
         </div>
       </div>
@@ -299,7 +319,7 @@ export default function Portal() {
                         <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${
                           ticket.type === 'bug' ? 'bg-red-50 text-red-600' : 'bg-purple-50 text-purple-600'
                         }`}>
-                          {ticket.type === 'bug' ? 'Bug' : 'Feature'}
+                          {typeLabels[ticket.type] ?? ticket.type}
                         </span>
                       </div>
                       <h3 className="font-semibold text-gray-900 dark:text-white">{ticket.title}</h3>
@@ -378,7 +398,7 @@ export default function Portal() {
                         <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
                           ticket.type === 'bug' ? 'bg-red-50 text-red-600' : 'bg-purple-50 text-purple-600'
                         }`}>
-                          {ticket.type === 'bug' ? 'Bug' : 'Feature'}
+                          {typeLabels[ticket.type] ?? ticket.type}
                         </span>
                       </td>
                       <td className="px-5 py-3">

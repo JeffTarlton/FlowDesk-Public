@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { useAuthStore } from '../store/useAuthStore';
 import { useNavigate } from 'react-router-dom';
-import FlowDeskLogo from '../components/FlowDeskLogo';
+import LokdITLogo from '../components/LokdITLogo';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -41,7 +41,7 @@ export default function Login() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-canvas-dark p-4">
       <div className="w-full max-w-md bg-white dark:bg-surface-dark rounded-2xl shadow-xl p-8 border border-gray-100 dark:border-gray-800 text-center">
         <div className="flex justify-center mb-6">
-          <FlowDeskLogo size="lg" showWordmark={false} />
+          <LokdITLogo size="lg" />
         </div>
         <h1 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">FlowDesk</h1>
         <p className="text-gray-500 mb-8">

@@ -138,13 +138,13 @@ export default function Backlog() {
         <NewTicketModal onClose={() => setShowNewTicketModal(false)} />
       )}
       {/* Header & Controls */}
-      <div className="px-6 py-5 border-b border-gray-200 dark:border-gray-800 bg-white/50 dark:bg-surface-dark/50 backdrop-blur-xl shrink-0 flex items-center justify-between z-10 transition-colors duration-200">
+      <div className="px-6 py-5 border-b border-gray-200 dark:border-gray-800 bg-white/50 dark:bg-surface-dark/50 backdrop-blur-xl shrink-0 flex flex-wrap items-center justify-between gap-4 z-10 transition-colors duration-200">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1 transition-colors duration-200">Backlog</h1>
           <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">Triage and manage the queue</p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center justify-end gap-3">
           <ProductDropdown 
             value={filterProduct} 
             onChange={(val) => {

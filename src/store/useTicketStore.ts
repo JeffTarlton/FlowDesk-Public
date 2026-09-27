@@ -118,7 +118,8 @@ export const useTicketStore = create<TicketState>((set, get) => ({
         await supabase.from('activity_logs').insert({
           ticket_id: ticketId,
           actor_id: user.id,
-          action: `Moved request to **${displayStatus}**`
+          // The ticket feed renders actions as (sanitised) HTML, not Markdown
+          action: `Moved request to <strong>${displayStatus}</strong>`
         });
       }
     } catch (err: any) {

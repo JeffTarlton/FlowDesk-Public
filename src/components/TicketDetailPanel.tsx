@@ -24,6 +24,24 @@ import BranchInfoPanel from './BranchInfoPanel';
 import NewTicketModal from './NewTicketModal';
 import SlaBadge from './SlaBadge';
 
+// Target dates are calendar days kept in timestamptz columns. They are stored at noon UTC so the
+// same day shows in every timezone from UTC-11 to UTC+11, and read back by their UTC calendar day.
+const toStoredDay = (d: Date | null) => (d ? `${format(d, 'yyyy-MM-dd')}T12:00:00Z` : null);
+const fromStoredDay = (s: string | null) => {
+  if (!s) return null;
+  const d = new Date(s);
+  return new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
+};
+
+// The editable copy of the Scope & Timeline fields, taken fresh from the ticket each time editing starts
+const scopeFromTicket = (t: Ticket) => ({
+  estimated_hours: t.estimated_hours ? formatHoursToTime(t.estimated_hours) : '',
+  billed_hours: t.billed_hours ? formatHoursToTime(t.billed_hours) : '',
+  target_start_date: fromStoredDay(t.target_start_date),
+  target_test_date: fromStoredDay(t.target_test_date),
+  target_completion_date: fromStoredDay(t.target_completion_date),
+});
+
 function TimerButton({ ticketId }: { ticketId: string }) {
   const { activeTimer, startTimer, stopTimer, discardTimer, fetchActiveTimer } = useTimerStore();
   const [elapsed, setElapsed] = useState('');
@@ -131,6 +149,8 @@ export default function TicketDetailPanel({ ticket, onClose }: Props) {
   const [customerComments, setCustomerComments] = useState<CommentWithAuthor[]>([]);
   const [newCustomerComment, setNewCustomerComment] = useState('');
   const [isInternalComment, setIsInternalComment] = useState(false);
+  // Internal notes are staff-only: branch managers cannot read them (RLS), so they cannot write them either
+  const canWriteInternalNote = !!myProfile && ['admin', 'developer', 'support_desk'].includes(myProfile.role);
   const [sendingComment, setSendingComment] = useState(false);
   const [isEditingAc, setIsEditingAc] = useState(false);
   const [localAc, setLocalAc] = useState(ticket.acceptance_criteria || '');
@@ -170,13 +190,7 @@ export default function TicketDetailPanel({ ticket, onClose }: Props) {
     toast.success('Task linked successfully');
   };
   const [isEditingScope, setIsEditingScope] = useState(false);
-  const [scopeData, setScopeData] = useState({
-    estimated_hours: ticket.estimated_hours ? formatHoursToTime(ticket.estimated_hours) : '',
-    billed_hours: ticket.billed_hours ? formatHoursToTime(ticket.billed_hours) : '',
-    target_start_date: ticket.target_start_date ? new Date(ticket.target_start_date) : null as Date | null,
-    target_test_date: ticket.target_test_date ? new Date(ticket.target_test_date) : null as Date | null,
-    target_completion_date: ticket.target_completion_date ? new Date(ticket.target_completion_date) : null as Date | null,
-  });
+  const [scopeData, setScopeData] = useState(() => scopeFromTicket(ticket));
   const [savingScope, setSavingScope] = useState(false);
   const [attachments, setAttachments] = useState<TicketAttachment[]>([]);
   const [isDragging, setIsDragging] = useState(false);
@@ -259,7 +273,7 @@ export default function TicketDetailPanel({ ticket, onClose }: Props) {
         ticket_id: ticket.id,
         author_id: user.id,
         comment_text: newCustomerComment.trim(),
-        is_internal_only: isInternalComment
+        is_internal_only: canWriteInternalNote && isInternalComment
       });
 
       // Extract and dispatch @mentions
@@ -641,9 +655,9 @@ export default function TicketDetailPanel({ ticket, onClose }: Props) {
     await updateTicketFields(ticket.id, {
       estimated_hours: scopeData.estimated_hours ? parseTimeToHours(scopeData.estimated_hours) : null,
       billed_hours: scopeData.billed_hours ? parseTimeToHours(scopeData.billed_hours) : null,
-      target_start_date: scopeData.target_start_date ? format(scopeData.target_start_date, 'yyyy-MM-dd') : null,
-      target_test_date: scopeData.target_test_date ? format(scopeData.target_test_date, 'yyyy-MM-dd') : null,
-      target_completion_date: scopeData.target_completion_date ? format(scopeData.target_completion_date, 'yyyy-MM-dd') : null,
+      target_start_date: toStoredDay(scopeData.target_start_date),
+      target_test_date: toStoredDay(scopeData.target_test_date),
+      target_completion_date: toStoredDay(scopeData.target_completion_date),
     });
     setIsEditingScope(false);
     setSavingScope(false);
@@ -1686,7 +1700,7 @@ export default function TicketDetailPanel({ ticket, onClose }: Props) {
               </div>
               {!isEditingScope && (
                 <button 
-                  onClick={() => setIsEditingScope(true)}
+                  onClick={() => { setScopeData(scopeFromTicket(ticket)); setIsEditingScope(true); }}
                   className="text-xs font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 transition-colors"
                 >
                   Edit Timeline
@@ -1899,7 +1913,7 @@ export default function TicketDetailPanel({ ticket, onClose }: Props) {
                 <div>
                   <p className="text-[10px] uppercase font-semibold text-gray-400 tracking-wider mb-1">Due Date</p>
                   <p className="text-sm font-medium text-gray-900 dark:text-white">
-                    {ticket.target_completion_date ? format(new Date(ticket.target_completion_date), 'MMM d, yyyy') : 'TBD'}
+                    {ticket.target_completion_date ? format(fromStoredDay(ticket.target_completion_date)!, 'MMM d, yyyy') : 'TBD'}
                   </p>
                 </div>
               </div>
@@ -2009,6 +2023,7 @@ export default function TicketDetailPanel({ ticket, onClose }: Props) {
                 placeholder="Message customer or leave an internal note..."
                 className="min-h-[60px] pb-12 shadow-sm"
               />
+              {canWriteInternalNote && (
               <div className="absolute left-4 bottom-10 flex items-center gap-2">
                 <label className="flex items-center gap-2 cursor-pointer group">
                   <input type="checkbox" className="hidden" checked={isInternalComment} onChange={(e) => setIsInternalComment(e.target.checked)} />
@@ -2026,6 +2041,7 @@ export default function TicketDetailPanel({ ticket, onClose }: Props) {
                   </span>
                 </label>
               </div>
+              )}
               <button 
                 onClick={handleSendComment}
                 disabled={!newCustomerComment.trim() || sendingComment}

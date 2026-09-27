@@ -14,7 +14,7 @@ import {
   CalendarDays, ChevronDown, Loader2, ShieldCheck, BarChart3,
 } from 'lucide-react';
 import { formatHoursToTime } from '../utils/timeTracker';
-import { format, subDays, differenceInDays, isAfter } from 'date-fns';
+import { format, subDays, differenceInDays, isAfter, parseISO } from 'date-fns';
 
 
 
@@ -329,8 +329,8 @@ export default function ExecutiveDashboard() {
                     </div>
                     {m.target_date && (
                       <div className="text-[10px] text-gray-400 mt-0.5 flex items-center gap-1">
-                        <CalendarDays size={9} /> {format(new Date(m.target_date), 'MMM d, yyyy')}
-                        {isAfter(new Date(), new Date(m.target_date)) && pct < 100 && (
+                        <CalendarDays size={9} /> {format(parseISO(m.target_date), 'MMM d, yyyy')}
+                        {isAfter(new Date(), parseISO(m.target_date)) && pct < 100 && (
                           <span className="text-red-500 font-bold ml-1">OVERDUE</span>
                         )}
                       </div>
@@ -364,7 +364,7 @@ export default function ExecutiveDashboard() {
                     </div>
                     {r.name && <p className="text-[11px] text-gray-600 dark:text-gray-400">{r.name}</p>}
                     <div className="flex items-center gap-3 mt-1 text-[10px] text-gray-400">
-                      {r.release_date && <span className="flex items-center gap-1"><CalendarDays size={9} /> {format(new Date(r.release_date), 'MMM d')}</span>}
+                      {r.release_date && <span className="flex items-center gap-1"><CalendarDays size={9} /> {format(parseISO(r.release_date), 'MMM d')}</span>}
                       <span>{r.ticket_count || 0} tickets</span>
                     </div>
                   </div>

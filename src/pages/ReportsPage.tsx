@@ -6,7 +6,7 @@ import { useReleaseStore } from '../store/useReleaseStore';
 import { useProductStore } from '../store/useProductStore';
 import { useAdminStore } from '../store/useAdminStore';
 import { FileText, Download, Copy, Loader2, ChevronDown, Check, CalendarDays } from 'lucide-react';
-import { format, subDays, differenceInDays, isAfter } from 'date-fns';
+import { format, subDays, differenceInDays, isAfter, parseISO } from 'date-fns';
 import { formatHoursToTime } from '../utils/timeTracker';
 import toast from 'react-hot-toast';
 
@@ -149,11 +149,11 @@ export default function ReportsPage() {
           </tr></thead><tbody>
             {milestones.map(m => {
               const pct = m.ticket_count ? Math.round((m.completed_count || 0) / m.ticket_count * 100) : 0;
-              const overdue = m.target_date && isAfter(now, new Date(m.target_date)) && m.status !== 'completed';
+              const overdue = m.target_date && isAfter(now, parseISO(m.target_date)) && m.status !== 'completed';
               return (<tr key={m.id}>
                 <td className={`${tdClass} font-bold`}>{m.name}</td>
                 <td className={`${tdClass} capitalize`}>{m.status.replace('_', ' ')}</td>
-                <td className={`${tdClass} ${overdue ? 'text-red-600 font-bold' : ''}`}>{m.target_date ? format(new Date(m.target_date), 'MMM d, yyyy') : '—'}{overdue ? ' ⚠' : ''}</td>
+                <td className={`${tdClass} ${overdue ? 'text-red-600 font-bold' : ''}`}>{m.target_date ? format(parseISO(m.target_date), 'MMM d, yyyy') : '—'}{overdue ? ' ⚠' : ''}</td>
                 <td className={tdClass}>{m.ticket_count || 0}</td>
                 <td className={tdClass}>{m.completed_count || 0}</td>
                 <td className={`${tdClass} font-bold ${pct >= 80 ? 'text-green-600' : pct >= 50 ? 'text-amber-600' : 'text-gray-500'}`}>{pct}%</td>
@@ -173,7 +173,7 @@ export default function ReportsPage() {
               <td className={`${tdClass} font-bold text-primary-600 dark:text-primary-400`}>{r.version}</td>
               <td className={tdClass}>{r.name || '—'}</td>
               <td className={`${tdClass} capitalize font-semibold`}>{r.status.replace('_', ' ')}</td>
-              <td className={tdClass}>{r.release_date ? format(new Date(r.release_date), 'MMM d, yyyy') : '—'}</td>
+              <td className={tdClass}>{r.release_date ? format(parseISO(r.release_date), 'MMM d, yyyy') : '—'}</td>
               <td className={tdClass}>{r.ticket_count || 0}</td>
             </tr>))}
           </tbody></table>

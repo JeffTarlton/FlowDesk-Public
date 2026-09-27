@@ -25,6 +25,7 @@
 - [Documentation](#documentation)
 - [Contributing and security](#contributing)
 - [License](#license)
+- [Credits](#credits)
 
 ---
 
@@ -87,6 +88,9 @@ The browser only ever holds Supabase's **public** key. Row Level Security in the
 
 No Docker needed. Plan for about 30 minutes. No prior Supabase or Vercel experience is assumed.
 
+> [!TIP]
+> **Never used GitHub, Supabase or Vercel?** Follow the **[FlowDesk Setup Guide](docs/SETUP_GUIDE.html)**, a click-by-click walkthrough with a progress tracker and a worksheet that fills in your own links. It lets you choose between two paths: **online** (Supabase + Vercel, for your whole team) or **on your own computer** (Supabase + localhost, no Vercel or GitHub account needed). GitHub shows the file as source code: download it (the **Download raw file** button) and open it in your browser.
+
 > [!NOTE]
 > Free Supabase projects are **paused after about a week without activity**. A paused project makes FlowDesk look broken until you click **Resume project** in the Supabase dashboard. Vercel's Hobby plan is for personal, non-commercial use; check [Vercel's pricing](https://vercel.com/pricing) if you run FlowDesk for a business.
 
@@ -108,6 +112,8 @@ Six steps take you from nothing to FlowDesk running at your own Vercel address. 
    cd FlowDesk-Public
    npm install
    ```
+
+   On Windows, run the commands in this guide in **Command Prompt**. In PowerShell, `npm` and `npx` often fail with "running scripts is disabled on this system"; there, type `npm.cmd` and `npx.cmd` instead ([details](docs/TROUBLESHOOTING.md#npmps1-cannot-be-loaded-because-running-scripts-is-disabled-on-this-system)).
 
 Details: [SETUP.md, step 1](docs/SETUP.md#1-get-the-code).
 
@@ -139,8 +145,11 @@ Details: [SETUP.md, steps 2 and 3](docs/SETUP.md#2-create-a-free-supabase-projec
 **Required.** Without it, nobody can finish their first sign-in, including the default admin.
 
 ```bash
-npx supabase functions deploy admin-actions --no-verify-jwt
+npx supabase login
+npx supabase functions deploy admin-actions --project-ref <project-ref> --no-verify-jwt
 ```
+
+(If you ran `login` and `link` in step 2, the first line and `--project-ref <project-ref>` can be left out.) No command line? Paste the function into the dashboard editor instead: [SETUP.md, step 4, option A](docs/SETUP.md#option-a-supabase-dashboard-no-install).
 
 - The name must be exactly `admin-actions`, and **JWT verification must be off** (the function checks every caller's token itself).
 - There are no secrets to set: Supabase gives the function its URL and secret key automatically.
@@ -154,9 +163,9 @@ In the Supabase dashboard:
 
 1. **Authentication > Sign In / Providers**: turn **off** **Allow new users to sign up**. FlowDesk has no sign-up page; admins create every account.
 2. **Authentication > URL Configuration**: set **Site URL** to `http://localhost:5173` for now and add `http://localhost:5173/**` under **Redirect URLs**. You will add your Vercel address in step 6.
-3. Click **Connect** (or open **Project Settings > API Keys**) and copy two values:
-   - the **Project URL**, like `https://abcdefghijklmnopqrst.supabase.co`
-   - the **publishable key** (`sb_publishable_...`), or the legacy `anon` key
+3. Click **Connect** at the top of the project dashboard and copy two values:
+   - the **Project URL**, like `https://abcdefghijklmnopqrst.supabase.co` (also under **Integrations > Data API**, or simply `https://<project-ref>.supabase.co`)
+   - the **publishable key** (`sb_publishable_...`), or the legacy `anon` key (also under **Project Settings > API Keys**)
 
 > [!WARNING]
 > **Never use the secret key (`sb_secret_...`) or the `service_role` key in FlowDesk's settings.** Every `VITE_` variable is compiled into the JavaScript that every visitor downloads. FlowDesk never needs the secret key in the browser.
@@ -186,7 +195,7 @@ Details: [SETUP.md, steps 5 and 6](docs/SETUP.md#5-lock-down-authentication).
 
 3. Sign in as `admin@flowdesk.com` with `Password2026!`. The **Set Your Password** screen appears: choose a new password (at least 8 characters, with a number and a special character).
 
-If you see **"FlowDesk isn't configured yet"**, a value in `.env.local` is missing or wrong; fix it and restart `npm run dev`. `.env.local` is git-ignored, so your keys are never committed.
+If you see **"FlowDesk isn't configured yet"**, a value in `.env.local` is missing (or the URL is not a valid address); fix it and restart `npm run dev`. A key that is present but wrong shows an "Invalid API key" alert at sign-in instead; see [Troubleshooting](docs/TROUBLESHOOTING.md#invalid-api-key-or-other-key-errors). `.env.local` is git-ignored, so your keys are never committed.
 
 Details: [SETUP.md, steps 7 and 8](docs/SETUP.md#7-run-flowdesk-locally).
 
@@ -201,8 +210,8 @@ Details: [SETUP.md, steps 7 and 8](docs/SETUP.md#7-run-flowdesk-locally).
    | `VITE_SUPABASE_URL` | Your Project URL |
    | `VITE_SUPABASE_ANON_KEY` | Your publishable or `anon` key |
 
-4. Click **Deploy**. After a minute or two you get an address like `https://flowdesk-abc123.vercel.app`.
-5. Back in Supabase, **Authentication > URL Configuration**: set **Site URL** to that address and add `https://flowdesk-abc123.vercel.app/**` to **Redirect URLs** (keep the localhost entry).
+4. Click **Deploy**. After a minute or two the site is live. On the project's **Overview** page, note the short address listed under **Domains**, like `https://your-project.vercel.app`. Use that one everywhere: the longer addresses with random letters belong to single deployments and may ask visitors to sign in to Vercel.
+5. Back in Supabase, **Authentication > URL Configuration**: set **Site URL** to that address and add it again with `/**` at the end (for example `https://your-project.vercel.app/**`) to **Redirect URLs** (keep the localhost entry).
 6. Open your Vercel address and sign in with the password you chose in step 5. It is the same database.
 
 **You're live.** Every push to your fork's `main` branch now redeploys the site automatically.
@@ -294,6 +303,7 @@ FlowDesk-Public/
 
 | Guide | For | Covers |
 |---|---|---|
+| [Setup Guide (beginners)](docs/SETUP_GUIDE.html) | First-time installers new to GitHub, Supabase and Vercel | A click-by-click walkthrough from zero to a working FlowDesk, online with Vercel or on your own computer (download the HTML file and open it in your browser) |
 | [Setup](docs/SETUP.md) | Whoever installs FlowDesk | Every step in detail, with no-install options and local Supabase |
 | [Deploy to Vercel](docs/DEPLOY_VERCEL.md) | Whoever installs FlowDesk | Hosting, environment variables, custom domains, updates |
 | [Getting Started](docs/GETTING_STARTED.md) | The first admin | Workspace setup, inviting users, roles and permissions, a first ticket |
@@ -318,4 +328,8 @@ FlowDesk-Public/
 
 FlowDesk is released under the [MIT License](LICENSE). The optional FullCalendar Premium plugin used by the Calendar's Timeline view is licensed separately by FullCalendar (see [SETUP.md](docs/SETUP.md#optional-fullcalendar-timeline-license-key)).
 
-<!-- CREDITS -->
+## Credits
+
+FlowDesk was created by **Jeff Tarlton** ([@JeffTarlton](https://github.com/JeffTarlton)) and is published by [LokdIT](https://www.lokdit.net).
+
+Running FlowDesk under your own name? Replace `src/components/LokdITLogo.tsx` and `public/favicon.svg` with your own logo.

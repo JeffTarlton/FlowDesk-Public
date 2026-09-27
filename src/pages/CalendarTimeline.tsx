@@ -67,14 +67,23 @@ export default function CalendarTimeline() {
 
   // --- Events (used for both views — resourceId only matters in timeline mode) ---
   const events = useMemo(() => {
+    // Target dates are calendar days (stored at noon UTC), so show them as all-day events on their
+    // UTC day. FullCalendar treats an all-day end as exclusive, hence the extra day.
+    const day = (s: string) => new Date(s).toISOString().slice(0, 10);
+    const dayAfter = (s: string) => {
+      const d = new Date(s);
+      d.setUTCDate(d.getUTCDate() + 1);
+      return d.toISOString().slice(0, 10);
+    };
     return filteredTickets
       .filter(t => t.target_start_date || t.target_completion_date)
       .map(t => ({
         id: t.id,
         resourceId: t.assigned_to ?? 'unassigned',
         title: `[${t.readable_id}] ${t.title}`,
-        start: t.target_start_date ?? t.target_completion_date!,
-        end: t.target_completion_date ?? t.target_start_date!,
+        start: day(t.target_start_date ?? t.target_completion_date!),
+        end: dayAfter(t.target_completion_date ?? t.target_start_date!),
+        allDay: true,
         backgroundColor: PRIORITY_COLORS[t.priority],
         borderColor: PRIORITY_COLORS[t.priority],
         textColor: '#ffffff',

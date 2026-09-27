@@ -20,42 +20,48 @@ Line numbers were accurate when this page was written; search for the quoted nam
 |---|---|---|---|
 | Data loading | [Most views only load the newest 50 tickets](#most-views-only-load-the-newest-50-tickets) | High | |
 | Data loading | [Some pages show the shared ticket list without loading it](#some-pages-show-the-shared-ticket-list-without-loading-it) | Medium | Yes |
-| Workflow | [Kanban drags skip approval gates](#kanban-drags-skip-approval-gates) | High | Yes |
 | Workflow | [Approval gates are enforced in the browser only](#approval-gates-are-enforced-in-the-browser-only) | Medium | |
 | Workflow | [Five statuses have no Kanban column](#five-statuses-have-no-kanban-column) | Medium | |
 | Workflow | [Edits the database refuses can look successful](#edits-the-database-refuses-can-look-successful) | Medium | |
-| Workflow | [Customer-approval auto-move does not notify watchers](#customer-approval-auto-move-does-not-notify-watchers) | Low | |
 | Workflow | [Status changes from the ticket panel are not logged](#status-changes-from-the-ticket-panel-are-not-logged) | Low | Yes |
-| Workflow | [Activity log shows literal asterisks](#activity-log-shows-literal-asterisks) | Low | Yes |
 | Workflow | [Admin "All Tickets" table shortcuts](#admin-all-tickets-table-shortcuts) | Low | Yes |
 | Workflow | [Branch managers' Kanban tickets get no branch](#branch-managers-kanban-tickets-get-no-branch) | Low | Yes |
-| Dates | [Dates can show one day early west of UTC](#dates-can-show-one-day-early-west-of-utc) | Medium | |
+| Workflow | [A Task cannot be created on its own](#a-task-cannot-be-created-on-its-own) | Low | |
+| Dates | [Dashboard and Support Portal read due dates in local time](#dashboard-and-support-portal-read-due-dates-in-local-time) | Low | Yes |
 | SLA | [SLA breach notifications are not implemented](#sla-breach-notifications-are-not-implemented) | Medium | |
 | SLA | [The SLA Resolution KPI always shows 0](#the-sla-resolution-kpi-always-shows-0) | Low | Yes |
 | SLA | [Some "SLA" labels are not based on SLA data](#some-sla-labels-are-not-based-on-sla-data) | Low | Yes |
+| SLA | [Only leaving Intake counts as the first response](#only-leaving-intake-counts-as-the-first-response) | Low | |
 | SLA | [Editing an SLA policy does not update open tickets](#editing-an-sla-policy-does-not-update-open-tickets) | Low | |
 | Security and admin | [Impersonation changes menus only](#impersonation-changes-menus-only) | Medium | |
 | Security and admin | [Files embedded in text use public links](#files-embedded-in-text-use-public-links) | Medium | |
+| Security and admin | [Deleted tickets and removed inline files stay in storage](#deleted-tickets-and-removed-inline-files-stay-in-storage) | Medium | |
 | Security and admin | [admin-actions returns HTTP 200 for errors](#admin-actions-returns-http-200-for-errors) | Low | |
 | Security and admin | [Invite User silently recovers existing accounts](#invite-user-silently-recovers-existing-accounts) | Low | |
 | Security and admin | [Force Password Reset has weak checks](#force-password-reset-has-weak-checks) | Low | Yes |
+| Security and admin | [Password rules are enforced only by the Edge Function](#password-rules-are-enforced-only-by-the-edge-function) | Low | |
+| Security and admin | [Deactivated users can still edit their own profile](#deactivated-users-can-still-edit-their-own-profile) | Low | |
+| Security and admin | [Invites and the seeded admin are audit-logged without an actor](#invites-and-the-seeded-admin-are-audit-logged-without-an-actor) | Low | |
+| Security and admin | [Users and Audit Logs tab rough edges](#users-and-audit-logs-tab-rough-edges) | Low | Yes |
 | Security and admin | [The customer role has no user interface](#the-customer-role-has-no-user-interface) | Low | |
 | Notifications | [Clicking a notification does not open the ticket](#clicking-a-notification-does-not-open-the-ticket) | Low | Yes |
 | Notifications | [No "Mark all as read" button](#no-mark-all-as-read-button) | Low | Yes |
 | Notifications | [Portal requesters are not notified](#portal-requesters-are-not-notified) | Low | Yes |
 | Notifications | [Mentions in the Support Portal do not notify](#mentions-in-the-support-portal-do-not-notify) | Low | Yes |
-| Navigation | [Selecting a ticket in the command palette does not open it](#selecting-a-ticket-in-the-command-palette-does-not-open-it) | Medium | Yes |
 | Navigation | [Command palette and shortcut quirks](#command-palette-and-shortcut-quirks) | Low | Yes |
 | Navigation | [Calendar "Unassigned" filter shows nothing](#calendar-unassigned-filter-shows-nothing) | Low | Yes |
 | Lists and board | [Dead buttons on the Kanban board](#dead-buttons-on-the-kanban-board) | Low | Yes |
 | Lists and board | [Kanban comment count is always 0](#kanban-comment-count-is-always-0) | Low | Yes |
+| Lists and board | [The Kanban board needs horizontal scrolling](#the-kanban-board-needs-horizontal-scrolling) | Low | |
 | Lists and board | [Status names and colors differ between screens](#status-names-and-colors-differ-between-screens) | Low | Yes |
 | Lists and board | ["Assigned to Me" chip count is always 0](#assigned-to-me-chip-count-is-always-0) | Low | Yes |
 | Lists and board | [Admin ticket list shows the creator's email as the customer email](#admin-ticket-list-shows-the-creators-email-as-the-customer-email) | Low | Yes |
+| Ticket panel | [Branch managers' comments are labelled "Customer"](#branch-managers-comments-are-labelled-customer) | Low | Yes |
+| Ticket panel | [Cosmetic glitches](#cosmetic-glitches) | Low | Yes |
 | Time tracking | [Billed hours can be overwritten](#billed-hours-can-be-overwritten) | Low | |
-| Knowledge Base | [KB view count does not increase for non-staff](#kb-view-count-does-not-increase-for-non-staff) | Low | Yes |
 | Knowledge Base | [KB search does not use the full-text index](#kb-search-does-not-use-the-full-text-index) | Low | Yes |
-| Support Portal | [Portal request details are missing the description, product and dates](#portal-request-details-are-missing-the-description-product-and-dates) | Medium | Yes |
+| Knowledge Base | [Knowledge Base card previews run text together](#knowledge-base-card-previews-run-text-together) | Low | Yes |
+| Support Portal | [Portal request details are missing the description and product](#portal-request-details-are-missing-the-description-and-product) | Medium | Yes |
 | Support Portal | [Portal labels and tracker gaps](#portal-labels-and-tracker-gaps) | Low | Yes |
 | Mobile | [Mobile shows a ticket list only](#mobile-shows-a-ticket-list-only) | Medium | |
 | Calendar | [Timeline view depends on a FullCalendar Premium plugin](#timeline-view-depends-on-a-fullcalendar-premium-plugin) | Low | |
@@ -63,6 +69,8 @@ Line numbers were accurate when this page was written; search for the quoted nam
 | Code health | [No automated tests](#no-automated-tests) | Medium | Yes |
 | Code health | [About 93 ESLint errors](#about-93-eslint-errors) | Low | Yes |
 | Code health | [Browser alert() dialogs for errors](#browser-alert-dialogs-for-errors) | Low | Yes |
+| Code health | [React Router future-flag warnings in the console](#react-router-future-flag-warnings-in-the-console) | Low | Yes |
+| Code health | [Local Supabase stack on Windows: a log container keeps restarting](#local-supabase-stack-on-windows-a-log-container-keeps-restarting) | Low | |
 
 ---
 
@@ -95,7 +103,7 @@ The opposite problem exists on **Admin Panel > All Tickets**, which loads every 
 
 The branch pickers in the new-ticket form and the ticket panel have the same problem: they read `useAdminStore().branches`, which is only loaded by the Admin Panel, Edit Profile or session recovery.
 
-**Where.** `src/pages/Dashboard.tsx:22`, `src/pages/CalendarTimeline.tsx:36`, `src/pages/MilestonesPage.tsx:17`, `src/pages/ReleasesPage.tsx:18`, `src/components/CommandPalette.tsx:34`, `src/components/MobileDashboard.tsx:12`; branches in `src/components/NewTicketModal.tsx:26` and `src/components/TicketDetailPanel.tsx:99`. The recovery path is `src/hooks/useSessionRecovery.ts:25`.
+**Where.** `src/pages/Dashboard.tsx:22`, `src/pages/CalendarTimeline.tsx:36`, `src/pages/MilestonesPage.tsx:17`, `src/pages/ReleasesPage.tsx:18`, `src/components/CommandPalette.tsx:35`, `src/components/MobileDashboard.tsx:12`; branches in `src/components/NewTicketModal.tsx:26` and `src/components/TicketDetailPanel.tsx:117`. The recovery path is `src/hooks/useSessionRecovery.ts:25`.
 
 **Suggested approach.** Add a small `useEnsureTickets()` hook that calls `fetchTickets()` when the store is empty, and use it on those pages. Call `fetchBranches()` when the branch list is empty in the two ticket components.
 
@@ -103,25 +111,13 @@ The branch pickers in the new-ticket form and the ticket panel have the same pro
 
 ## Workflow and approvals
 
-### Kanban drags skip approval gates
-
-**Severity:** High · **good first issue**
-
-**What happens.** Approval gates are never enforced when a card is dragged on the Kanban board. For example, with the default gate "Ready for Dev to In Progress needs admin approval", a card without admin approval can be dragged to In Progress and the change is saved. The same change through the ticket panel's **Status** dropdown is correctly refused. (Verified in a browser against the current code.)
-
-**Why.** `handleDragOver` moves the card optimistically and also rewrites `activeTicket.status` to the target column. dnd-kit calls `onDragEnd` from the latest props, so `handleDragEnd` checks `canTransition(activeTicket, newStatus)` with a ticket that is *already* in the target status, and finds no gate from "In Progress" to "In Progress". The store's own check in `updateTicketStatus` has the same problem, because it reads the optimistically moved ticket.
-
-**Where.** `src/pages/KanbanBoard.tsx:121-131` (optimistic move in `handleDragOver`) and `:177-187` (gate check in `handleDragEnd`); `src/store/useTicketStore.ts:99-107`.
-
-**Suggested approach.** Check the gate against the status captured at drag start: `canTransition({ ...activeTicket, status: originalStatus }, newStatus)`. Let `updateTicketStatus` accept the original status (or check before `moveTicketOptimistically`). Keep the existing `fetchTickets()` call to undo the optimistic move when a gate blocks. The acceptance-criteria rule for **Released / Closed** is not affected.
-
 ### Approval gates are enforced in the browser only
 
 **Severity:** Medium
 
-**What happens.** Apart from "only an admin may grant admin approval", the database does not know about gates. A status change made through **Admin Panel > All Tickets**, or directly through the API by any user who may edit the ticket, skips gates and the "Acceptance Criteria required before closing" rule. The Admin dropdown also writes no activity log entry. This is also listed under "Known design limits" in [SECURITY.md](../SECURITY.md).
+**What happens.** The ticket panel's **Status** dropdown and Kanban drags check approval gates, but only in the browser. Apart from "only an admin may grant admin approval", the database does not know about gates. A status change made through **Admin Panel > All Tickets**, or directly through the API by any user who may edit the ticket, skips gates and the "Acceptance Criteria required before closing" rule. The Admin dropdown also writes no activity log entry. This is also listed under "Known design limits" in [SECURITY.md](../SECURITY.md).
 
-**Where.** Client checks: `canTransition` in `src/store/useApprovalStore.ts:97`, used by `src/components/TicketDetailPanel.tsx:426-447`. Bypass: `updateTicketStatus` in `src/store/useAdminStore.ts:231` (called from `src/pages/Admin.tsx:524-538`). The only server rule: `guard_ticket_privileged_columns` in `supabase/migrations/20260926000000_flowdesk_schema.sql:725-753`.
+**Where.** Client checks: `canTransition` in `src/store/useApprovalStore.ts:97`, used by `handleStatusChange` in `src/components/TicketDetailPanel.tsx:440-461` and `handleDragEnd` in `src/pages/KanbanBoard.tsx:177-188`. Bypass: `updateTicketStatus` in `src/store/useAdminStore.ts:231` (called from `src/pages/Admin.tsx:524-538`). The only server rule: `guard_ticket_privileged_columns` in `supabase/migrations/20260926000000_flowdesk_schema.sql:725-753`.
 
 **Suggested approach.** Add a `BEFORE UPDATE` trigger on `public.tickets` that, when `status` changes and `current_user` is `authenticated`, looks up an active row in `approval_gates` for `(OLD.status, NEW.status)` and raises an error if the approvals are missing, and rejects `done` without acceptance criteria. Follow the pattern of the existing guard triggers so trusted paths (SQL editor, service role) still work. Put it in a new timestamped migration, and make the UI show the database's error message.
 
@@ -141,41 +137,21 @@ The branch pickers in the new-ticket form and the ticket panel have the same pro
 
 **What happens.** Ticket edits are applied to the screen first (optimistic updates). When row level security filters a row out, PostgREST returns success with zero rows changed, not an error, so the change stays on screen until the next reload. Examples: a branch manager editing or deleting a ticket that is not from their branch, or deleting any ticket. The ticket panel also shows controls that some roles cannot use: **Delete** and **Link** for branch managers, and the **New Release** button for support desk (that one does show an error).
 
-**Where.** `updateTicketFields` and `deleteTicket` in `src/store/useTicketStore.ts:131-167`; the controls in `src/components/TicketDetailPanel.tsx` (footer **Delete**, **Link** in Linked Tickets).
+Attachments have the same problem. The trash icon in the **Attachments** section is shown to every role, but only the uploader and staff may remove a file. For anyone else, storage and the database both remove nothing, yet the panel shows "Attachment removed"; the file and its row are still there after a reload.
 
-**Suggested approach.** Add `.select('id')` to updates and deletes and treat an empty result as "not permitted": roll back and show a toast. Hide controls the current role cannot use (see the roles table in [GETTING_STARTED.md](GETTING_STARTED.md#5-roles-and-permissions)).
+**Where.** `updateTicketFields` and `deleteTicket` in `src/store/useTicketStore.ts:132-168`; `handleRemoveAttachment` in `src/components/TicketDetailPanel.tsx:520-530`, which ignores the `{ error }` results of `storage.remove` and of the row delete; the controls in `src/components/TicketDetailPanel.tsx` (footer **Delete**, **Link** in Linked Tickets, the attachment trash icon).
 
-### Customer-approval auto-move does not notify watchers
-
-**Severity:** Low
-
-**What happens.** Approving the customer side of a ticket in **Awaiting Customer Approval** moves it to **Ready for Dev** (a database trigger). Watchers and the customer get no "status changed" notification for that move, and no activity log entry is written for it.
-
-**Why.** `on_ticket_status_change` is declared `AFTER UPDATE OF status`. PostgreSQL fires column-specific triggers only when the `UPDATE` statement's `SET` list names the column. The client only sets `customer_approved`; the status is changed by the `BEFORE` trigger `ticket_auto_ready_for_dev`, which does not count.
-
-**Where.** `supabase/migrations/20260926000000_flowdesk_schema.sql`: `handle_customer_approval_trigger` at `:758-771`, trigger at `:1181-1184`, `on_ticket_status_change` at `:1202-1205`. Client: `approveTicket` in `src/store/useTicketStore.ts:268`.
-
-**Suggested approach.** In a new migration, recreate the trigger as `AFTER UPDATE ON public.tickets FOR EACH ROW WHEN (OLD.status IS DISTINCT FROM NEW.status)`. Consider the same change for `on_ticket_assignment`.
+**Suggested approach.** Add `.select('id')` to updates and deletes and treat an empty result as "not permitted": roll back and show a toast. Check the results in `handleRemoveAttachment` the same way. Hide controls the current role cannot use (see the roles table in [GETTING_STARTED.md](GETTING_STARTED.md#5-roles-and-permissions)), including the attachment trash icon for users who are neither the uploader nor staff.
 
 ### Status changes from the ticket panel are not logged
 
 **Severity:** Low · **good first issue**
 
-**What happens.** Moving a ticket on the Kanban board writes "Moved request to ..." to its activity log. Changing the **Status** dropdown in the ticket panel writes nothing, so the history is incomplete.
+**What happens.** Moving a ticket on the Kanban board writes "Moved request to ..." to its activity log. Changing the **Status** dropdown in the ticket panel writes nothing, so the history is incomplete. The automatic move from **Awaiting Customer Approval** to **Ready for Dev**, made by a database trigger when the customer approval is recorded, is not logged either: the feed only shows "Granted Customer approval".
 
-**Where.** `handleStatusChange` in `src/components/TicketDetailPanel.tsx:426` calls `updateTicketFields`, which only logs assignment changes (`src/store/useTicketStore.ts:143-167`). Kanban uses `updateTicketStatus` (`:95-129`).
+**Where.** `handleStatusChange` in `src/components/TicketDetailPanel.tsx:440-461` calls `updateTicketFields`, which only logs assignment changes (`src/store/useTicketStore.ts:144-168`). Kanban uses `updateTicketStatus` (`:95-130`). The automatic move: `approveTicket` in `src/store/useTicketStore.ts:269` and the `ticket_auto_ready_for_dev` trigger (`handle_customer_approval_trigger`) in `supabase/migrations/20260926000000_flowdesk_schema.sql`.
 
-**Suggested approach.** Quick fix: call `updateTicketStatus` from the panel. Better: write status-change log rows in a database trigger, which also covers the Admin dropdown and API clients.
-
-### Activity log shows literal asterisks
-
-**Severity:** Low · **good first issue**
-
-**What happens.** Entries such as "Moved request to \*\*Ready for dev\*\*" and "Linked ticket as \*\*Blocks\*\*" show the asterisks, because the feed renders HTML, not Markdown.
-
-**Where.** `src/store/useTicketStore.ts:121`, `src/store/useRelationshipStore.ts:80`; rendered in `src/components/TicketDetailPanel.tsx:1924`.
-
-**Suggested approach.** Use `<strong>...</strong>`, as the approval entries already do (`src/store/useTicketStore.ts:284`).
+**Suggested approach.** Quick fix: call `updateTicketStatus` from the panel. Better: write status-change log rows in a database trigger, which also covers the automatic customer-approval move, the Admin dropdown and API clients.
 
 ### Admin "All Tickets" table shortcuts
 
@@ -200,22 +176,34 @@ The branch pickers in the new-ticket form and the ticket panel have the same pro
 
 **Suggested approach.** When the creator is a branch manager, set `branch_id` to their branch, as `src/components/BranchRequestModal.tsx:37-47` does.
 
+### A Task cannot be created on its own
+
+**Severity:** Low
+
+**What happens.** In the new-ticket form, choosing the type **Task** makes **Parent Ticket** a required field, and the list only offers top-level tickets that are already loaded. A Task therefore cannot stand alone, and cannot be the first ticket in a new installation. The form does not explain why.
+
+**Where.** The two Parent Ticket fields in `src/components/NewTicketModal.tsx:348-362` and `:385-400`.
+
+**Suggested approach.** Either make the parent optional, or add a hint in the form that a Task must belong to a parent ticket (and suggest another type when there is none).
+
 ---
 
 ## Dates
 
-### Dates can show one day early west of UTC
+### Dashboard and Support Portal read due dates in local time
 
-**Severity:** Medium
+**Severity:** Low · **good first issue**
 
-**What happens.** For users in time zones behind UTC (for example the Americas), dates can be displayed one day early:
+**What happens.** Ticket target dates are calendar days, stored at noon UTC. The ticket panel and the Calendar read them back by their UTC day, and milestone and release dates are parsed as local dates, so most screens show the right day everywhere. Two screens still convert the stored value to local time:
 
-- Ticket **Target Start**, **Target Test** and **Due Date** are saved as `yyyy-MM-dd` into `timestamptz` columns, so they are stored as midnight UTC, and then shown with `new Date(...)` in local time: 15 October becomes 14 October. Opening **Edit Timeline** and saving without changes can then store the earlier date. The Calendar and Support Portal are affected the same way.
-- Milestone target dates and release dates are `date` columns, but they are displayed with `new Date('YYYY-MM-DD').toLocaleDateString()`, which parses the value as UTC. For example, in `America/Chicago` `new Date('2026-10-15').toLocaleDateString()` gives `10/14/2026`. The **Overdue** checks use the same parsing.
+- The **Dashboard** shows due dates with `new Date(...).toLocaleDateString()`, and counts a ticket as **Overdue** as soon as `new Date(due) < now`. A ticket therefore turns Overdue at 12:00 UTC on its due date, not after the end of that day.
+- The Support Portal's request details (**Delivery Roadmap**) format the target dates with `format(new Date(...))`.
 
-**Where.** `src/components/TicketDetailPanel.tsx:176-178` and `:644-646`; `src/pages/CalendarTimeline.tsx:76-77`; `src/pages/MilestonesPage.tsx:231` and `:281`; `src/pages/ReleasesPage.tsx:253`; similar parsing in `src/pages/ExecutiveDashboard.tsx` and `src/pages/ReportsPage.tsx`.
+In time zones at UTC+12 or later, both screens show the next day.
 
-**Suggested approach.** Treat date-only values as local calendar dates: parse them with `date-fns` `parseISO` (which reads `YYYY-MM-DD` as local midnight) and never round-trip them through UTC. Consider migrating the three ticket date columns to `date`. Add a unit test that runs with `TZ=America/Chicago`.
+**Where.** `src/pages/Dashboard.tsx:35-39` (Overdue card), `:259-261` (overdue check in the drill-down window), and the due-date labels at `:289` and `:429`; `src/components/CustomerTicketDetail.tsx:348`, `:356` and `:364`. The correct handling is `toStoredDay` / `fromStoredDay` in `src/components/TicketDetailPanel.tsx:27-43`.
+
+**Suggested approach.** Move `fromStoredDay` into a shared helper and use it on both screens. Count a ticket as Overdue only after the end of its due day.
 
 ---
 
@@ -253,6 +241,16 @@ The branch pickers in the new-ticket form and the ticket panel have the same pro
 
 **Suggested approach.** Either compute these from `sla_response_deadline` / `sla_resolution_deadline`, or rename them ("Activity", "Stale", "Waiting in Intake").
 
+### Only leaving Intake counts as the first response
+
+**Severity:** Low
+
+**What happens.** The response SLA clock stops only when a ticket's status leaves **Intake / New Request**. A public reply from the team, or assigning the ticket, does not count as a first response, so a ticket that was answered quickly but left in Intake still breaches its response target.
+
+**Where.** `track_first_response` in `supabase/migrations/20260926000000_flowdesk_schema.sql:846-867`, which sets `first_responded_at` only when the status leaves `pending`.
+
+**Suggested approach.** In a new migration, also stamp `first_responded_at` (and the breach flag) from the comment trigger when a staff member posts a public reply, and optionally on the first assignment. Document the chosen rule in the SLA tab's help text.
+
 ### Editing an SLA policy does not update open tickets
 
 **Severity:** Low
@@ -283,9 +281,19 @@ The branch pickers in the new-ticket form and the ticket panel have the same pro
 
 **What happens.** Images and files inserted with **Attach** in a description, comment (including internal notes) or knowledge base article are stored as public storage URLs. Anyone who has the exact link can open the file without signing in. Files in the ticket **Attachments** panel open through short-lived signed links, but the buckets are public, so those files are reachable by URL too. Details and mitigations are in [SECURITY.md](../SECURITY.md#6-attachments-are-public-by-url).
 
-**Where.** `getPublicUrl` in `src/components/RichTextEditor.tsx:41`; bucket definitions in `supabase/migrations/20260926000000_flowdesk_schema.sql:1754-1761`.
+**Where.** `getPublicUrl` in `src/components/RichTextEditor.tsx:41`; bucket definitions in `supabase/migrations/20260926000000_flowdesk_schema.sql:1792-1799`.
 
-**Suggested approach.** Make `ticket_attachments` private, store the storage path in the HTML (for example a `data-path` attribute), and replace it with a signed URL when the content is rendered. Avatars can stay public.
+**Suggested approach.** Make `ticket_attachments` private, store the storage path in the HTML (for example a `data-path` attribute), and replace it with a signed URL when the content is rendered. Avatars can stay public. While the paths are public, consider building them with `crypto.randomUUID()` instead of the current timestamp and 4-character random part, so they are harder to guess.
+
+### Deleted tickets and removed inline files stay in storage
+
+**Severity:** Medium
+
+**What happens.** Deleting a ticket removes its database rows (comments, attachment rows, time entries and so on cascade), but never the files in the `ticket_attachments` bucket. Deleting a comment or a knowledge base article does not remove files inserted into it either. Files inserted with the editor's **Attach** button (stored under `comment-attachments/`) have no delete control anywhere in the app: removing the image or link from the text leaves the file in the bucket. Because the bucket is public, all of these files stay reachable by anyone who has the URL. This contradicts the advice in [SECURITY.md](../SECURITY.md#6-attachments-are-public-by-url) to delete a file to revoke access; today only the attachment panel's trash icon, or an admin in the Supabase **Storage** dashboard, removes a file.
+
+**Where.** `deleteTicket` in `src/store/useTicketStore.ts:132-142`; editor uploads in `handleFileUpload`, `src/components/RichTextEditor.tsx:24-45`.
+
+**Suggested approach.** Remove a ticket's attachment objects before or when the ticket is deleted (from the client with `storage.remove`, or in an Edge Function using the service role). Track editor uploads (for example in a table with the ticket, comment or article they belong to) so they can be cleaned up when that content is deleted, and offer a periodic clean-up of objects no row refers to.
 
 ### admin-actions returns HTTP 200 for errors
 
@@ -293,7 +301,7 @@ The branch pickers in the new-ticket form and the ticket panel have the same pro
 
 **What happens.** The `admin-actions` Edge Function always answers HTTP 200 and puts failures in `{ error: "..." }`. This keeps error messages visible in the UI, because the call sites read `data.error`, but it hides failures from HTTP monitoring and from anyone calling the function directly. The intended status (400, 401, 403, 404, 409 or 500) is only written to the function logs.
 
-**Where.** `supabase/functions/admin-actions/index.ts:24-27`, `jsonResponse` at `:59-64`, catch block at `:325-331`. Call sites: `src/components/NewUserModal.tsx:81-82`, `src/components/ForcePasswordResetModal.tsx:220-221`, `src/components/TicketDetailPanel.tsx:237-241`, and the direct `fetch` in `forcePasswordReset` (`src/store/useAdminStore.ts:250`). Error mapping: `src/lib/edgeFunctionError.ts`.
+**Where.** `supabase/functions/admin-actions/index.ts:25-28`, `jsonResponse` at `:60-65`, catch block at `:342-348`. Call sites: `src/components/NewUserModal.tsx:81-82`, `src/components/ForcePasswordResetModal.tsx:37-46`, `src/components/TicketDetailPanel.tsx:251-255`, and the direct `fetch` in `forcePasswordReset` (`src/store/useAdminStore.ts:250`). Error mapping: `src/lib/edgeFunctionError.ts`.
 
 **Suggested approach.** In supabase-js, a non-2xx response arrives as a `FunctionsHttpError` whose `context` is the `Response`, so the body can still be read with `await error.context.json()`. Add a helper that does this, switch all four call sites and `describeAdminActionsError` to it, and only then return real status codes from the function. Ship both halves in one pull request.
 
@@ -303,9 +311,11 @@ The branch pickers in the new-ticket form and the ticket panel have the same pro
 
 **What happens.** If the email in **Invite User** already belongs to an Auth account without an active profile (a deactivated user, or someone added in the Supabase dashboard), the function takes that account over: it sets the new temporary password, role and branch, and reactivates it. That is usually what an admin wants, but the UI says "User Created!" with no hint that an old account, with its history, was reused. To find the account, the function pages through all Auth users 1000 at a time, which gets slow with many users.
 
-**Where.** `create-user` in `supabase/functions/admin-actions/index.ts:169-240`; `findAuthUserByEmail` at `:98-110`; success screen in `src/components/NewUserModal.tsx:95-154`.
+A failed invite also leaves a half-created account behind. If `create-user` fails after the Auth user was created, for example because the profile update is refused for an unknown branch, the Auth user stays with its placeholder profile (inactive, role `customer`). The admin sees the error; retrying the invite then recovers that account as described above.
 
-**Suggested approach.** Return a `recovered: true` flag and show "An existing account was reactivated" in the modal. Look the user up by email with a service-role-only SQL function over `auth.users` instead of paging through `listUsers`.
+**Where.** `create-user` in `supabase/functions/admin-actions/index.ts:170-241` (the Auth user is created at `:186-190`, the profile upsert follows at `:225-238`); `findAuthUserByEmail` at `:99-111`; success screen in `src/components/NewUserModal.tsx:95-154`.
+
+**Suggested approach.** Return a `recovered: true` flag and show "An existing account was reactivated" in the modal. Look the user up by email with a service-role-only SQL function over `auth.users` instead of paging through `listUsers`. Validate `branch_id` before calling `createUser`, or delete the new Auth user when the profile upsert fails.
 
 ### Force Password Reset has weak checks
 
@@ -315,9 +325,51 @@ The branch pickers in the new-ticket form and the ticket panel have the same pro
 - The admin types the temporary password in a plain text field; only a 6-character minimum is checked, and the server does not validate it at all.
 - Clicking the orange key of a user with a pending reset cancels the reset immediately, with no confirmation and without changing the password.
 
-**Where.** `src/pages/Admin.tsx:403-411` (key button) and `:1357-1362` (length check); `admin-force-password-reset` in `supabase/functions/admin-actions/index.ts:271-295`.
+**Where.** `src/pages/Admin.tsx:402-416` (key button) and `:1357-1362` (length check); `admin-force-password-reset` in `supabase/functions/admin-actions/index.ts:288-312`.
 
 **Suggested approach.** Reuse `generateTempPassword()` from `src/components/NewUserModal.tsx` and show the password once, as Invite User does. Validate length and character classes on the server. Ask for confirmation before cancelling a pending reset.
+
+### Password rules are enforced only by the Edge Function
+
+**Severity:** Low
+
+**What happens.** FlowDesk's password rules (at least 8 characters, a number and a special character, not the published default) are checked by the **Set Your Password** screen and by the `update-password` action of `admin-actions`. A signed-in user can bypass both by calling `supabase.auth.updateUser({ password })` directly and set any password Supabase Auth accepts (6 characters by default). This does **not** clear `force_password_reset`, so the first-login reset still cannot be skipped. (`admin-force-password-reset` does not validate the temporary password either; see [Force Password Reset has weak checks](#force-password-reset-has-weak-checks).)
+
+**Where.** `validateNewPassword` in `supabase/functions/admin-actions/index.ts:89-97`, used only by `update-password` (`:243-286`).
+
+**Suggested approach.** Mitigation, no code change: set matching rules in the Supabase dashboard under **Authentication > Sign In / Providers > Email** (minimum password length 8, which is still compatible with the 10-character temporary passwords from **Invite User**). This is also in the [SECURITY.md hardening checklist](../SECURITY.md#deployment-hardening-checklist). FlowDesk's own check can stay as a friendlier first line.
+
+### Deactivated users can still edit their own profile
+
+**Severity:** Low
+
+**What happens.** Deactivating a user blocks their access to tickets and all other shared data, but a deactivated user can still sign in, and can still change their own **full name**, **phone**, **company name** and **avatar** through the API. The privileged columns (role, active flag, branch, email, password reset flag) stay protected by `guard_profile_privileged_columns`. The notifications UPDATE and DELETE policies do not check for an active account either, although the SELECT policy does, so filtered requests from a deactivated account find no rows.
+
+**Where.** Policy "Users can update their own profile; admins can update any" in `supabase/migrations/20260926000000_flowdesk_schema.sql:1426-1429`; notifications policies at `:1663-1672`.
+
+**Suggested approach.** In a new migration, add `(SELECT public.get_my_role()) IS NOT NULL` to the self-update branch of the profiles UPDATE policy and to the notifications UPDATE and DELETE policies.
+
+### Invites and the seeded admin are audit-logged without an actor
+
+**Severity:** Low
+
+**What happens.** Every **Invite User** writes an audit log row "UPDATE_ROLE customer → *role*" with an empty **Actor**, because `create-user` updates the new profile with the service role, so `auth.uid()` is `NULL` inside the logging trigger. The seed file does the same for the default admin, so a fresh installation already has one such row before anyone signs in.
+
+**Where.** The profile upsert in `create-user`, `supabase/functions/admin-actions/index.ts:225-238`; `log_profile_changes` in `supabase/migrations/20260926000000_flowdesk_schema.sql:663-686`; the seed's profile upsert in `supabase/migrations/20260926000100_seed_admin.sql:93-100`.
+
+**Suggested approach.** Let `create-user` tell the trigger who the calling admin is, for example with `set_config('app.actor_id', ...)` read by `log_profile_changes` when `auth.uid()` is `NULL`, or write its own audit row. Label the seed row as a system action.
+
+### Users and Audit Logs tab rough edges
+
+**Severity:** Low · **good first issue**
+
+**What happens.**
+- **Deactivate User** (the ban icon in **Admin Panel > Users**) takes effect immediately, with no confirmation. **Permanently Delete** does ask.
+- The **Audit Logs** tab loads its rows once, when the Admin Panel opens, and again only when you click **Refresh**. Role changes, activations, deletions and invites made in the same visit do not appear until then.
+
+**Where.** `src/pages/Admin.tsx:417-423` (deactivate button); `fetchAuditLogs` is called at `:72` (on mount) and by the Refresh button at `:776`.
+
+**Suggested approach.** Ask for confirmation before deactivating, as the delete button does. Call `fetchAuditLogs()` after role, activation, delete and invite actions.
 
 ### The customer role has no user interface
 
@@ -325,7 +377,7 @@ The branch pickers in the new-ticket form and the ticket panel have the same pro
 
 **What happens.** The database has a fifth role, `customer`, with policies that let a customer see and comment on tickets whose `customer_email` matches their profile email. The app has no screens for it: a customer sees "No Role Assigned", and the role pickers do not offer it. It is also the placeholder role given to any account not created through **Invite User**.
 
-**Where.** Enum in `supabase/migrations/20260926000000_flowdesk_schema.sql:58-60`; `handle_new_user` at `:556-576`; customer ticket policy at `:1441-1447`. Frontend: `APP_ROLES` in `src/App.tsx:25` and the check at `:63`; `UserRole` in `src/types/index.ts:1`.
+**Where.** Enum in `supabase/migrations/20260926000000_flowdesk_schema.sql:58-60`; `handle_new_user` at `:556-576`; customer ticket policy at `:1477-1483`. Frontend: `APP_ROLES` in `src/App.tsx:25` and the check at `:63`; `UserRole` in `src/types/index.ts:1`.
 
 **Suggested approach.** Either build a customer portal (a route guarded for `customer` that reuses `src/components/CustomerTicketDetail.tsx` and lists tickets by `customer_email`, plus the role in the pickers and `create-user`), or remove the role in a migration and use a neutral placeholder.
 
@@ -341,7 +393,7 @@ The branch pickers in the new-ticket form and the ticket panel have the same pro
 
 **Where.** `src/components/NotificationDropdown.tsx:104-107` (there is a "Future:" comment).
 
-**Suggested approach.** Build one "open ticket by id" mechanism and use it here and in the command palette (see [below](#selecting-a-ticket-in-the-command-palette-does-not-open-it)).
+**Suggested approach.** Reuse the command palette's approach: it keeps the chosen ticket's id in state and renders `TicketDetailPanel` on top of the current page (`src/components/CommandPalette.tsx:39-41` and `:74-82`). A shared "open ticket by id" host in `src/layouts/AppLayout.tsx`, which also loads a ticket that is not in the store, would serve both.
 
 ### No "Mark all as read" button
 
@@ -369,7 +421,7 @@ The branch pickers in the new-ticket form and the ticket panel have the same pro
 
 **What happens.** An @mention typed in a Support Portal message is saved in the text but sends no notification. Mentions in the ticket panel do.
 
-**Where.** `handleSendComment` in `src/components/CustomerTicketDetail.tsx:95`; the mention logic to reuse is in `src/components/TicketDetailPanel.tsx:265-289`.
+**Where.** `handleSendComment` in `src/components/CustomerTicketDetail.tsx:95`; the mention logic to reuse is in `src/components/TicketDetailPanel.tsx:279-303`.
 
 **Suggested approach.** Move the mention extraction and notification insert into a shared helper and call it from both places.
 
@@ -377,28 +429,17 @@ The branch pickers in the new-ticket form and the ticket panel have the same pro
 
 ## Navigation and search
 
-### Selecting a ticket in the command palette does not open it
-
-**Severity:** Medium · **good first issue**
-
-**What happens.** Choosing a ticket in the **Ctrl+K** palette navigates to `/?ticket=<id>`. Nothing reads the `ticket` parameter, and `/` immediately redirects to the user's home page, so the ticket never opens.
-
-**Where.** `src/components/CommandPalette.tsx:123`; the redirect in `DefaultLanding`, `src/App.tsx:70-82`.
-
-**Suggested approach.** Add a ticket host in `src/layouts/AppLayout.tsx` that watches a `ticket` search parameter on any page and renders `TicketDetailPanel`, loading the ticket by id when it is not in the store. Then navigate to the current path plus `?ticket=<id>`. Notifications can use the same mechanism.
-
 ### Command palette and shortcut quirks
 
 **Severity:** Low · **good first issue**
 
 **What happens.**
-- **Go to Backlog** navigates to `/`, which is the user's home page (My Work for developers).
-- **Go to Customer Portal** is offered to admins, who are not allowed on `/portal` and are bounced back.
+- **Go to Backlog** navigates to `/`, which is the user's home page (My Work for developers, the Dashboard for branch managers).
 - The sidebar shows the hint "Cmd K" on every platform; Ctrl+K works too.
 
-**Where.** `src/components/CommandPalette.tsx:153` and `:179`; `src/App.tsx:168-172`; `src/layouts/AppLayout.tsx:186`.
+**Where.** `src/components/CommandPalette.tsx:163`; `src/layouts/AppLayout.tsx:186`.
 
-**Suggested approach.** Navigate to `/backlog` (only for roles that have it), hide the portal item for admins, and show "Ctrl K" on non-Apple platforms.
+**Suggested approach.** Navigate to `/backlog` (only for roles that have it), and show "Ctrl K" on non-Apple platforms.
 
 ### Calendar "Unassigned" filter shows nothing
 
@@ -406,7 +447,7 @@ The branch pickers in the new-ticket form and the ticket panel have the same pro
 
 **What happens.** Choosing **Unassigned** in the Calendar's Assignee filter hides every ticket, because the filter compares `assigned_to` with the string `'unassigned'`. The same list shows every profile by full name only, so users without a name appear blank.
 
-**Where.** `src/pages/CalendarTimeline.tsx:55` and `:160-162`.
+**Where.** `src/pages/CalendarTimeline.tsx:55` (filter) and `:162-172` (the Assignee list).
 
 **Suggested approach.** Handle `'unassigned'` as the Kanban board does (`src/pages/KanbanBoard.tsx:80-81`) and fall back to the email when there is no name.
 
@@ -434,13 +475,23 @@ The branch pickers in the new-ticket form and the ticket panel have the same pro
 
 **Suggested approach.** Add `ticket_comments(count)` to the ticket query in `src/store/useTicketStore.ts` and show that, or remove the counter.
 
+### The Kanban board needs horizontal scrolling
+
+**Severity:** Low
+
+**What happens.** The six columns are 320 px wide each, so they do not fit on a 1280 px or 1440 px screen. **On-Hold**, **Approved / Ready to Release** and **Released / Closed** are off to the right, and moving a card from Intake to Released / Closed takes a horizontal scroll between drags.
+
+**Where.** `min-w-[320px] max-w-[320px]` in `src/components/KanbanColumn.tsx:28`.
+
+**Suggested approach.** Let columns shrink to a smaller minimum (for example 240 px) on narrower screens, or make the rarely used columns collapsible.
+
 ### Status names and colors differ between screens
 
 **Severity:** Low · **good first issue**
 
-**What happens.** Each screen has its own status map. The same status is called "Approved", "Beta Testing" or "UAT" depending on the page, and the Backlog and My Work have no label or color for Planning, SOW In Progress, Awaiting Customer Approval, In Review and Rejected (the raw value is shown). The dev-task list in the ticket panel shows raw values for statuses without a Kanban column.
+**What happens.** Each screen has its own status map. The same status is called "Approved", "Beta Testing" or "UAT" depending on the page, and the Backlog and My Work have no label or color for Planning, SOW In Progress, Awaiting Customer Approval, In Review and Rejected (the raw value, such as `awaiting_customer_approval`, is shown). The dev-task list in the ticket panel shows raw values for statuses without a Kanban column, including the four on-hold statuses. (The Support Portal has a label for every status.)
 
-**Where.** `src/pages/Backlog.tsx:17-27`, `src/pages/MyWork.tsx:18-28`, `src/pages/Portal.tsx:29-37`, `src/components/MobileTaskCard.tsx:23-40`, `src/pages/Admin.tsx:82-86`, `src/components/TicketDetailPanel.tsx:1567`.
+**Where.** `src/pages/Backlog.tsx:17-27`, `src/pages/MyWork.tsx:18-28`, `src/pages/Portal.tsx:32-47`, `src/components/MobileTaskCard.tsx:23-40`, `src/pages/Admin.tsx:82-86`, `src/components/TicketDetailPanel.tsx:1581` (dev-task status lookup).
 
 **Suggested approach.** Create one status definition (label, short label, color) next to `COLUMNS` in `src/types/index.ts` and use it everywhere. The Support Portal may keep deliberately simpler, customer-friendly names.
 
@@ -466,6 +517,32 @@ The branch pickers in the new-ticket form and the ticket panel have the same pro
 
 ---
 
+## Ticket panel
+
+### Branch managers' comments are labelled "Customer"
+
+**Severity:** Low · **good first issue**
+
+**What happens.** The **Unified Ticket Feed** treats only admins, developers and support desk as staff. A branch manager's comment is therefore labelled **Customer**, shown in a white bubble on the right, like a requester's message. Every staff comment shows the same generic "S" avatar instead of the author's initial.
+
+**Where.** `isStaff` in `src/components/TicketDetailPanel.tsx:1949`; the bubble alignment at `:1953`, the avatar at `:1957` and the label at `:1967`.
+
+**Suggested approach.** Label branch managers as "Team" (or "Branch"), keep "Customer" for the `customer` role, and show each author's initial or avatar.
+
+### Cosmetic glitches
+
+**Severity:** Low · **good first issue**
+
+**What happens.**
+- The **New Milestone**, **New Release** and **Link** buttons turn into **Cancel** while their form is open, but keep the **+** icon.
+- On a 375 px wide screen, the ticket panel's type pill overlaps the export and close icons in the header.
+
+**Where.** `src/pages/MilestonesPage.tsx:130`, `src/pages/ReleasesPage.tsx:101`, `src/components/TicketDetailPanel.tsx:1236`; the panel header in `src/components/TicketDetailPanel.tsx:731-809`.
+
+**Suggested approach.** Show an **X** icon (or no icon) while the button reads **Cancel**. Let the header wrap, or move the type pill below the ticket ID, on narrow screens.
+
+---
+
 ## Time tracking
 
 ### Billed hours can be overwritten
@@ -474,23 +551,13 @@ The branch pickers in the new-ticket form and the ticket panel have the same pro
 
 **What happens.** **Billed Hours** is both a field you can type in (**Edit Timeline**) and a running total. Stopping a timer sets it to the sum of the ticket's time entries, which discards any value typed by hand. **Log Time** adds to the current value and deleting an entry subtracts, so the numbers can drift apart.
 
-**Where.** `stopTimer` in `src/store/useTimerStore.ts:108-120`; `handleLogTime`, `handleDeleteTimeEntry` and `handleEditTimeEntry` in `src/components/TicketDetailPanel.tsx:334-410`.
+**Where.** `stopTimer` in `src/store/useTimerStore.ts:108-120`; `handleLogTime`, `handleDeleteTimeEntry` and `handleEditTimeEntry` in `src/components/TicketDetailPanel.tsx:348-424`.
 
 **Suggested approach.** Derive billed hours from `time_entries` in one place (a database trigger or view) and make the field read-only, or store manual adjustments as their own time entries.
 
 ---
 
 ## Knowledge Base
-
-### KB view count does not increase for non-staff
-
-**Severity:** Low · **good first issue**
-
-**What happens.** Opening an article updates `view_count` directly. Row level security only lets admins, developers and support desk update articles, so views by branch managers are silently refused (the count only rises on their screen). The read-then-write update can also lose counts when two people open an article at once.
-
-**Where.** `incrementViewCount` in `src/store/useKbStore.ts:127-140`; policy "Staff can manage articles" in `supabase/migrations/20260926000000_flowdesk_schema.sql:1733-1737`.
-
-**Suggested approach.** Add a `SECURITY DEFINER` function such as `increment_kb_view_count(article_id uuid)` that runs `view_count = view_count + 1` for published articles when the caller has a role, grant `EXECUTE` to `authenticated`, and call it with `supabase.rpc`.
 
 ### KB search does not use the full-text index
 
@@ -502,19 +569,29 @@ The branch pickers in the new-ticket form and the ticket panel have the same pro
 
 **Suggested approach.** Query with `.textSearch('fts', query, { type: 'websearch' })` when the search box is not empty.
 
+### Knowledge Base card previews run text together
+
+**Severity:** Low · **good first issue**
+
+**What happens.** The preview on each article card strips the HTML tags without adding spaces, so a heading runs straight into the next paragraph, for example "checks.Quick checksMake sure".
+
+**Where.** `article.content.replace(/<[^>]*>/g, '')` in `src/pages/KnowledgeBase.tsx:379`.
+
+**Suggested approach.** Replace block-level tags with a space before stripping, or read the text with `DOMParser` and `textContent`, then collapse repeated whitespace.
+
 ---
 
 ## Support Portal
 
-### Portal request details are missing the description, product and dates
+### Portal request details are missing the description and product
 
 **Severity:** Medium · **good first issue**
 
-**What happens.** The Support Portal loads only a few columns per ticket. When a request is opened, the detail view has no **Original Request** text, no product chip, and no target dates in the **Delivery Roadmap** (the "All Open Requests" list also lacks hours).
+**What happens.** The Support Portal loads only some columns per ticket. When a request is opened, the detail view has no **Original Request** text and no product chip. Requests opened from **Your Requests** do show their target dates and hours in the **Delivery Roadmap**, but rows in **All Open Requests** load no dates or hours, so requests opened from that list show an empty roadmap.
 
-**Where.** The `select(...)` calls in `src/pages/Portal.tsx:87` and `:97`; the detail view reads `ticket.description`, `ticket.product` and the target date fields in `src/components/CustomerTicketDetail.tsx`.
+**Where.** The `select(...)` calls in `src/pages/Portal.tsx:105-111` (Your Requests) and `:115-121` (All Open Requests); the detail view reads `ticket.description` (Original Request, `src/components/CustomerTicketDetail.tsx:292`), `ticket.product` (product chip, `:213`) and the target date fields.
 
-**Suggested approach.** Select the missing columns (including `product:products(*)`), or load the full ticket by id inside `CustomerTicketDetail`.
+**Suggested approach.** Select the missing columns (including `description` and `product:products(*)`), or load the full ticket by id inside `CustomerTicketDetail`.
 
 ### Portal labels and tracker gaps
 
@@ -538,9 +615,11 @@ The branch pickers in the new-ticket form and the ticket panel have the same pro
 
 **What happens.** Below 768 px the app replaces the sidebar and pages with a single ticket list and a bottom bar. The **Tasks** button does nothing, **Products** changes the address but nothing visible changes, the impersonation banner is not shown, and the list depends on the shared ticket store (it can be empty, for example for branch managers). The Kanban board, Backlog, Admin Panel and other pages are unavailable on phones.
 
-**Where.** `src/layouts/AppLayout.tsx:101-137` (mobile shell) and `:286` (`hidden md:flex` on the main area); `src/components/MobileDashboard.tsx`.
+Phones also never show the account notices. The "Account Deactivated" and "No Role Assigned" screens are rendered inside the page area, which is hidden below 768 px, so a deactivated user or a user without a role sees an empty ticket list on a phone instead of the explanation.
 
-**Suggested approach.** Turn the sidebar into a drawer on small screens and make the main pages responsive one at a time, starting with My Work and the Support Portal.
+**Where.** `src/layouts/AppLayout.tsx:101-137` (mobile shell, which always renders `MobileDashboard`) and `:286` (`hidden md:flex` on the main area); `src/components/MobileDashboard.tsx`; the account notices in `RequireRole`, `src/App.tsx:52-68`.
+
+**Suggested approach.** Turn the sidebar into a drawer on small screens and make the main pages responsive one at a time, starting with My Work and the Support Portal. Check the account state before choosing the mobile or desktop layout, so the notices show on every screen size.
 
 ---
 
@@ -552,7 +631,7 @@ The branch pickers in the new-ticket form and the ticket panel have the same pro
 
 **What happens.** The Calendar's **Timeline** view uses `@fullcalendar/resource-timeline`, a FullCalendar Premium plugin that is licensed separately from FlowDesk's MIT license (see [fullcalendar.io/license](https://fullcalendar.io/license)). Without `VITE_FULLCALENDAR_LICENSE_KEY`, FullCalendar shows its license warning on that view. The month and week calendar use only free plugins.
 
-**Where.** `package.json` dependencies; `src/pages/CalendarTimeline.tsx:30-33` and `:229-251`.
+**Where.** `package.json` dependencies; `src/pages/CalendarTimeline.tsx:30-33` and `:239-259`.
 
 **Suggested approach.** Replace the Timeline with an assignee view built on the free plugins (or another MIT-licensed library), or make it opt-in behind the license key.
 
@@ -605,6 +684,33 @@ The build does not run ESLint, so it still passes.
 
 **What happens.** Several errors, including sign-in failures, are shown with the browser's `alert()` dialog instead of the app's toasts or inline messages.
 
-**Where.** `src/pages/Login.tsx:27` and `:34`, `src/components/NewTicketModal.tsx:111` and `:118`, `src/components/EditProfileModal.tsx:63` and `:94`, `src/components/EditUserModal.tsx:49`, `src/components/RichTextEditor.tsx:56`, `src/components/TicketDetailPanel.tsx:635`, `src/components/CustomerTicketDetail.tsx:191`.
+**Where.** `src/pages/Login.tsx:27` and `:34`, `src/components/NewTicketModal.tsx:111` and `:118`, `src/components/EditProfileModal.tsx:63` and `:94`, `src/components/EditUserModal.tsx:49`, `src/components/RichTextEditor.tsx:56`, `src/components/TicketDetailPanel.tsx:649`, `src/components/CustomerTicketDetail.tsx:191`.
 
 **Suggested approach.** Use `toast.error(...)` from `react-hot-toast` (already mounted in `src/main.tsx`), or an inline error like the one in `src/components/NewUserModal.tsx`.
+
+### React Router future-flag warnings in the console
+
+**Severity:** Low · **good first issue**
+
+**What happens.** Every page load logs two React Router warnings in the browser console, about the v7 future flags `v7_startTransition` and `v7_relativeSplatPath`. They are harmless, but they hide real errors when someone is debugging.
+
+**Where.** `<BrowserRouter>` in `src/App.tsx:127` sets no future flags.
+
+**Suggested approach.** Use `<BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>`, then check that navigation and the nested routes still behave the same.
+
+### Local Supabase stack on Windows: a log container keeps restarting
+
+**Severity:** Low
+
+**What happens.** With Docker Desktop on Windows, `npx supabase start` works, but the `supabase_vector_flowdesk` container restarts in a loop because it cannot reach the Docker daemon over TCP ("Network unreachable"), and `npx supabase status` lists it as stopped. The app, database, Auth, API and Edge Functions are not affected; only the log explorer in the local Studio stays empty.
+
+**Where.** `supabase/config.toml` has no `[analytics]` section, so the CLI's defaults apply.
+
+**Suggested approach.** Workarounds: turn on **Expose daemon on tcp://localhost:2375 without TLS** in Docker Desktop's settings, or add the following to `supabase/config.toml` (local only) and restart the stack:
+
+```toml
+[analytics]
+enabled = false
+```
+
+Also listed in [SETUP.md](SETUP.md#optional-run-supabase-locally-with-docker).

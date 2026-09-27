@@ -30,14 +30,30 @@ FlowDesk builds to a folder of static files (HTML, JavaScript, CSS), so any stat
 Vercel deploys from a Git repository that you control.
 
 - **Easiest:** open https://github.com/JeffTarlton/FlowDesk-Public and click **Fork**. Your fork is at `https://github.com/<your-username>/FlowDesk-Public`.
-- **Or**, if you cloned or downloaded the code, create a new empty repository on GitHub and push the code to it:
+- **Or**, if you cloned the code, create a new empty repository on GitHub and push the code to it:
 
   ```bash
   git remote set-url origin https://github.com/<your-username>/FlowDesk-Public.git
   git push -u origin main
   ```
 
-  (If you downloaded a ZIP, run `git init`, `git add .` and `git commit -m "Initial commit"` first, then `git remote add origin ...` instead of `set-url`.)
+- **If you downloaded a ZIP**, forking (above) is easier. To push the ZIP's contents instead, create a new empty repository on GitHub, then run these commands in the extracted folder:
+
+  ```bash
+  git init
+  git add .
+  git commit -m "Initial commit"
+  git branch -M main
+  git remote add origin https://github.com/<your-username>/FlowDesk-Public.git
+  git push -u origin main
+  ```
+
+  `git branch -M main` names the branch `main`; without it, Git may call it `master` and the push fails with "src refspec main does not match any". If this is the first time you use Git on this computer and `git commit` answers "Please tell me who you are", set your name and email once, then run the commit again:
+
+  ```bash
+  git config --global user.name "Your Name"
+  git config --global user.email "you@example.com"
+  ```
 
 Your `.env.local` file is git-ignored, so your keys are **not** pushed. That is correct: you give Vercel the values separately in step 4.
 
@@ -82,7 +98,7 @@ Open the **Environment Variables** section on the same page and add:
 
 Tips:
 
-- You can paste the contents of your `.env.local` into the first **Key** field; Vercel splits it into separate variables.
+- You can paste the contents of your `.env.local` into the first **Key** field; Vercel splits it into separate variables. If `VITE_FULLCALENDAR_LICENSE_KEY` has no value, delete that row: Vercel may refuse an empty value.
 - Apply the variables to **Production** and **Preview**, so preview deployments of other branches work too.
 - Copy values exactly: no quotes, no spaces, no trailing slash on the URL.
 
@@ -95,7 +111,10 @@ Tips:
 
 Click **Deploy**. The build takes a minute or two. Warnings in the build log about large chunks are expected and harmless.
 
-When it finishes, Vercel shows your production address, for example `https://flowdesk-abc123.vercel.app`. You can also find it later on the project's **Overview** page, under **Domains**.
+When it finishes, open the project's **Overview** page and look under **Domains**. The short address listed there, usually `https://<project-name>.vercel.app` (for example `https://your-project.vercel.app`), is your site's public production address.
+
+> [!IMPORTANT]
+> Use the address listed under **Domains** everywhere: in Supabase (step 6), in bookmarks, and when you share FlowDesk with your team. Vercel also shows longer addresses with random letters in them; each belongs to one specific deployment, and with Vercel's default **Deployment Protection** they ask visitors to sign in to Vercel.
 
 Open it. You should see the FlowDesk sign-in page. If you see **"FlowDesk isn't configured yet"**, the environment variables were missing when the site was built: see [Changing environment variables later](#changing-environment-variables-later).
 
@@ -105,8 +124,8 @@ Open it. You should see the FlowDesk sign-in page. If you see **"FlowDesk isn't 
 
 In the Supabase dashboard, open **Authentication > URL Configuration** ([SETUP.md step 5](SETUP.md#set-the-site-url-and-redirect-urls)):
 
-1. Set **Site URL** to your production address, for example `https://flowdesk-abc123.vercel.app`.
-2. Under **Redirect URLs**, add `https://flowdesk-abc123.vercel.app/**` (keep `http://localhost:5173/**` for local development).
+1. Set **Site URL** to your production address from **Domains**, for example `https://your-project.vercel.app`.
+2. Under **Redirect URLs**, add the same address followed by `/**`, for example `https://your-project.vercel.app/**` (keep `http://localhost:5173/**` for local development).
 3. Optional, for preview deployments: add `https://*-<team-or-account-slug>.vercel.app/**`.
 4. Save.
 
@@ -169,7 +188,9 @@ FlowDesk is a single-page app: there is one real page, `index.html`, and address
 
 ## Optional: the Vercel Supabase integration
 
-Instead of typing the two variables in step 4, you can connect your Supabase project to Vercel with the [Supabase integration](https://vercel.com/marketplace/supabase). Choose to connect your **existing** project. The integration adds variables such as `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (plus server-only ones like `SUPABASE_SECRET_KEY` and `POSTGRES_*`).
+Instead of typing the two variables in step 4, you can let a Supabase integration set them on your Vercel project. The integration adds variables such as `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (plus server-only ones like `SUPABASE_SECRET_KEY` and `POSTGRES_*`).
+
+Check which project it connects before you install it. The [Supabase integration on the Vercel Marketplace](https://vercel.com/marketplace/supabase) is built around Supabase projects **created through Vercel**; Supabase's documentation describes the automatic variable sync for those projects. To use the project you already set up in [SETUP.md](SETUP.md), look for an option to connect an existing Supabase account or project (in the Marketplace listing, or in the Supabase dashboard's integrations), and make sure you are not creating a second, empty project. If in doubt, type the two `VITE_` variables as in [step 4](#4-add-the-environment-variables): that is the tested route.
 
 FlowDesk accepts those names as fallbacks (`src/lib/supabase.ts`; `vite.config.ts` exposes the `NEXT_PUBLIC_` prefix to the browser). The first name that is set wins:
 

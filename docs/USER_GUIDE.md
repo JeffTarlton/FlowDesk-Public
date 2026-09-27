@@ -169,7 +169,7 @@ From top to bottom:
 | Mark as Blocked | See [Blockers](#blockers-and-linked-tickets). |
 | Linked Tickets | See [Linked tickets](#blockers-and-linked-tickets). |
 | Status | The full status list. |
-| Description and Acceptance Criteria | Click the text (or **Edit**) to open the editor, then **Save** or **Cancel**. |
+| Description and Acceptance Criteria | Click **Edit** (or the description text, or the empty "No criteria defined" box) to open the editor, then **Save** or **Cancel**. |
 | Dev Tasks | Child tickets. Hidden from branch managers. See [Parent tickets](#parent-tickets-and-dev-tasks). |
 | Attachments | See [Attachments](#attachments). |
 | Scope & Timeline | Estimates, dates, the timer and time logs. See [Time tracking](#time-tracking-and-the-timesheet). |
@@ -179,7 +179,7 @@ From top to bottom:
 **Scope & Timeline** fields (click **Edit Timeline**, then **Save Timeline**):
 
 - **Estimated Hours** and **Billed Hours** accept plain numbers (`2.5`) or Jira-style durations: `1w 2d 4h`, where 1w = 40 hours and 1d = 8 hours.
-- **Target Start**, **Target Test** and **Due Date**. Tickets with a start or due date appear on the [Calendar](#calendar-and-timeline). A due date in the past makes an open ticket count as **Overdue** on the Dashboard.
+- **Target Start**, **Target Test** and **Due Date**. Tickets with a due date appear on the [Calendar](#calendar-and-timeline); tickets with only a start date appear once you turn off its **Only scheduled tickets** filter. A due date in the past makes an open ticket count as **Overdue** on the Dashboard.
 - A budget bar compares billed hours with the estimate ("45% budget used" or "Overrun by 4h"). On a parent ticket, estimates and billed hours include its dev tasks.
 
 ### Approvals
@@ -199,7 +199,7 @@ When the ticket's current status has active gates, a **Gate Requirements** box l
 
 Approving the customer side of a ticket that is **Awaiting Customer Approval** moves it to **Ready for Dev** on its own.
 
-Gates are enforced when you change the **Status** dropdown in the ticket panel. **Dragging a card on the Kanban board does not check gates yet** because of a bug, so record approvals before you drag. See [Known Issues](KNOWN_ISSUES.md#kanban-drags-skip-approval-gates).
+Gates are enforced when you change the **Status** dropdown in the ticket panel and when you drag a card on the Kanban board. A refused move shows the reason, for example "Admin approval is required before this transition.", and a dragged card snaps back. The status dropdown on **Admin Panel > All Tickets** does not check gates; see [Known Issues](KNOWN_ISSUES.md#approval-gates-are-enforced-in-the-browser-only).
 
 Admins and developers also see **Flag as Global Known Issue/Outage** here, which lists the ticket under "Known Outages & High-Priority Bugs" in the [Product Catalog](#product-catalog).
 
@@ -251,17 +251,17 @@ The **Unified Ticket Feed** shows comments and activity together, oldest first. 
 3. Click **Attach** to insert a file: images appear inline, other files as a link. You can also drop a file into the box.
 4. Click the arrow button to send.
 
-**Public comments versus internal notes.** Tick **Internal Whisper Note** before sending to make the comment internal:
+**Public comments versus internal notes.** Admins, developers and support desk can tick **Internal Whisper Note** before sending to make the comment internal. Branch managers do not see the option, and the database refuses internal notes from them.
 
 | | Public comment | Internal note |
 |---|---|---|
-| Looks like | Tinted bubble (team) or white bubble | Yellow bubble with an "Internal Note" tag |
+| Looks like | Tinted bubble (staff) or white bubble | Yellow bubble with an "Internal Note" tag |
 | Admins, developers, support desk | See it | See it |
 | Branch managers | See it | Do not see it |
 | Support Portal | Shown in the Communication Log | Never shown |
 | Ticket PDF export from the panel | Included | Included, marked INTERNAL |
 
-Comments from admins, developers and support desk are labelled **Staff**; everyone else's are labelled **Customer**.
+Comments from admins, developers and support desk are labelled **Staff**; everyone else's, including branch managers', are labelled **Customer** ([known issue](KNOWN_ISSUES.md#branch-managers-comments-are-labelled-customer)).
 
 **@mentions.** Type `@` followed by the first letters of a person's **full name**. Up to five matching people appear; choose one with the arrow keys and Enter (or click), and press Esc to dismiss the list. When you send the comment, each person mentioned gets a notification such as "Mentioned you in FLD-0042" with the start of your message. Mentions work in the ticket panel only; a mention typed in the Support Portal does not notify anyone.
 
@@ -274,7 +274,7 @@ The **Attachments** section of the ticket panel lists the ticket's files.
 - Click **Add File**, or drag one or more files onto the "Click or drag to attach" area.
 - Allowed types in the file picker: `.csv`, `.pdf`, `.xlsx`, `.xls`, `.png`, `.jpg`, `.jpeg`, `.doc`, `.docx`, `.zip`, `.txt`. The limit is 50 MB per file.
 - Click a file to open it. FlowDesk opens a download link that is valid for 60 seconds.
-- Click the trash icon to remove a file (after a confirmation). The uploader and staff can remove attachments.
+- Click the trash icon to remove a file (after a confirmation). The uploader and staff can remove attachments. The icon is shown to everyone, and for other users the panel may still say "Attachment removed" although the file stays ([known issue](KNOWN_ISSUES.md#edits-the-database-refuses-can-look-successful)).
 
 Files inserted into a description, comment or knowledge base article with **Attach** are stored as public links: anyone who has the exact link can open them. Do not attach sensitive documents that way. See [SECURITY.md](../SECURITY.md#6-attachments-are-public-by-url).
 
@@ -320,7 +320,7 @@ The Support Portal has its own PDF export, which leaves internal notes out.
 
 ### Deleting a ticket
 
-Click **Delete** in the panel footer and confirm **Delete Permanently**. This cannot be undone. It also deletes the ticket's comments, attachments list, time entries and links, and **all of its dev tasks**. Admins, developers and support desk can delete tickets; ticket deletions are recorded in the admin audit log.
+Click **Delete** in the panel footer and confirm **Delete Permanently**. This cannot be undone. It also deletes the ticket's comments, attachments list, time entries and links, and **all of its dev tasks**. The uploaded files themselves are **not** removed from storage and stay reachable by anyone who has their link; see [Known Issues](KNOWN_ISSUES.md#deleted-tickets-and-removed-inline-files-stay-in-storage). Admins, developers and support desk can delete tickets; ticket deletions are recorded in the admin audit log.
 
 ---
 
@@ -344,7 +344,7 @@ Open **Kanban** in the sidebar. The page is titled **Projects**.
 
 - Dropping on **On-Hold** asks for a hold reason.
 - Dropping on **Released / Closed** is refused, with a message, unless the ticket has Acceptance Criteria.
-- Approval gates are not checked on the board yet ([known issue](KNOWN_ISSUES.md#kanban-drags-skip-approval-gates)). Use the ticket panel's Status dropdown when a move needs a gate check.
+- Dropping a card where an approval gate is not met is refused, with a message such as "Admin approval is required before this transition.", and the card snaps back. See [Approvals](#approvals).
 - Each move is recorded in the ticket's activity log.
 
 Branch managers can open cards but cannot drag them.
@@ -406,7 +406,7 @@ A saved view remembers the search text, the quick-filter chip and the sort. It d
 
 ## Dashboard
 
-The **Analytics Dashboard** gives an overview of the loaded tickets. It is the branch manager's home page.
+The **Analytics Dashboard** gives an overview of the loaded tickets. Branch managers land on the Support Portal after signing in, and on the Dashboard when they open the site root.
 
 ![The Analytics Dashboard](images/dashboard.png)
 
@@ -600,7 +600,7 @@ The **Support Portal** is a simpler view for people who raise and follow request
 - **Communication Log**: public comments only. Team replies are signed "FlowDesk Support". Type in the box and send to reply; your message is visible to the team.
 - **Export as PDF**: the request and its public messages.
 
-Some request details opened from the portal miss the description and dates; see [Known Issues](KNOWN_ISSUES.md#portal-request-details-are-missing-the-description-product-and-dates).
+Requests opened from the portal do not show the original description or the product, and requests opened from **All Open Requests** do not show dates or hours either; see [Known Issues](KNOWN_ISSUES.md#portal-request-details-are-missing-the-description-and-product).
 
 **Other pages for branch managers:** the Dashboard, the Kanban board (view only; cards open the full ticket panel, and changes are saved only for tickets of your own branch), and the Product Catalog. Tickets you create from the Kanban board are not tied to your branch, so prefer **Submit a Request**.
 
@@ -629,8 +629,8 @@ The bell at the top of the sidebar shows a red dot when you have unread notifica
 Press **Ctrl+K** (Windows, Linux) or **Cmd+K** (macOS), or click **Omni-Search** in the sidebar.
 
 - Type to search the loaded tickets by ID, title, customer name, customer email or description. Up to 12 results are shown. The footer shows how many tickets are indexed.
-- With an empty search box you get navigation shortcuts: **Go to Backlog** (actually your home page), **Go to Kanban Board**, **Go to Customer Portal** (support desk), **Go to Admin Panel** (admins), and **Sign Out**.
-- Selecting a ticket result currently takes you to your home page instead of opening the ticket; see [Known Issues](KNOWN_ISSUES.md#selecting-a-ticket-in-the-command-palette-does-not-open-it).
+- With an empty search box you get navigation shortcuts: **Go to Backlog** (actually your home page), **Go to Kanban Board**, **Go to Customer Portal** (support desk and branch managers), **Go to Admin Panel** (admins), and **Sign Out**.
+- Choose a ticket result to open it in the ticket panel, on top of the page you are on.
 
 | Keys | Where | What it does |
 |---|---|---|
@@ -663,7 +663,7 @@ On screens narrower than 768 px, FlowDesk shows a simplified app:
 - A greeting and a **ticket list** (newest first), with a **Customer** filter and a **My Tickets** toggle. Tap a ticket to open the full ticket panel.
 - A bottom bar with **Tasks**, **Products**, **Theme**, **Profile** and **Exit** (sign out).
 
-The sidebar pages (Kanban, Backlog, Admin Panel and the rest) are not available on phones, and the **Products** button does not show the catalog yet. Use a tablet in landscape or a desktop browser for full access. See [Known Issues](KNOWN_ISSUES.md#mobile-shows-a-ticket-list-only).
+The sidebar pages (Kanban, Backlog, Admin Panel and the rest) are not available on phones, and the **Products** button does not show the catalog yet. A deactivated account, or one without a role, sees an empty list on a phone instead of the "Account Deactivated" or "No Role Assigned" notice. Use a tablet in landscape or a desktop browser for full access. See [Known Issues](KNOWN_ISSUES.md#mobile-shows-a-ticket-list-only).
 
 ---
 

@@ -9,7 +9,7 @@ import ForcePasswordResetModal from '../components/ForcePasswordResetModal';
 import { useSessionRecovery } from '../hooks/useSessionRecovery';
 import MobileDashboard from '../components/MobileDashboard';
 import EditProfileModal from '../components/EditProfileModal';
-import FlowDeskLogo from '../components/FlowDeskLogo';
+import LokdITLogo from '../components/LokdITLogo';
 import { useTimerStore } from '../store/useTimerStore';
 
 function ActiveTimerIndicator() {
@@ -140,7 +140,7 @@ export default function AppLayout() {
       <aside className="hidden md:flex relative z-20 w-64 bg-white dark:bg-surface-dark border-r border-gray-100 dark:border-gray-800 flex-col py-6 shrink-0 h-full overflow-y-visible">
         {/* Logo */}
         <div className="flex items-center mb-8 px-4">
-          <FlowDeskLogo size="md" />
+          <LokdITLogo size="md" subtitle="FlowDesk" />
           <div className="ml-auto pr-2 relative">
             <NotificationDropdown />
           </div>

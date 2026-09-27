@@ -250,7 +250,7 @@ export default function ReleasesPage() {
                   <div className="flex items-center gap-4 text-xs text-gray-400">
                     {r.release_date && (
                       <span className="flex items-center gap-1">
-                        <CalendarDays size={12} /> {new Date(r.release_date).toLocaleDateString()}
+                        <CalendarDays size={12} /> {new Date(r.release_date + 'T00:00:00').toLocaleDateString()}
                       </span>
                     )}
                     {product && (

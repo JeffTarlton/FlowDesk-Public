@@ -38,6 +38,9 @@ If you only want the short version, the [README](../README.md#quick-start) has a
 
 You do **not** need Docker, unless you choose the [optional local Supabase stack](#optional-run-supabase-locally-with-docker).
 
+> [!TIP]
+> **On Windows, run the `npm` and `npx` commands in this guide in Command Prompt.** In Windows PowerShell they often fail straight away with "npm.ps1 cannot be loaded because running scripts is disabled on this system". If you prefer PowerShell, type `npm.cmd` and `npx.cmd` instead of `npm` and `npx`. See [Troubleshooting](TROUBLESHOOTING.md#npmps1-cannot-be-loaded-because-running-scripts-is-disabled-on-this-system).
+
 ## How the pieces fit together
 
 ```text
@@ -109,7 +112,7 @@ You need the code even if you do everything else in the browser: steps 3 and 4 u
    | **Project name** | Anything, for example `flowdesk`. |
    | **Database password** | Click **Generate a password**, or type a strong one. **Save it in your password manager now.** The command-line route in step 3 (option B) asks for it, and it is not shown again. |
    | **Region** | The region closest to your users. It cannot be changed later. |
-   | Security / Data API options, if shown | Keep the defaults. FlowDesk talks to the database through the **Data API**, so it must stay enabled, using the `public` schema. |
+   | Security / Data API options, if shown | Keep the defaults. FlowDesk talks to the database through the **Data API**, so it must stay enabled, using the `public` schema. An option to **automatically expose new tables and functions** can stay unticked: FlowDesk's schema grants access to its own tables and functions explicitly. |
 
 5. Click **Create new project** and wait a minute or two until the project is ready.
 
@@ -162,8 +165,8 @@ The [Supabase CLI](https://supabase.com/docs/guides/local-development/cli/gettin
    npx supabase db push
    ```
 
-   - `login` opens your browser to authorize the CLI.
-   - `link` asks for the **database password** from step 2. It writes `supabase/.temp/`, which is git-ignored.
+   - `login` asks you to press Enter, then opens your browser to authorize the CLI. After you approve, the browser shows a **verification code**: copy it into the terminal and press Enter.
+   - `link` asks for the **database password** from step 2. It writes `supabase/.temp/`, which is git-ignored. It may then print `WARNING: Local config differs from linked project` followed by a list of differences. That is expected and harmless: `supabase/config.toml` holds the settings for the optional local stack, not for your hosted project. There is nothing to run or change.
    - `db push` shows the two migration files and asks for confirmation, then applies them in order. The CLI remembers which files it applied, so later pushes only apply new ones.
 
 ---
@@ -256,7 +259,16 @@ Creating users from FlowDesk keeps working, because the Edge Function uses the a
 
 **Why:** FlowDesk signs in with email and password only and sends no emails of its own (no sign-up, magic-link or reset emails), so these settings are not used in everyday use. They are housekeeping: Supabase uses the Site URL for any auth link it generates, and the default, `http://localhost:3000`, points nowhere. Keeping both lists accurate means any such link lands on your FlowDesk. See [Supabase: redirect URLs](https://supabase.com/docs/guides/auth/redirect-urls).
 
-Leave the other Authentication settings at their defaults.
+### Recommended: raise the minimum password length
+
+FlowDesk's **Set Your Password** screen asks for at least 8 characters, a number and a special character, but that check runs in the app and the Edge Function only. Supabase's own minimum is 6 characters, and a signed-in user can change their password directly through the Supabase API. Make Supabase enforce the same minimum:
+
+1. Open **Authentication**, then **Sign In / Providers**, then the **Email** provider.
+2. Set **Minimum password length** to `8` and save.
+
+Keep the minimum at **10 or lower**: the temporary passwords that **Invite User** generates are 10 characters long. Temporary passwords you type yourself in **Force Password Reset** (the app accepts 6 or more) must then have at least 8 characters too. If you also choose **Password Requirements** (required character types), every password, including the temporary ones you type, must meet them; the Set Your Password screen then shows Supabase's message when a password falls short.
+
+Leave the other Authentication settings at their defaults. In particular, keep the **Email** provider itself enabled: turning it off blocks every sign-in. To stop sign-ups, only turn off **Allow new users to sign up** (above).
 
 ---
 
@@ -285,6 +297,8 @@ Either key works. Supabase is phasing out the legacy keys, so prefer the publish
    npm install
    ```
 
+   On Windows, run this in **Command Prompt** (or type `npm.cmd install` in PowerShell); see the tip under [Prerequisites](#prerequisites).
+
 2. Create your settings file from the example.
 
    macOS / Linux:
@@ -293,7 +307,7 @@ Either key works. Supabase is phasing out the legacy keys, so prefer the publish
    cp .env.example .env.local
    ```
 
-   Windows (Command Prompt or PowerShell):
+   Windows (Command Prompt or PowerShell; `copy` works in both):
 
    ```bash
    copy .env.example .env.local
@@ -319,7 +333,7 @@ Either key works. Supabase is phasing out the legacy keys, so prefer the publish
 
 5. Open **http://localhost:5173**.
 
-You should see the FlowDesk sign-in page. If you see **"FlowDesk isn't configured yet"** instead, the app could not find one or both values: the screen shows which one is missing. Fix `.env.local`, then stop the dev server (Ctrl+C) and run `npm run dev` again. Vite only reads `.env.local` when it starts. See [Troubleshooting](TROUBLESHOOTING.md#flowdesk-isnt-configured-yet).
+You should see the FlowDesk sign-in page. If you see **"FlowDesk isn't configured yet"** instead, the app could not find one or both values, or the URL is not a valid `http(s)` address: the screen shows which one is wrong. (A key that is present but wrong does not trigger this screen; sign-in then fails with ["Invalid API key"](TROUBLESHOOTING.md#invalid-api-key-or-other-key-errors).) Fix `.env.local`, then stop the dev server (Ctrl+C) and run `npm run dev` again. Vite only reads `.env.local` when it starts. See [Troubleshooting](TROUBLESHOOTING.md#flowdesk-isnt-configured-yet).
 
 Other useful commands:
 
@@ -430,6 +444,8 @@ Useful commands:
 | `npx supabase stop` | Stops the stack. Data is kept for the next `start`. |
 
 The local stack reads `supabase/config.toml`: API on `http://127.0.0.1:54321`, the local dashboard (Studio) on `http://127.0.0.1:54323`, sign-ups disabled, and `verify_jwt = false` for `admin-actions`. The hosted project ignores this file (except that `supabase functions deploy` reads the function settings). More detail for developers is in [ARCHITECTURE.md](ARCHITECTURE.md#10-local-development-with-the-supabase-cli).
+
+**Known issue on Windows:** with Docker Desktop, the `supabase_vector_flowdesk` container can restart in a loop because it cannot reach the Docker daemon over TCP, and `npx supabase status` may list some services as stopped. The app, database, Auth and the Edge Function are not affected; only the log explorer in the local Studio stays empty. To silence it, turn on **Expose daemon on tcp://localhost:2375 without TLS** in Docker Desktop's settings, or add `[analytics]` with `enabled = false` to your local `supabase/config.toml`, then run `npx supabase stop` and `npx supabase start`.
 
 ---
 

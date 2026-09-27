@@ -1553,8 +1553,9 @@ CREATE POLICY "Team members can log activity as themselves"
   );
 
 -- 7.10 ticket_comments
--- Internal notes are staff-only. Comments are deleted through the admin-actions
--- edge function (author or admin), so there is no DELETE policy.
+-- Internal notes are staff-only, for writing as well as reading. Comments are
+-- deleted through the admin-actions edge function (author or admin), so there
+-- is no DELETE policy.
 DROP POLICY IF EXISTS "Staff can view all comments" ON public.ticket_comments;
 CREATE POLICY "Staff can view all comments"
   ON public.ticket_comments FOR SELECT TO authenticated
@@ -1575,6 +1576,7 @@ CREATE POLICY "Members can comment as themselves on tickets they can see"
   WITH CHECK (
     author_id = (SELECT auth.uid())
     AND (SELECT public.get_my_role()) IS NOT NULL
+    AND (NOT is_internal_only OR (SELECT public.get_my_role()) IN ('admin', 'developer', 'support_desk'))
     AND EXISTS (SELECT 1 FROM public.tickets AS t WHERE t.id = ticket_comments.ticket_id)
   );
 

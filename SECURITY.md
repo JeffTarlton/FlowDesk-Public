@@ -118,14 +118,15 @@ Both storage buckets, `ticket_attachments` and `avatars`, are **public buckets**
 What this means in practice:
 
 - **Anyone who has a file's exact URL can download it without signing in.** This includes images and files inside internal notes and draft articles.
-- The URLs contain a user id, a timestamp and a random part, so they cannot be guessed, and nobody can list the files in a bucket without being signed in. But a URL is not a secret: it can be forwarded, saved in browser history or logs, or copied by any user who can see the ticket.
+- The URLs contain a timestamp, a short random part and the file name (files from the attachment panel also include the uploader's user id), so they are hard to guess, and nobody can list the files in a bucket without being signed in. But a URL is not a secret: it can be forwarded, saved in browser history or logs, or copied by any user who can see the ticket.
 - A URL keeps working after the person who copied it loses access to FlowDesk (for example after their account is deactivated). Access to a file ends only when the file is deleted.
 - Files in the attachment panel are downloaded through short-lived signed links, but the same file is still reachable through its public URL.
+- **Deleting a ticket, comment or knowledge base article does not delete its files.** Files inserted into text with the editor's **Attach** button have no delete control in the app at all. See [Known issues](docs/KNOWN_ISSUES.md#deleted-tickets-and-removed-inline-files-stay-in-storage).
 
 Recommendations:
 
 - Do not upload highly sensitive files, such as passwords, identity documents or payment data, as attachments.
-- Delete an attachment to revoke access to it.
+- To revoke access to a file in a ticket's **Attachments** panel, remove it there with the trash icon (the uploader or staff can do this). Files inserted into text, and the files of deleted tickets, comments and articles, can only be removed by an admin in the Supabase dashboard under **Storage** (bucket `ticket_attachments`; inline files are in the `comment-attachments` folder).
 - If you need truly private files, the frontend has to switch from public URLs to signed URLs and the buckets have to be made private. That is a code change; contributions are welcome.
 
 ### 7. Rotate keys if they leak
@@ -135,7 +136,13 @@ Recommendations:
 - **A user's password leaked:** an admin can set a temporary password with **Force Password Reset** in Admin > Users. The user must choose a new one at the next sign-in. Deactivate the account first if you suspect misuse.
 - Do not commit a new key to fix a leaked one. Keys belong in environment variables and in the Supabase dashboard only.
 
-### 8. Ongoing hygiene
+### 8. Match Supabase's password rules to FlowDesk's
+
+FlowDesk's password rules (at least 8 characters, a number and a special character) are checked by the **Set Your Password** screen and the `admin-actions` Edge Function only. A signed-in user can call Supabase Auth directly and set any password Auth accepts, which is 6 characters by default. (That does not clear the first-login reset flag.)
+
+In the Supabase dashboard, open **Authentication > Sign In / Providers > Email** and set **Minimum password length** to `8`. Keep it at 10 or lower, because the temporary passwords **Invite User** generates are 10 characters long. You can also require character types under **Password Requirements**; every password then has to meet them, including temporary passwords typed in **Force Password Reset**. See [docs/SETUP.md](docs/SETUP.md#recommended-raise-the-minimum-password-length).
+
+### 9. Ongoing hygiene
 
 - Deactivate or delete accounts of people who leave. A deactivated account loses access to tickets, comments and all other shared data, because the RLS helper functions return no role for it. It can still see its own profile, which is how the app knows to show "Account Deactivated".
 - Keep dependencies up to date and review `npm audit` output.
@@ -147,4 +154,7 @@ These are deliberate or known limitations, documented so you can judge them for 
 
 - **Approval gates are checked in the browser.** The database does not block a status change that skips a gate when it is made directly through the API by a user who is allowed to edit the ticket. Only granting admin approval is enforced by the database.
 - **"View as" is a preview.** When an admin views the app as another user, only the menus change; all requests still run with the admin's own permissions.
-- **Deactivation does not end a session immediately.** A deactivated user's Auth session stays valid until it expires, but RLS blocks it from tickets and other shared data, and the Edge Function rejects it.
+- **Deactivation does not end a session immediately.** A deactivated user's Auth session stays valid until it expires, but RLS blocks it from tickets and other shared data, and the Edge Function rejects it. A deactivated user can still sign in and can still change their own name, phone, company and avatar; the privileged profile columns stay protected.
+- **The first-login password reset is enforced by the UI.** Until the user has chosen a new password, the app shows only the **Set Your Password** screen, but the database gives the account its role's normal API access. What the database does enforce is that only the Edge Function can clear the reset flag, after a real password change. Share temporary passwords as carefully as real ones.
+- **Password rules are enforced by the Edge Function only.** Match them in Supabase Auth; see [step 8 of the checklist](#8-match-supabases-password-rules-to-flowdesks).
+- **Deleting content does not delete its files.** Files of deleted tickets, comments and articles stay in the public bucket; see [Attachments are public by URL](#6-attachments-are-public-by-url).

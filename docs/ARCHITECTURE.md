@@ -168,7 +168,7 @@ Each domain has its own Zustand store in `src/store/`. Stores hold data and the 
 | `useMilestoneStore` | Milestones and their ticket counts. | `milestones`, `tickets` |
 | `useReleaseStore` | Releases and the tickets in each. | `releases`, `release_tickets` |
 | `useRelationshipStore` | Linked tickets for the open ticket. | `ticket_relationships`, `activity_logs` |
-| `useKbStore` | Knowledge base articles, search text and category filter. | `kb_articles` |
+| `useKbStore` | Knowledge base articles, search text and category filter; counts views through an RPC. | `kb_articles`, RPC `increment_kb_view_count` |
 | `useNotificationStore` | Notifications, unread count, the per-user Realtime channel. | `notifications` |
 | `usePresenceStore` | Who is viewing which ticket (Realtime Presence, no table). | Realtime |
 | `useTimerStore` | The user's running timer (start, stop, discard). | `time_entries`, `tickets`, `activity_logs` |
@@ -326,7 +326,7 @@ Some database names are referenced as strings in the React code. Renaming them b
 - Foreign key names used as PostgREST embed hints, for example `profiles!tickets_assigned_to_fkey`.
 - `idx_one_running_timer_per_tech` (the UI matches it to explain that a timer is already running).
 - `no_self_relationship` (the UI matches it when a ticket is linked to itself).
-- Bucket names `avatars` and `ticket_attachments`, the RPC `delete_user_officially`, and the Edge Function name `admin-actions`.
+- Bucket names `avatars` and `ticket_attachments`, the RPCs `delete_user_officially` and `increment_kb_view_count`, and the Edge Function name `admin-actions`.
 
 ### Storage
 
@@ -373,7 +373,7 @@ Terms used in the policies:
 |---|---|---|
 | `profiles` | Own row; the team sees everyone | Own row; admins any row. Privileged columns are guarded by a trigger (below). No INSERT or DELETE policy: rows are created by `handle_new_user` and removed by `delete_user_officially`. |
 | `tickets` | Team: all. Customer: own tickets by email | Insert: team, as themselves (admins may set any `created_by`). Update: staff; branch managers only tickets of their own branch. Delete: staff. |
-| `ticket_comments` | Staff: all. Members: public comments on tickets they can see | Insert: members, as themselves, on tickets they can see. No UPDATE/DELETE policy (deletes go through `admin-actions`). |
+| `ticket_comments` | Staff: all. Members: public comments on tickets they can see | Insert: members, as themselves, on tickets they can see; internal notes (`is_internal_only`) only by staff. No UPDATE/DELETE policy (deletes go through `admin-actions`). |
 | `ticket_attachments` | Members, on tickets they can see | Insert: as themselves, on a visible ticket, and `file_path` must be in their own `<user id>/` folder (admins exempt). Delete: uploader or staff. |
 | `time_entries` | Team: all. Others: own | Insert: team, own entries. Update/Delete: owner or staff. |
 | `notifications` | Own (active users only) | Update/Delete: own. Insert: only `mention` notifications, by team members, as themselves, on a visible ticket. All other types come from triggers. |
@@ -400,6 +400,15 @@ RLS works on rows, not columns. Two `BEFORE` triggers add column-level rules for
 - `supabase/config.toml` disables sign-ups for the local stack. On a hosted project you must turn sign-ups off yourself; see [SECURITY.md](../SECURITY.md#deployment-hardening-checklist).
 - `delete_user_officially(target_user_id)` is the only user-deletion path. It checks that the caller is an active admin and not deleting themselves, unassigns the user's tickets, discards a running timer, deletes the Auth user (cascading to the profile) and writes an audit log row.
 
+### RPC functions
+
+Besides the role helpers, the API exposes two `SECURITY DEFINER` functions, both executable by `authenticated` only:
+
+| Function | What it does |
+|---|---|
+| `delete_user_officially(target_user_id uuid)` | Permanently deletes a user (see above). Admins only. |
+| `increment_kb_view_count(article_id uuid)` | Adds one to a knowledge base article's `view_count` and returns the new count. Works for any member who can read the article (published articles, or drafts for staff), although only staff may edit articles. Changes nothing else, and the increment is atomic. |
+
 ### The `admin-actions` Edge Function
 
 Source: [`supabase/functions/admin-actions/index.ts`](../supabase/functions/admin-actions/index.ts). It exists because some operations need the secret key, which must never reach the browser:
@@ -407,8 +416,8 @@ Source: [`supabase/functions/admin-actions/index.ts`](../supabase/functions/admi
 | Action | Who may call it | What it does |
 |---|---|---|
 | `create-user` | Admins | Creates an Auth user with a temporary password (email pre-confirmed) and upserts an active profile with the chosen role and branch and `force_password_reset = true`. The role must be one of `admin`, `developer`, `support_desk`, `branch_manager`. If the email already exists, it only recovers accounts whose profile is missing or inactive; it never takes over an active user. |
-| `update-password` | The user themselves (`user_id` must equal the caller) | Rejects the published default password and weak passwords (at least 8 characters, a number and a special character), updates the password, then clears `force_password_reset`. Because the guard trigger blocks users from clearing that flag themselves, the first-login reset cannot be skipped from the browser. |
-| `admin-force-password-reset` | Admins | Sets another user's password and sets `force_password_reset = true`. |
+| `update-password` | The user themselves (`user_id` must equal the caller) | Rejects the published default password and weak passwords (at least 8 characters, a number and a special character), then changes the password **as the caller**, through Supabase Auth's own `PUT /auth/v1/user` endpoint with the caller's token. The current session therefore stays signed in and the user's other sessions are signed out, and Auth applies its own checks too (for example, it refuses to reuse the current password, and enforces the project's password settings). Finally it clears `force_password_reset`. Because the guard trigger blocks users from clearing that flag themselves, the first-login reset cannot be skipped from the browser. FlowDesk's password rules are only enforced here: a user can still set a weaker password with `supabase.auth.updateUser()`, although that does not clear the flag (see [Known Issues](KNOWN_ISSUES.md#password-rules-are-enforced-only-by-the-edge-function)). |
+| `admin-force-password-reset` | Admins | Sets another user's password with the Auth admin API (which signs out that user's sessions) and sets `force_password_reset = true`. |
 | `delete-comment` | Admins, or the comment's author | Deletes a comment (there is no DELETE policy on `ticket_comments`). |
 
 Every request goes through the same checks before an action runs:
@@ -420,8 +429,8 @@ Every request goes through the same checks before an action runs:
 Other details:
 
 - It reads the secret key from `SUPABASE_SECRET_KEYS` (the `default` entry, new API keys) and falls back to `SUPABASE_SERVICE_ROLE_KEY` (legacy). Both are injected by Supabase; there is nothing to configure.
-- Because the function authenticates the caller itself, `supabase/config.toml` sets `verify_jwt = false` for it. Leaving the platform's JWT check on also works.
-- Errors are returned as **HTTP 200** with `{ "error": "..." }`, because `supabase.functions.invoke()` discards the body of non-2xx responses. The intended status code is written to the function logs.
+- Because the function authenticates the caller itself, `supabase/config.toml` sets `verify_jwt = false` for it, and it **must** be deployed with the platform's JWT check off. That legacy gateway check can reject valid users on projects that use the newer JWT signing keys, before the function runs. (The comment at the top of `index.ts` still says leaving it on also works; the setup docs are the reference.)
+- Errors are returned as **HTTP 200** with `{ "error": "..." }`, because `supabase.functions.invoke()` returns a generic `FunctionsHttpError` for non-2xx responses and the call sites only read `data.error`. (The body of a non-2xx response could still be read from `error.context`; see [Known Issues](KNOWN_ISSUES.md#admin-actions-returns-http-200-for-errors).) The intended status code is written to the function logs.
 
 ### Storage policies
 
@@ -481,7 +490,7 @@ Postgres fires triggers with the same timing and event in **alphabetical order o
 | `trigger_recompute_sla_on_priority` | BEFORE UPDATE | Recomputes both SLA deadlines from `created_at` when the priority changes. |
 | `trigger_set_resolved_at` | BEFORE INSERT, UPDATE | Stamps `resolved_at` when the status becomes `done` and clears it when the ticket leaves `done`. Its name sorts after `ticket_auto_ready_for_dev`, so it sees the final status. |
 | `trigger_track_first_response` | BEFORE UPDATE | The first time a ticket leaves `pending`, sets `first_responded_at` and `sla_response_breached` if late. On reaching `done`, sets `sla_resolution_breached` if late. Breach flags are set only at these transitions; there is no scheduled job. |
-| `on_ticket_status_change` | AFTER UPDATE OF status | Notifies the ticket's customer (the active profile whose email matches `customer_email`) and the watchers. |
+| `on_ticket_status_change` | AFTER UPDATE, `WHEN (OLD.status IS DISTINCT FROM NEW.status)` | Notifies the ticket's customer (the active profile whose email matches `customer_email`) and the watchers. A `WHEN` condition is used instead of `UPDATE OF status` so that it also fires for the automatic Awaiting Customer Approval to Ready for Dev move made by `ticket_auto_ready_for_dev`. |
 | `on_ticket_assignment` | AFTER UPDATE OF assigned_to | Notifies the new assignee and the watchers. |
 | `trigger_log_ticket_deletions` | AFTER DELETE | Writes an `audit_logs` row with the deleted ticket. |
 
@@ -492,12 +501,12 @@ Postgres fires triggers with the same timing and event in **alphabetical order o
 | `auth.users` | `on_auth_user_created` (AFTER INSERT) | `handle_new_user`: creates the profile as an inactive `customer`. Created only if missing; the schema never drops triggers on Supabase-owned tables. |
 | `profiles` | `guard_profile_privileged_columns` (BEFORE UPDATE) | Admin-only changes to privileged columns (section 6). |
 | `profiles` | `trigger_log_profile_changes` (AFTER UPDATE) | Audit log rows for role changes and activation or deactivation. |
-| `ticket_comments` | `on_new_comment` (AFTER INSERT) | Notifies the customer on a public staff reply, the assignee on a customer comment, and the watchers. |
+| `ticket_comments` | `on_new_comment` (AFTER INSERT) | Notifies the customer on a public reply from any team member (staff or branch manager), the assignee on a customer comment, and the watchers. |
 | `notifications` | `trigger_cleanup_old_notifications` (AFTER INSERT) | Deletes that user's notifications older than 30 days (no `pg_cron` needed). |
 | `ticket_relationships` | `trigger_reciprocal_relationship` (AFTER INSERT) and `trigger_delete_reciprocal_relationship` (AFTER DELETE) | Keeps the mirror row in sync (A `blocks` B and B `blocked_by` A). |
-| `products`, `milestones`, `time_entries`, `sla_policies`, `approval_gates`, `releases`, `kb_articles`, `profiles` | `set_timestamp_*` (BEFORE UPDATE) | Sets `updated_at`. |
+| `products`, `milestones`, `time_entries`, `sla_policies`, `approval_gates`, `releases`, `kb_articles`, `profiles` | `set_timestamp_*` (BEFORE UPDATE) | Sets `updated_at`. On `kb_articles` the trigger has `WHEN (OLD.view_count IS NOT DISTINCT FROM NEW.view_count)`, so counting a view does not change `updated_at`. |
 
-Notification triggers never notify the person who made the change, and skip deactivated accounts. The notification functions are `SECURITY DEFINER`, so they can insert rows for other users even though the API only allows `mention` inserts.
+Notification triggers never notify the person who made the change, and skip deactivated watchers and customers. The assignee is not checked: `notify_ticket_assignment` and the customer-comment path of `notify_new_comment` notify the assignee even if that account is deactivated. The notification functions are `SECURITY DEFINER`, so they can insert rows for other users even though the API only allows `mention` inserts.
 
 ---
 
@@ -594,13 +603,15 @@ A local Supabase stack is optional; most contributors can point the app at a fre
    VITE_SUPABASE_ANON_KEY=<publishable key from "supabase status">
    ```
 
-4. Serve the Edge Function in a second terminal. `supabase start` does not serve functions on its own, and without `admin-actions` the first sign-in cannot get past "Set Your Password":
+4. Optional: `supabase start` already serves the `admin-actions` Edge Function (the `[edge_runtime]` section of `supabase/config.toml` is enabled), so the first sign-in works without extra steps. Run the following in a second terminal only when you edit `index.ts` and want live reload and the function's logs in your terminal:
 
    ```bash
-   npx supabase functions serve
+   npx supabase functions serve admin-actions
    ```
 
 5. Start the app and sign in as `admin@flowdesk.com` / `Password2026!`. You will be asked to choose a new password.
+
+On Windows with Docker Desktop, the `supabase_vector_flowdesk` log container may restart in a loop; the app is not affected. See [SETUP.md](SETUP.md#optional-run-supabase-locally-with-docker) for workarounds.
 
    ```bash
    npm run dev

@@ -319,7 +319,7 @@ export default function KnowledgeBase() {
 
       {/* Search + Filters */}
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
-        <div className="relative flex-1">
+        <div className="relative flex-1 sm:flex-none sm:w-72 shrink-0">
           <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
           <input
             type="text"
@@ -329,7 +329,7 @@ export default function KnowledgeBase() {
             className="w-full pl-11 pr-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-surface-dark text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 placeholder-gray-400"
           />
         </div>
-        <div className="flex gap-2 overflow-x-auto pb-1">
+        <div className="flex gap-2 overflow-x-auto pb-1 min-w-0 flex-1">
           <button
             onClick={() => setCategoryFilter('all')}
             className={`px-3 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${

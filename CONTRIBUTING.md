@@ -91,7 +91,7 @@ There is no formatter configured, so the main rule is: **match the style of the 
 ### Styling
 
 - Style with Tailwind utility classes in JSX. Avoid new CSS files.
-- Use the theme color tokens (`primary-*`, `gray-*`, `canvas`, `surface-dark`) instead of hard-coded colors. They are CSS variables defined per theme in `src/themes.css`, so your UI works with all six color themes.
+- Use the theme color tokens (`primary-*`, `gray-*`, `canvas`, `surface-dark`) instead of hard-coded colors. They are CSS variables defined per theme in `src/themes.css`, so your UI works with all six color themes. The one exception is the LokdIT logo (`src/components/LokdITLogo.tsx`, and the same artwork in `public/favicon.svg`): it uses fixed brand colors on purpose, so it looks the same in every theme.
 - Add `dark:` variants for anything you style; dark mode is toggled with the `dark` class on `<html>`.
 - Icons come from `lucide-react`.
 - Check your change at desktop width, and below 768 px if it affects the mobile layout.

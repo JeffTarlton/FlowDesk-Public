@@ -77,7 +77,7 @@ export const useRelationshipStore = create<RelationshipState>((set, get) => ({
         await supabase.from('activity_logs').insert({
           ticket_id: sourceTicketId,
           actor_id: user.id,
-          action: `Linked ticket as **${typeLabel}**`,
+          action: `Linked ticket as <strong>${typeLabel}</strong>`,
         });
       }
 

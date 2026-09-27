@@ -1,5 +1,5 @@
 import { CheckCircle2, XCircle } from 'lucide-react';
-import FlowDeskLogo from './FlowDeskLogo';
+import LokdITLogo from './LokdITLogo';
 import { supabaseEnvStatus } from '../lib/supabase';
 
 // Shown instead of the app when the Supabase environment variables are missing or invalid.
@@ -21,7 +21,7 @@ export default function SetupRequired() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-canvas-dark p-4">
       <div className="w-full max-w-lg bg-white dark:bg-surface-dark rounded-2xl shadow-xl p-8 border border-gray-100 dark:border-gray-800">
         <div className="flex justify-center mb-6">
-          <FlowDeskLogo size="lg" />
+          <LokdITLogo size="lg" subtitle="FlowDesk" />
         </div>
 
         <h1 className="text-xl font-bold text-gray-900 dark:text-white text-center mb-2">

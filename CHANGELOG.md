@@ -30,7 +30,7 @@ Initial public release of FlowDesk under the MIT License.
 
 - SLA policies per priority, with response and resolution deadlines and breach tracking.
 - Configurable approval gates that require admin and/or customer approval for selected status changes.
-- A Support Portal where branch managers and the support desk submit and follow requests.
+- A Support Portal where branch managers submit and follow their branch's requests; the support desk can follow them too.
 - A Knowledge Base with categories, tags, drafts, view counts and a full-text search index.
 
 **Insights**
@@ -43,6 +43,7 @@ Initial public release of FlowDesk under the MIT License.
 - In-app notifications for status changes, assignments, comments and mentions, delivered live through Supabase Realtime.
 - A command palette (Ctrl+K or Cmd+K) to search tickets and jump between pages.
 - Light and dark mode, six color themes, and a simplified layout for small screens.
+- LokdIT branding: the LokdIT logo with a FlowDesk label in the sidebar, sign-in page, Support Portal and setup screen, plus a matching favicon.
 
 **Administration**
 
@@ -66,6 +67,7 @@ Initial public release of FlowDesk under the MIT License.
 - Row Level Security on every table, with no access at all for signed-out (`anon`) users.
 - Role checks through `SECURITY DEFINER` helper functions that return no role for deactivated accounts, so deactivation blocks access to shared data in the database, not only in the UI.
 - Triggers that stop non-admins from changing privileged profile columns (role, active status, password reset flag, branch, email) and from granting admin approval or changing a ticket number.
+- Internal notes can be written and read only by staff (admin, developer, support desk), enforced by the database.
 - A first-login password reset that cannot be skipped: the flag is cleared only by the Edge Function after the password has changed, and the published default password is rejected.
 - The `admin-actions` Edge Function verifies the caller's token, requires an active profile and checks the role for every action. It reads the new secret keys, with a fallback to the legacy `service_role` key.
 - Storage policies that stop bucket listing by anonymous users, restrict avatar uploads to the user's own file names, and tie attachment rows to the uploader's own folder.

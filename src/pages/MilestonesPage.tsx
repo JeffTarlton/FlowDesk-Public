@@ -228,7 +228,8 @@ export default function MilestonesPage() {
               const progress = m.ticket_count ? Math.round((m.completed_count! / m.ticket_count) * 100) : 0;
               const isSelected = selectedMilestone === m.id;
               const product = products.find(p => p.id === m.product_id);
-              const isOverdue = m.target_date && new Date(m.target_date) < new Date() && m.status !== 'completed';
+              // target_date is a date-only string: read it as local midnight, not UTC midnight
+              const isOverdue = m.target_date && new Date(m.target_date + 'T00:00:00') < new Date() && m.status !== 'completed';
 
               return (
                 <div
@@ -278,7 +279,7 @@ export default function MilestonesPage() {
                   <div className="flex items-center gap-4 text-xs text-gray-400 mb-3">
                     {m.target_date && (
                       <span className="flex items-center gap-1">
-                        <CalendarDays size={12} /> {new Date(m.target_date).toLocaleDateString()}
+                        <CalendarDays size={12} /> {new Date(m.target_date + 'T00:00:00').toLocaleDateString()}
                       </span>
                     )}
                     {product && (
