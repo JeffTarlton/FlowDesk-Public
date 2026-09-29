@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
+import { escapeHtml, toCsv } from '../lib/escape';
 import { useAuthStore } from '../store/useAuthStore';
 import { Ticket as TicketIcon, Clock, CheckCircle, Trash2, Plus, Download } from 'lucide-react';
 import { format } from 'date-fns';
@@ -135,14 +136,14 @@ export default function Portal() {
     const headers = ['ID', 'Title', 'Type', 'Priority', 'Status', 'Created', 'Updated'];
     const rows = myTickets.map(t => [
       t.readable_id,
-      `"${t.title.replace(/"/g, '""')}"`,
+      t.title,
       t.type,
       t.priority,
       t.status,
       format(new Date(t.created_at), 'yyyy-MM-dd'),
       format(new Date(t.updated_at), 'yyyy-MM-dd'),
     ]);
-    const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    const csv = toCsv([headers, ...rows]);
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -162,7 +163,7 @@ export default function Portal() {
       container.style.color = '#111';
 
       let html = `<h1 style="margin:0 0 4px 0;font-size:22px;">My Support Requests</h1>
-        <p style="color:#666;font-size:13px;margin:0 0 20px 0;">Branch: ${profile?.branch_id || 'N/A'} &bull; Exported ${format(new Date(), 'MMM d, yyyy')}</p>
+        <p style="color:#666;font-size:13px;margin:0 0 20px 0;">Branch: ${escapeHtml(profile?.branch_id || 'N/A')} &bull; Exported ${format(new Date(), 'MMM d, yyyy')}</p>
         <table style="width:100%;border-collapse:collapse;font-size:13px;">
           <thead><tr style="background:#f3f4f6;">
             <th style="padding:8px 12px;text-align:left;border-bottom:2px solid #e5e7eb;">ID</th>
@@ -176,11 +177,11 @@ export default function Portal() {
       myTickets.forEach((t, i) => {
         const bg = i % 2 === 0 ? '#fff' : '#f9fafb';
         html += `<tr style="background:${bg};">
-          <td style="padding:8px 12px;border-bottom:1px solid #f0f0f0;font-weight:700;color:#3b82f6;">${t.readable_id}</td>
-          <td style="padding:8px 12px;border-bottom:1px solid #f0f0f0;">${t.title}</td>
-          <td style="padding:8px 12px;border-bottom:1px solid #f0f0f0;">${t.type}</td>
-          <td style="padding:8px 12px;border-bottom:1px solid #f0f0f0;">${t.priority}</td>
-          <td style="padding:8px 12px;border-bottom:1px solid #f0f0f0;">${t.status}</td>
+          <td style="padding:8px 12px;border-bottom:1px solid #f0f0f0;font-weight:700;color:#3b82f6;">${escapeHtml(t.readable_id)}</td>
+          <td style="padding:8px 12px;border-bottom:1px solid #f0f0f0;">${escapeHtml(t.title)}</td>
+          <td style="padding:8px 12px;border-bottom:1px solid #f0f0f0;">${escapeHtml(t.type)}</td>
+          <td style="padding:8px 12px;border-bottom:1px solid #f0f0f0;">${escapeHtml(t.priority)}</td>
+          <td style="padding:8px 12px;border-bottom:1px solid #f0f0f0;">${escapeHtml(t.status)}</td>
           <td style="padding:8px 12px;border-bottom:1px solid #f0f0f0;">${format(new Date(t.created_at), 'MMM d, yyyy')}</td>
         </tr>`;
       });

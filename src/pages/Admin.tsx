@@ -8,6 +8,7 @@ import { useAdminStore } from '../store/useAdminStore';
 import { useProductStore } from '../store/useProductStore';
 import { useSlaStore } from '../store/useSlaStore';
 import { useApprovalStore } from '../store/useApprovalStore';
+import { toCsv } from '../lib/escape';
 
 const ROLE_OPTIONS: UserRole[] = ['support_desk', 'developer', 'admin', 'branch_manager'];
 
@@ -94,28 +95,28 @@ export default function Admin() {
 
   const handleExportCSV = () => {
     try {
-      let csvContent = "data:text/csv;charset=utf-8,";
-      
-      if (activeTab === 'users') {
-        csvContent += "ID,Name,Email,Role,Created At\n";
-        users.forEach(u => {
-          csvContent += `"${u.id}","${u.full_name || ''}","${u.email}","${u.role}","${u.created_at}"\n`;
-        });
-      } else {
-        csvContent += "ID,Readable ID,Title,Type,Priority,Status,Customer Email,Created At,Last Updated,Is Stuck\n";
-        tickets.forEach(t => {
-          const stuck = isTicketStuck(t.updated_at, t.status) ? 'Yes' : 'No';
-          csvContent += `"${t.id}","${t.readable_id}","${t.title.replace(/"/g, '""')}","${t.type}","${t.priority}","${t.status}","${t.customer_email || ''}","${t.created_at}","${t.updated_at}","${stuck}"\n`;
-        });
-      }
-      
-      const encodedUri = encodeURI(csvContent);
+      const rows: unknown[][] = activeTab === 'users'
+        ? [
+            ['ID', 'Name', 'Email', 'Role', 'Created At'],
+            ...users.map(u => [u.id, u.full_name || '', u.email, u.role, u.created_at]),
+          ]
+        : [
+            ['ID', 'Readable ID', 'Title', 'Type', 'Priority', 'Status', 'Customer Email', 'Created At', 'Last Updated', 'Is Stuck'],
+            ...tickets.map(t => [
+              t.id, t.readable_id, t.title, t.type, t.priority, t.status, t.customer_email || '',
+              t.created_at, t.updated_at, isTicketStuck(t.updated_at, t.status) ? 'Yes' : 'No',
+            ]),
+          ];
+
+      const blob = new Blob([toCsv(rows)], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
-      link.setAttribute("href", encodedUri);
+      link.setAttribute("href", url);
       link.setAttribute("download", `flowdesk_${activeTab}_export.csv`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+      URL.revokeObjectURL(url);
       showToast(`${activeTab === 'users' ? 'Users' : 'Tickets'} exported successfully`, 'success');
     } catch {
       showToast('Failed to export CSV', 'error');

@@ -277,8 +277,9 @@ export default function TicketDetailPanel({ ticket, onClose }: Props) {
       });
 
       // Extract and dispatch @mentions
-      const tempDiv = document.createElement('div');
-      tempDiv.innerHTML = newCustomerComment.trim();
+      // DOMParser builds an inert document: unlike innerHTML on a live element,
+      // it never loads images or runs event handlers in the pasted markup.
+      const tempDiv = new DOMParser().parseFromString(newCustomerComment.trim(), 'text/html').body;
       const mentionNodes = tempDiv.querySelectorAll('[data-type="mention"]');
       const mentionedIds = Array.from(mentionNodes).map((el: any) => el.getAttribute('data-id')).filter(Boolean);
       const uniqueMentions = [...new Set(mentionedIds)];

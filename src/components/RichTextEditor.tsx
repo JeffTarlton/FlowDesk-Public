@@ -6,6 +6,7 @@ import Image from '@tiptap/extension-image';
 import suggestion from './mention/suggestion';
 import { useEffect, useState, useRef } from 'react';
 import { supabase } from '../lib/supabase';
+import { escapeHtml } from '../lib/escape';
 import { 
   Bold, Italic, List, Code, Type, ListOrdered, Paperclip, Loader2
 } from 'lucide-react';
@@ -47,7 +48,7 @@ export default function RichTextEditor({ content, onChange, placeholder, classNa
         } else {
           // Non-image files: insert as a clickable download link
           editor.chain().focus()
-            .insertContent(`<a href="${publicUrl}" target="_blank" rel="noopener noreferrer">📎 ${file.name}</a> `)
+            .insertContent(`<a href="${escapeHtml(publicUrl)}" target="_blank" rel="noopener noreferrer">📎 ${escapeHtml(file.name)}</a> `)
             .run();
         }
       }
