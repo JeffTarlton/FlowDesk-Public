@@ -1242,6 +1242,10 @@
         <li><b>Don't see it?</b> Click <span class="ui">Install</span> or <span class="ui">Adjust GitHub App Permissions</span>. On the GitHub page that opens, choose <b>Only select repositories</b>, pick <code>FlowDesk-Public</code>, and click <span class="ui">Install</span> / <span class="ui">Save</span>. You're sent back to Vercel, where it now appears. Click <span class="ui">Import</span>.</li>
       </ol>
       <div class="callout warn">You're now on the <b>Configure Project</b> page. <b>Don't click Deploy yet.</b> First do 7.3 and 7.4.</div>
+      <div class="callout note">
+        <span class="callout-title">Vercel says "Project created… then deploy", but there's no settings form?</span>
+        Newer versions of Vercel's import screen create the project straight away and put the <span class="ui">Deploy</span> button below a list of <b>recommended integrations</b>. Scroll down, and set the environment variables (7.4) before you click <span class="ui">Deploy</span>. If you can't find a <span class="ui">Deploy</span> button at all, use the <a href="#deploy-fallback">dashboard route in 7.5</a> instead. Your project already exists, so don't import it a second time.
+      </div>
 
       <h3>7.3 Check the build settings (normally nothing to change)</h3>
       <div class="table-wrap"><table>
@@ -1282,6 +1286,17 @@
         </li>
       </ol>
       <div class="callout check"><span class="callout-title">You should see</span>When you open your website address, the <b>FlowDesk sign-in page</b>. (Don't sign in yet. Do step 8 first.)</div>
+
+      <h4 id="deploy-fallback">No Deploy button, or "No Production Deployment"? Deploy from the dashboard</h4>
+      <p>Vercel only builds your site when you click <span class="ui">Deploy</span> or when new code reaches GitHub. If the import screen had no <span class="ui">Deploy</span> button, or your project's <b>Overview</b> says <b>No Production Deployment</b>, start the first build yourself:</p>
+      <ol class="steps">
+        <li>Open <a href="https://vercel.com/dashboard" target="_blank" rel="noopener">vercel.com/dashboard</a> and click your project.</li>
+        <li>Go to <span class="path">Settings<span class="sep">›</span>Environment Variables</span>. Add the two variables from 7.4 with <b>Production</b> and <b>Preview</b> ticked, and click <span class="ui">Save</span>.</li>
+        <li>Open <span class="ui">Deployments</span> and click <span class="ui">Create Deployment</span> at the top right (it may be under the <span class="ui">⋯</span> menu).</li>
+        <li>Type <code>main</code> as the branch and confirm. Then continue with item 2 of the list above.</li>
+      </ol>
+      <p style="font-size:14.5px;color:var(--text-2)">If the <b>Deployments</b> list shows an entry marked <b>Blocked</b>, see <a href="#troubleshooting">Troubleshooting</a>.</p>
+
       <div class="callout note">
         <span class="callout-title">Seeing "FlowDesk isn't configured yet" instead?</span>
         One of the two environment variables is missing or misspelled. Go to your Vercel project's <span class="path">Settings<span class="sep">›</span>Environment Variables</span>, fix it, then <b>redeploy</b>: open <span class="ui">Deployments</span>, click the <span class="ui">⋯</span> menu on the newest one, and choose <span class="ui">Redeploy</span>. Changes to variables only take effect after a redeploy.
@@ -1704,6 +1719,16 @@ VITE_SUPABASE_ANON_KEY=paste_your_publishable_key_here</code></pre></div>
           <td>"404: NOT_FOUND" when refreshing a page on the website</td>
           <td>The <code>vercel.json</code> file is missing from your fork.</td>
           <td>Make sure <code>vercel.json</code> exists in the top folder of your fork (sync your fork, step 11), then redeploy.</td>
+        </tr>
+        <tr data-path="online">
+          <td>Vercel's Overview says "No Production Deployment", or the import screen has no Deploy button</td>
+          <td>Vercel created the project but never started a build.</td>
+          <td>Use the <a href="#deploy-fallback">dashboard route in 7.5</a>: add the variables in Settings, then <span class="ui">Deployments</span> › <span class="ui">Create Deployment</span> › <code>main</code>.</td>
+        </tr>
+        <tr data-path="online">
+          <td>A deployment marked "Blocked"</td>
+          <td>On the free Hobby plan, Vercel only builds commits whose author is the GitHub account you signed in to Vercel with (this applies to private repositories).</td>
+          <td>Sign in to Vercel with <span class="ui">Continue with GitHub</span> using the account that owns the fork, or make the fork public. Then use <span class="ui">Create Deployment</span> again.</td>
         </tr>
         <tr data-path="online">
           <td>The Vercel build fails (red "Error")</td>
